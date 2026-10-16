@@ -22,7 +22,7 @@ Format:
 
 ## 2026-10-16 19:00 — Data in the cloud
 - Agent/session: Claude Code (isiXhosa Speech AI session, account2)
-- Did: founder confirmed he speaks isiXhosa (D-0003), chose cloud storage for datasets (D-0004, docs/data-flow.png)
+- Did: founder confirmed they speak isiXhosa (D-0003), chose cloud storage for datasets (D-0004, docs/data-flow.png)
   and accepted NCHLT CC BY 3.0 (D-0005). Found that SADiLaR serves NCHLT without a login, so no SADiLaR account
   is needed. Wrote cloud/fetch_data.sh + cloud/node/fetch_bootstrap.sh (small CPU node, self-terminating) and
   cloud/wait.sh. Ran jobs fetch-fleurs-1 and fetch-nchlt-1. Drew docs/stage1.png for the next stage.
