@@ -1,0 +1,7 @@
+# Pinned so every run on a cloud GPU node uses the same software (installed by cloud/node/job_bootstrap.sh).
+torch==2.5.1
+torchaudio==2.5.1
+transformers==4.46.3
+jiwer==3.0.5
+soundfile==0.12.1
+numpy==1.26.4

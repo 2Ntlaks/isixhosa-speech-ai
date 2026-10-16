@@ -1,0 +1,14 @@
+run: R-0001
+stage: 1
+what: baseline, no training
+model: openai/whisper-small   # 244M parameters, stock weights from Hugging Face
+language: auto                # Whisper picks a language per clip (it has no isiXhosa tag); the pick is recorded
+task: transcribe
+test_set: NCHLT isiXhosa test split (nchlt_xho.tst.xml), all 2770 clips, 8 held-out speakers (500-507), 3.11 h
+normalisation: scoring.py v1 (drop [s] markers, lowercase, strip punctuation)
+precision: fp16
+batch_size: 32
+max_new_tokens: 96
+samples: 20 clips, seed 1, spread over the 8 speakers
+software: requirements-gpu.txt (torch 2.5.1, transformers 4.46.3, jiwer 3.0.5)
+machine: g6.xlarge (NVIDIA L4) spot, fallback g5.xlarge / g4dn.xlarge, us-east-1

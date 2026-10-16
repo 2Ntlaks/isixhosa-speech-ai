@@ -2,12 +2,12 @@ const { Sketch, render, COLORS } = require("C:/Users/ntlak/.claude/skills/hand-d
 const { NAVY, CORAL, MUTED, EMERALD } = COLORS;
 const sk = new Sketch(1400, 900, 21);
 sk.text(700, 62, "Stage 1: watch Whisper fail", { size: 42, weight: "bold" });
-sk.text(700, 104, "one honest 'before' number, on your laptop, $0", { size: 24, color: MUTED });
+sk.text(700, 104, "one honest 'before' number, on a cloud GPU, under $1", { size: 24, color: MUTED });
 
 // row 1: what we do
 const steps = [
-  ["Test clips", ["100 clips from", "8 unseen speakers"], NAVY],
-  ["Whisper-small", ["stock, no training,", "on your laptop"], NAVY],
+  ["Test clips", ["all 2,770 clips,", "8 unseen speakers"], NAVY],
+  ["Whisper-small", ["stock, no training,", "on a cloud GPU"], NAVY],
   ["Compare", ["its guess vs", "the true text"], NAVY],
   ["Baseline", ["WER and CER,", "expect over 80 %"], EMERALD],
 ];

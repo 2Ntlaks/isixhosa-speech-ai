@@ -42,3 +42,11 @@ Format:
 - Decision: the founder accepts the CC BY 3.0 terms: credit CSIR Meraka Institute and North-West University (via SADiLaR)
   in the model card and write-up, no implied endorsement, never re-upload the raw audio.
 - Why: required before downloading; founder's own acceptance per AGENTS.md.
+
+## D-0006 · 2026-10-16 · Where and how to run the stage 1 baseline
+- Options: A) laptop, 100 test clips (original plan) / B) cloud GPU, full NCHLT test set (2 770 clips)
+- Recommendation: B. Data is already in S3 (D-0004), the full test set gives a more trustworthy number than 100 clips,
+  and it rehearses the GPU node setup stage 2 needs. Cost well under $1. Language: let Whisper auto-detect per clip
+  (shows what happens today, and records which language it mistakes isiXhosa for).
+- Decision: B, auto-detect. Founder: "you can do it in the cloud and report results here... I trust you".
+- Why: keep the laptop free; founder will read results on a results page.
