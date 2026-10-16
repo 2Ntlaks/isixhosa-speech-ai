@@ -31,3 +31,27 @@ Format:
 - Fix: not yet. Harmless for downloads; needed before stage 2 so agents can look inside GPU nodes without opening SSH.
 - Cost: none.
 - Lesson: decide how you'll get inside a cloud machine before you need to.
+
+## P-0003 · 2026-10-16 · No spot GPU capacity anywhere in us-east-1
+- Stage / run: stage 1, R-0001 (first launch attempt)
+- Symptom: `cloud/run_job.sh --run R-0001` tried g6.xlarge, g5.xlarge and g4dn.xlarge spot in all 6 zones:
+  ```
+  no GPU capacity anywhere right now (spot)
+  ```
+- Cause: AWS had no spare discounted (spot) GPU machines of those types at that moment. Not a quota problem:
+  both the spot and on-demand G-instance quotas are 8 vCPU.
+- Fix: relaunched with `--market ondemand` (g6.xlarge, ~$0.80/h instead of ~$0.35-0.50/h spot); got capacity in the 4th zone.
+- Cost: ~2 min; a few tens of cents more than spot for this short run.
+- Lesson: spot is cheap but not guaranteed; short jobs can just go on-demand, long training runs need checkpoints to survive either way.
+
+## P-0004 · 2026-10-16 · Collect script could not find files that were in S3
+- Stage / run: stage 1, R-0001 (after the run)
+- Symptom:
+  ```
+  fatal error: An error occurred (404) when calling the HeadObject operation: Key "jobs/R-0001/out/baseline.log" does not exist
+  ```
+- Cause: on Windows the aws tool ends every output line with an invisible carriage return (CRLF), so the file name
+  read back had a hidden character on the end and S3 said it didn't exist.
+- Fix: cloud/collect.sh strips `\r` from the listing.
+- Cost: ~5 min, $0.
+- Lesson: when scripts pass text between Windows and Linux tools, invisible line-ending characters break exact names.

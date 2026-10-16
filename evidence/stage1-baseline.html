@@ -1,0 +1,234 @@
+<title>Whisper Baseline R-0001</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, like the project spec; numbers and charts sit inside the column, samples table scrolls on its own. */
+:root {
+  --paper: #f4efe4; --paper2: #ebe4d4; --ink: #1d1b16; --dim: #6c6455; --rule: #d6ccb6;
+  --ochre: #b8641c; --bar: #b8641c; --green: #1f5c45; --red: #a63a2a;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "DM Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+    --ochre: #e0954c; --bar: #c0742e; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+  --ochre: #e0954c; --bar: #c0742e; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 18.5px/1.6 var(--serif); }
+.wrap { max-width: 900px; margin: 0 auto; padding-block: 36px 60px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mono, code, th, .k { font-family: var(--mono); }
+code { font-size: .82em; background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+h1 { font-size: clamp(36px, 6.4vw, 64px); line-height: 1.02; font-weight: 600; margin: 12px 0 16px; text-wrap: balance; }
+h1 em { color: var(--ochre); }
+h2 { font-size: 30px; font-weight: 600; margin: 0 0 6px; text-wrap: balance; }
+.lede { font-size: 21px; max-width: 62ch; margin: 0; }
+section { padding-top: 48px; display: grid; gap: 12px; }
+section > p { margin: 0; max-width: 66ch; }
+.sub { color: var(--dim); }
+
+.nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 30px;
+  border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.num { padding: 16px 18px 18px 0; display: grid; gap: 4px; align-content: start; }
+.num + .num { padding-left: 18px; border-left: 1px solid var(--rule); }
+.num b { font-size: 46px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.num b small { font-size: 22px; color: var(--dim); font-weight: 400; }
+.num .k { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ochre); }
+.num p { margin: 0; font-size: 15.5px; color: var(--dim); }
+
+/* worked example */
+.ex { background: var(--paper2); border: 1px solid var(--rule); padding: 18px 20px; display: grid; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.row .k { width: 100px; font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; }
+.w { font-family: var(--mono); font-size: 15px; padding: 3px 9px; border: 1px solid var(--rule); background: var(--paper); border-radius: 3px; }
+.w.bad { border-color: var(--red); color: var(--red); }
+.w.ins { border-style: dashed; border-color: var(--red); color: var(--red); }
+.ex .sum { font-family: var(--mono); font-size: 14px; }
+
+/* bar charts: single series, direct labels, hover detail */
+.chart { display: grid; gap: 6px; margin-top: 4px; }
+.bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) 128px; gap: 12px; align-items: center; position: relative;
+  padding: 2px 4px; border-radius: 3px; outline: none; }
+.bar:hover, .bar:focus-visible { background: var(--paper2); }
+.bar:focus-visible { box-shadow: 0 0 0 2px var(--ochre); }
+.bar .lab { font-size: 16px; }
+.bar .lab small { font-family: var(--mono); font-size: 11.5px; color: var(--dim); margin-left: 4px; }
+.track { height: 14px; position: relative; }
+.fill { height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; min-width: 2px; }
+.bar .val { font-family: var(--mono); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.bar .val span { color: var(--dim); }
+.bar[data-tip]:hover::after, .bar[data-tip]:focus-visible::after {
+  content: attr(data-tip); position: absolute; left: 160px; top: calc(100% + 4px); z-index: 2; max-width: min(420px, 80vw);
+  background: var(--ink); color: var(--paper); font: 13px/1.45 var(--mono); padding: 8px 10px; border-radius: 4px; }
+.axis { display: grid; grid-template-columns: 150px minmax(0, 1fr) 128px; gap: 12px; font-family: var(--mono); font-size: 11px; color: var(--dim); padding: 0 4px; }
+.axis div:nth-child(2) { display: flex; justify-content: space-between; border-top: 1px solid var(--rule); padding-top: 4px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th { text-align: left; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); font-weight: 500;
+  padding: 8px 10px 8px 0; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.samples td:nth-child(4), .samples td:nth-child(5) { min-width: 180px; }
+.samples td:nth-child(5) { word-break: break-word; overflow-wrap: anywhere; }
+.samples td.id { font-family: var(--mono); font-size: 12.5px; color: var(--dim); white-space: nowrap; }
+
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fact { border-top: 2px solid var(--ochre); padding-top: 10px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.fact b { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fact p { margin: 0; font-size: 16px; }
+
+.ask { border: 1px solid var(--ochre); background: var(--paper2); padding: 18px 22px; display: grid; gap: 8px; }
+.ask ol { margin: 0; padding-left: 22px; display: grid; gap: 4px; }
+.ask p { margin: 0; }
+
+footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 14px; font-family: var(--mono); font-size: 12.5px; color: var(--dim);
+  display: grid; gap: 4px; }
+
+@media (max-width: 680px) {
+  body { font-size: 17.5px; }
+  .nums, .facts { grid-template-columns: 1fr; }
+  .num + .num { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .bar, .axis { grid-template-columns: 96px minmax(0, 1fr) 96px; gap: 8px; }
+  .bar .lab small { display: none; }
+  .bar[data-tip]:hover::after, .bar[data-tip]:focus-visible::after { left: 0; }
+}
+</style>
+
+<div class="wrap">
+  <div class="kicker">Run R-0001 · Stage 1 baseline · 16 October 2026</div>
+  <h1>Whisper hears isiXhosa,<br>but it <em>can't spell it</em></h1>
+  <p class="lede">We played all 2,770 test clips from the NCHLT isiXhosa corpus to stock <code>whisper-small</code>, which has never been taught isiXhosa. As expected, it failed. The useful part is how it failed: it often catches the sounds, but has no idea how isiXhosa is written or which language it is hearing.</p>
+
+  <div class="nums">
+    <div class="num"><span class="k">Letters wrong (CER)</span><b>75.1<small>%</small></b><p>Of every 100 letters in the true text, about 75 were wrong, missing or extra.</p></div>
+    <div class="num"><span class="k">Words wrong (WER)</span><b>196.6<small>%</small></b><p>Above 100% because it invents extra words. The example below shows why.</p></div>
+    <div class="num"><span class="k">Clips exactly right</span><b>22<small> / 2,770</small></b><p>All 22 are English phrases that happen to be in the test set.</p></div>
+  </div>
+
+  <section>
+    <h2>Why word errors can go past 100%</h2>
+    <p>WER counts every wrong word, every missing word <em>and every extra word</em>, then divides by the number of words in the true text. isiXhosa words are long, and Whisper chops them into pieces, so it writes more words than were spoken. Across the test set it wrote <b>15,328 words for 8,107 real ones</b>, about 1.9 for every real word. Here is a real clip from speaker 500:</p>
+    <div class="ex">
+      <div class="row"><span class="k">True text</span><span class="w">esalika</span><span class="w">ekhayeni</span><span class="w">lakhe</span></div>
+      <div class="row"><span class="k">Whisper</span><span class="w bad">esa</span><span class="w ins">lika</span><span class="w bad">ekayeni</span><span class="w bad">lakia</span></div>
+      <div class="sum">3 wrong words + 1 extra word = 4 errors ÷ 3 true words = 133% WER · but only 18% CER</div>
+    </div>
+    <p>By sound, that is close. It split <i>esalika</i> in two, dropped the <i>h</i> in <i>kh</i>, and misheard the ending of <i>lakhe</i>. This is why we report CER next to WER: for isiXhosa, CER shows how close the model is, and WER shows whether the words come out usable.</p>
+  </section>
+
+  <section>
+    <h2>It mistook isiXhosa for 52 different languages</h2>
+    <p>Whisper's first decision on every clip is which language it is hearing, and isiXhosa isn't one of its options. Its top guess was Swahili, another Bantu language, and those clips came out closest. When it guessed Yoruba or Shona it often got stuck repeating one character over and over, which pushes the letter error above 100%.</p>
+    <div class="chart" role="list" aria-label="Language Whisper detected, number of clips, and letter error rate">
+      <div class="bar" role="listitem" tabindex="0" data-tip="Swahili · 876 clips (31.6%) · CER 40.3%: the closest guesses"><span class="lab">Swahili <small>sw</small></span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">876 <span>· CER 40%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Yoruba · 392 clips (14.2%) · CER 121.2%: many repetition loops"><span class="lab">Yoruba <small>yo</small></span><div class="track"><div class="fill" style="width:44.7%"></div></div><span class="val">392 <span>· CER 121%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="English · 278 clips (10.0%) · CER 69.8%, includes the 22 English phrases it got exactly right"><span class="lab">English <small>en</small></span><div class="track"><div class="fill" style="width:31.7%"></div></div><span class="val">278 <span>· CER 70%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Shona · 258 clips (9.3%) · CER 108.8%"><span class="lab">Shona <small>sn</small></span><div class="track"><div class="fill" style="width:29.5%"></div></div><span class="val">258 <span>· CER 109%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Portuguese · 192 clips (6.9%) · CER 70.5%"><span class="lab">Portuguese <small>pt</small></span><div class="track"><div class="fill" style="width:21.9%"></div></div><span class="val">192 <span>· CER 71%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Spanish · 122 clips (4.4%) · CER 58.1%"><span class="lab">Spanish <small>es</small></span><div class="track"><div class="fill" style="width:13.9%"></div></div><span class="val">122 <span>· CER 58%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Italian · 106 clips (3.8%) · CER 58.8%"><span class="lab">Italian <small>it</small></span><div class="track"><div class="fill" style="width:12.1%"></div></div><span class="val">106 <span>· CER 59%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Arabic · 94 clips (3.4%) · CER 105.7%: written in Arabic script"><span class="lab">Arabic <small>ar</small></span><div class="track"><div class="fill" style="width:10.7%"></div></div><span class="val">94 <span>· CER 106%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="44 other languages, from German and Korean to Welsh and Mongolian · 452 clips (16.3%) · CER 94.8%"><span class="lab">44 others</span><div class="track"><div class="fill" style="width:51.6%"></div></div><span class="val">452 <span>· CER 95%</span></span></div>
+      <div class="axis"><div></div><div><span>0</span><span>clips</span><span>876</span></div><div></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>It hears the sounds but not the spelling</h2>
+    <p>We counted how often key isiXhosa letter patterns appear in the true text, and how often Whisper wrote them. This count only uses the 1,933 clips where Whisper wrote in the Latin alphabet. It almost never writes <i>kh</i>, <i>hl</i> or <i>dl</i>, and mostly drops the click <i>x</i>. Those patterns are the most distinctive parts of isiXhosa spelling, and they are exactly what fine-tuning has to teach.</p>
+    <div class="chart" role="list" aria-label="Share of each letter pattern Whisper wrote, relative to the true text">
+      <div class="bar" role="listitem" tabindex="0" data-tip="kh: 311 in the true text, Whisper wrote 9 (3%). It usually writes plain k."><span class="lab"><b>kh</b> <small>ekhayeni</small></span><div class="track"><div class="fill" style="width:2.9%"></div></div><span class="val">9 of 311 <span>· 3%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="dl: 99 in the true text, Whisper wrote 4 (4%)"><span class="lab"><b>dl</b></span><div class="track"><div class="fill" style="width:4%"></div></div><span class="val">4 of 99 <span>· 4%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="hl: 199 in the true text, Whisper wrote 13 (7%)"><span class="lab"><b>hl</b></span><div class="track"><div class="fill" style="width:6.5%"></div></div><span class="val">13 of 199 <span>· 7%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="th: 532 in the true text, Whisper wrote 83 (16%). It usually writes plain t, as in emthatha → em tata."><span class="lab"><b>th</b> <small>emthatha</small></span><div class="track"><div class="fill" style="width:15.6%"></div></div><span class="val">83 of 532 <span>· 16%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="x (click): 186 in the true text, Whisper wrote 30 (16%)"><span class="lab"><b>x</b> <small>click</small></span><div class="track"><div class="fill" style="width:16.1%"></div></div><span class="val">30 of 186 <span>· 16%</span></span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="ng: 767 in the true text, Whisper wrote 627 (82%). Common in many languages, so Whisper already knows it."><span class="lab"><b>ng</b></span><div class="track"><div class="fill" style="width:81.7%"></div></div><span class="val">627 of 767 <span>· 82%</span></span></div>
+      <div class="axis"><div></div><div><span>0%</span><span>share Whisper wrote</span><span>100%</span></div><div></div></div>
+    </div>
+    <p class="sub">The clicks <i>c</i> and <i>q</i> are left out because they are ordinary letters in other languages, so Whisper writes them often but in the wrong places. Raw counts of those don't mean much.</p>
+  </section>
+
+  <section>
+    <h2>Where it fell apart completely</h2>
+    <div class="facts">
+      <div class="fact"><b>30%</b><p>of outputs (837 clips) weren't in the Latin alphabet at all: Arabic, Korean, Hindi and Khmer script, and others.</p></div>
+      <div class="fact"><b>~19%</b><p>(about 527 clips) got stuck in a loop, repeating one character or word until the length limit.</p></div>
+      <div class="fact"><b>22</b><p>exact matches, all English phrases such as <i>south china sea</i>. The NCHLT isiXhosa test set includes some English prompts, which matters later for stage 4.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Every speaker failed, some worse than others</h2>
+    <p>Letter error rate for each of the 8 held-out test speakers (4 women, 4 men). The spread, from 60% to 93%, comes mostly from how often Whisper went into a loop or switched script for that voice, not from gender (women 79.7%, men 70.7%).</p>
+    <div class="chart" role="list" aria-label="Letter error rate per test speaker">
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 500, man · 365 clips · CER 60.0% · WER 161.7%"><span class="lab">500 <small>man</small></span><div class="track"><div class="fill" style="width:60%"></div></div><span class="val">60.0%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 507, man · 358 clips · CER 62.1% · WER 211.5%"><span class="lab">507 <small>man</small></span><div class="track"><div class="fill" style="width:62.1%"></div></div><span class="val">62.1%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 501, man · 383 clips · CER 73.8% · WER 184.6%"><span class="lab">501 <small>man</small></span><div class="track"><div class="fill" style="width:73.8%"></div></div><span class="val">73.8%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 502, woman · 322 clips · CER 74.1% · WER 171.9%"><span class="lab">502 <small>woman</small></span><div class="track"><div class="fill" style="width:74.1%"></div></div><span class="val">74.1%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 506, woman · 360 clips · CER 77.0% · WER 210.4%"><span class="lab">506 <small>woman</small></span><div class="track"><div class="fill" style="width:77%"></div></div><span class="val">77.0%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 503, woman · 365 clips · CER 78.7% · WER 192.2%"><span class="lab">503 <small>woman</small></span><div class="track"><div class="fill" style="width:78.7%"></div></div><span class="val">78.7%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 504, woman · 305 clips · CER 91.2% · WER 214.8%"><span class="lab">504 <small>woman</small></span><div class="track"><div class="fill" style="width:91.2%"></div></div><span class="val">91.2%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="Speaker 505, man · 312 clips · CER 93.0% · WER 229.9%"><span class="lab">505 <small>man</small></span><div class="track"><div class="fill" style="width:93%"></div></div><span class="val">93.0%</span></div>
+      <div class="axis"><div></div><div><span>0%</span><span>letters wrong</span><span>100%</span></div><div></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>20 clips to judge by ear</h2>
+    <p>A fixed pick spread across all 8 speakers (seed 1), so it isn't cherry-picked. The audio for these 20 clips is on your laptop in <code>data/listen/R-0001/</code>, named by clip. It isn't on this page because the raw audio is never re-uploaded anywhere.</p>
+    <div class="scroll">
+      <table class="samples">
+        <thead><tr><th>Clip</th><th>Speaker</th><th>Guessed</th><th>True text (NCHLT)</th><th>Whisper wrote</th><th>CER</th></tr></thead>
+        <tbody>
+          <tr><td class="id">500m_0092</td><td>500 m</td><td class="n">sw</td><td>esalika ekhayeni lakhe</td><td>Esa lika ekayeni lakia.</td><td class="n">18%</td></tr>
+          <tr><td class="id">501m_0376</td><td>501 m</td><td class="n">yo</td><td>yaba ngumhla omkhulu</td><td>yabangu ṬṢā'uṃ kūl</td><td class="n">60%</td></tr>
+          <tr><td class="id">502f_0092</td><td>502 f</td><td class="n">en</td><td>nzulu umnumzana u</td><td>Zulu um num sana.</td><td class="n">35%</td></tr>
+          <tr><td class="id">503f_0226</td><td>503 f</td><td class="n">sw</td><td>iingwevu zasempoza zadibanisana</td><td>Inwefuza sem pausa sa tibani san.</td><td class="n">45%</td></tr>
+          <tr><td class="id">504f_0113</td><td>504 f</td><td class="n">sw</td><td>ukuba igama likadingindawo</td><td>Ukovaika malikandi gidao</td><td class="n">39%</td></tr>
+          <tr><td class="id">505m_0394</td><td>505 m</td><td class="n">en</td><td>uliphalisayo ihashe ngumkhulawa</td><td>We are going to be going to the palace.</td><td class="n">100%</td></tr>
+          <tr><td class="id">506f_0353</td><td>506 f</td><td class="n">yo</td><td>yemiphunga eyosulelayo banokuyifumana</td><td>ḍᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃ</td><td class="n">100%</td></tr>
+          <tr><td class="id">507m_0403</td><td>507 m</td><td class="n">en</td><td>sompu esindulula imbaleki</td><td>Som poesin do lulaim ba leke</td><td class="n">40%</td></tr>
+          <tr><td class="id">500m_0491</td><td>500 m</td><td class="n">yo</td><td>obuqhelekileyo kwinkcazo [s] yakho</td><td>ḍᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃ</td><td class="n">107%</td></tr>
+          <tr><td class="id">501m_0253</td><td>501 m</td><td class="n">sw</td><td>nomfo wakuqumbu owayetolika</td><td>Nwomfu waku kumbo, owa yetolika.</td><td class="n">22%</td></tr>
+          <tr><td class="id">502f_0271</td><td>502 f</td><td class="n">en</td><td>emthatha</td><td>Em tata.</td><td class="n">38%</td></tr>
+          <tr><td class="id">503f_0089</td><td>503 f</td><td class="n">en</td><td>wazi loo nto</td><td>was alone.</td><td class="n">58%</td></tr>
+          <tr><td class="id">504f_0507</td><td>504 f</td><td class="n">sn</td><td>inene ndithi kuwe</td><td>ន្្្្្្្្្</td><td class="n">100%</td></tr>
+          <tr><td class="id">505m_0018</td><td>505 m</td><td class="n">en</td><td>nabeendawo</td><td>Nabindow</td><td class="n">40%</td></tr>
+          <tr><td class="id">506f_0296</td><td>506 f</td><td class="n">ar</td><td>ngezulu ndiqinisekile uyalazi</td><td>جزول لقنسة جيلة ويلازي</td><td class="n">93%</td></tr>
+          <tr><td class="id">507m_0379</td><td>507 m</td><td class="n">sw</td><td>nketho zazisiweyo okuthethi</td><td>kwae tozazisweyo oku tete</td><td class="n">41%</td></tr>
+          <tr><td class="id">500m_0446</td><td>500 m</td><td class="n">it</td><td>yamachunu</td><td>I amatruono.</td><td class="n">67%</td></tr>
+          <tr><td class="id">501m_0003</td><td>501 m</td><td class="n">es</td><td>karhulumente</td><td>Cajolumente</td><td class="n">33%</td></tr>
+          <tr><td class="id">502f_0523</td><td>502 f</td><td class="n">en</td><td>uthi yishi endiza</td><td>which is a teaser.</td><td class="n">77%</td></tr>
+          <tr><td class="id">503f_0239</td><td>503 f</td><td class="n">hi</td><td>monti</td><td>मुड</td><td class="n">100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ask">
+      <p><b>Your part.</b> Listen to some of these clips, then tell me:</p>
+      <ol>
+        <li>Where Whisper is close by sound, is the problem mostly spelling (kh → k, th → t, missed clicks) or mostly word boundaries?</li>
+        <li>Do any of the NCHLT reference texts look wrong or unusual to you? Some are fragments, like <i>nzulu umnumzana u</i>.</li>
+        <li>Do any speakers sound like a particular dialect or region? That could explain why 504 and 505 did worst.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>What this means for stage 2</h2>
+    <p>Fine-tuning on the NCHLT training set (about 200 other speakers) has three jobs, in the order this baseline suggests: stop Whisper guessing a language and switching scripts, teach it isiXhosa spelling (<i>kh, th, hl, dl</i>, the clicks), and teach it where long words begin and end. The first two should show up quickly in CER, and the third in WER. Stage 2 will be scored on these same 2,770 clips and speakers, so the numbers can be compared directly.</p>
+  </section>
+
+  <footer>
+    <div>Model openai/whisper-small · language auto-detected per clip · task transcribe · fp16 · batch 32 · max 96 new tokens</div>
+    <div>Test set NCHLT isiXhosa test split · 2,770 clips · 3.11 h · 8 held-out speakers (500–507) · scoring v1 (drops [s] marker, lowercase, no punctuation)</div>
+    <div>Machine NVIDIA L4 (g6.xlarge, on-demand; no spot capacity, see P-0003) · 4 min of transcribing, ~10 min of machine time · about $0.13</div>
+    <div>Code commit 32e5cbe · torch 2.5.1 · transformers 4.46.3 · jiwer 3.0.5 · all files in runs/R-0001/</div>
+    <div>Data: NCHLT isiXhosa Speech Corpus, CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0.</div>
+  </footer>
+</div>

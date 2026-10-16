@@ -1,0 +1,129 @@
+{
+  "model": "openai/whisper-small",
+  "language": "auto",
+  "test_set": "nchlt_xho.tst.xml",
+  "clips": 2770,
+  "audio_hours": 3.108,
+  "wer": 196.56,
+  "cer": 75.09,
+  "exact_match_pct": 0.79,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 876,
+    "yo": 392,
+    "en": 278,
+    "sn": 258,
+    "pt": 192,
+    "es": 122,
+    "it": 106,
+    "ar": 94,
+    "de": 79,
+    "ko": 57,
+    "fr": 49,
+    "zh": 32,
+    "bo": 21,
+    "my": 19,
+    "ru": 18,
+    "fi": 18,
+    "da": 16,
+    "tl": 15,
+    "fa": 10,
+    "mi": 10,
+    "el": 9,
+    "si": 9,
+    "la": 8,
+    "th": 7,
+    "bn": 6,
+    "he": 5,
+    "km": 5,
+    "hi": 5,
+    "nn": 4,
+    "sv": 4,
+    "sl": 4,
+    "tr": 4,
+    "vi": 4,
+    "sq": 3,
+    "lv": 3,
+    "lt": 3,
+    "ne": 3,
+    "am": 3,
+    "haw": 3,
+    "id": 2,
+    "ht": 2,
+    "gl": 2,
+    "hu": 1,
+    "ka": 1,
+    "pl": 1,
+    "hr": 1,
+    "sk": 1,
+    "jw": 1,
+    "ro": 1,
+    "cy": 1,
+    "yi": 1,
+    "mn": 1
+  },
+  "per_speaker": {
+    "500": {
+      "wer": 161.7,
+      "cer": 60.0,
+      "n": 365
+    },
+    "501": {
+      "wer": 184.6,
+      "cer": 73.8,
+      "n": 383
+    },
+    "502": {
+      "wer": 171.9,
+      "cer": 74.1,
+      "n": 322
+    },
+    "503": {
+      "wer": 192.2,
+      "cer": 78.7,
+      "n": 365
+    },
+    "504": {
+      "wer": 214.8,
+      "cer": 91.2,
+      "n": 305
+    },
+    "505": {
+      "wer": 229.9,
+      "cer": 93.0,
+      "n": 312
+    },
+    "506": {
+      "wer": 210.4,
+      "cer": 77.0,
+      "n": 360
+    },
+    "507": {
+      "wer": 211.5,
+      "cer": 62.1,
+      "n": 358
+    }
+  },
+  "per_gender": {
+    "female": {
+      "wer": 197.4,
+      "cer": 79.7,
+      "n": 1352
+    },
+    "male": {
+      "wer": 195.7,
+      "cer": 70.7,
+      "n": 1418
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 245.2,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L4",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}
