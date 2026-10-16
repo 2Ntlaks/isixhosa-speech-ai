@@ -21,3 +21,9 @@ Format:
 - Decision: agents (founder's Claude Code sessions) write, test, validate and operate everything, including server access.
   The founder is architect and decision-maker and must understand the system.
 - Why: founder's explicit choice; understanding over typing.
+
+## D-0003 · 2026-10-16 · Does the founder speak isiXhosa? (SPEC §10, question 1)
+- Answer: yes.
+- Consequences: stage 4 uses the founder's own mixed isiXhosa/English recordings; the founder checks
+  transcripts and judges model errors by ear (e.g. "wrong click", "wrong word boundary", "dialect spelling").
+  Agents still never invent isiXhosa text; the founder is the source for any text not in the datasets.
