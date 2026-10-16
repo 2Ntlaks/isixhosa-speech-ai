@@ -1,0 +1,10 @@
+data/
+checkpoints/
+*.wav
+*.flac
+*.mp3
+*.safetensors
+*.bin
+.env
+__pycache__/
+.venv/

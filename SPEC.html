@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>isiXhosa Speech AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #f4efe4; --paper2: #ebe4d4; --ink: #1d1b16; --dim: #6c6455; --rule: #d6ccb6;
+    --ochre: #b8641c; --green: #1f5c45; --red: #a63a2a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a; --ochre: #e0954c; --green: #6fbf98; --red: #e07a66; }
+  }
+  :root[data-theme="dark"] { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a; --ochre: #e0954c; --green: #6fbf98; --red: #e07a66; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 19px/1.62 "Newsreader", Georgia, serif; }
+  .mono, code, th, .tag, nav { font-family: "DM Mono", ui-monospace, Consolas, monospace; }
+  code { font-size: .82em; background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  a { color: var(--ochre); }
+
+  header { padding: 40px 0 10px; }
+  .wave { width: 100%; height: 70px; display: block; color: var(--ochre); }
+  .kicker { font-family: "DM Mono"; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); margin-top: 22px; }
+  h1 { font-size: clamp(40px, 7vw, 76px); line-height: 1; font-weight: 600; margin: 12px 0 18px; letter-spacing: -.01em; }
+  h1 em { color: var(--ochre); }
+  .lede { font-size: 22px; max-width: 760px; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; padding: 16px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 30px 0 10px; }
+  nav a { color: var(--dim); text-decoration: none; } nav a:hover { color: var(--ochre); }
+
+  section { padding-top: 46px; }
+  h2 { font-size: 34px; font-weight: 600; margin: 0 0 6px; display: flex; gap: 14px; align-items: baseline; }
+  h2 .n { font-family: "DM Mono"; font-size: 15px; color: var(--ochre); font-weight: 500; }
+  h3 { font-size: 23px; margin: 26px 0 6px; }
+  .sub { color: var(--dim); margin: 0 0 18px; }
+  figure { margin: 18px 0; } figure img { width: 100%; border: 1px solid var(--rule); background: #fdfdfc; display: block; }
+  figcaption { font-family: "DM Mono"; font-size: 12px; color: var(--dim); margin-top: 8px; }
+
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .fact { border: 1px solid var(--rule); padding: 16px 18px; background: var(--paper2); }
+  .fact b { display: block; font-size: 20px; margin-bottom: 4px; }
+  .fact p { margin: 0; font-size: 16.5px; }
+  .fact .src { font-family: "DM Mono"; font-size: 11.5px; margin-top: 8px; display: block; }
+
+  .stage { border-left: 3px solid var(--rule); padding: 4px 0 6px 22px; margin: 30px 0; }
+  .stage.hot { border-color: var(--ochre); }
+  .stage h3 { margin-top: 0; }
+  .stage .tag { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ochre); }
+  table { width: 100%; border-collapse: collapse; font-size: 16.5px; margin-top: 8px; }
+  th { text-align: left; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); font-weight: 500; width: 160px; vertical-align: top; padding: 9px 12px 9px 0; border-top: 1px solid var(--rule); }
+  td { padding: 8px 0; border-top: 1px solid var(--rule); vertical-align: top; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+
+  dl.gl { display: grid; grid-template-columns: 210px 1fr; gap: 0; margin: 0; }
+  dl.gl dt { font-family: "DM Mono"; font-size: 14px; padding: 10px 0; border-top: 1px solid var(--rule); color: var(--green); }
+  dl.gl dd { margin: 0; padding: 9px 0; border-top: 1px solid var(--rule); font-size: 17px; }
+
+  .ask { background: var(--paper2); border: 1px solid var(--ochre); padding: 20px 24px; }
+  .ask ol { margin: 8px 0 0; padding-left: 22px; } .ask li { margin: 6px 0; }
+  .warn { color: var(--red); }
+  footer { margin: 70px 0 40px; padding-top: 14px; border-top: 1px solid var(--rule); font-family: "DM Mono"; font-size: 12px; color: var(--dim); }
+
+  @media (max-width: 720px) {
+    body { font-size: 17.5px; }
+    .facts, .split { grid-template-columns: 1fr; }
+    dl.gl { grid-template-columns: 1fr; } dl.gl dd { border-top: 0; padding-top: 0; }
+    th { width: 110px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg class="wave" viewBox="0 0 980 70" preserveAspectRatio="none" aria-hidden="true">
+    <g id="bars" fill="currentColor"></g>
+  </svg>
+  <div class="kicker">Project spec · v1 · 16 October 2026 · Ntlakanipho Mgaguli</div>
+  <h1>Teach an AI to <em>hear isiXhosa.</em></h1>
+  <p class="lede">Fine-tune OpenAI's Whisper speech model on South African speech, on a GPU you rent with your AWS credits.
+    The goal is to <b>learn something hard</b>: understand how modern speech AI works from audio to text, well enough to direct its training and fix it when it goes wrong. AI coding agents write and run the code; you are the architect.</p>
+  <nav>
+    <a href="#why">1 · Why this is hard</a><a href="#facts">2 · What we know</a><a href="#plan">3 · The five stages</a>
+    <a href="#money">4 · Money &amp; guardrails</a><a href="#rules">5 · Licences &amp; ethics</a><a href="#words">6 · Words you'll meet</a><a href="#end">8 · The end product</a><a href="#evidence">9 · The evidence trail</a><a href="#you">10 · What I need from you</a>
+  </nav>
+</header>
+
+<figure>
+  <img src="docs/roadmap.png" alt="Roadmap: speech data to Whisper to fine-tuning on AWS to your model, then five stages from baseline to shipping.">
+  <figcaption>The whole project on one page. Regenerate with <code>node docs/make_roadmap.js</code>.</figcaption>
+</figure>
+
+<section id="why">
+  <h2><span class="n">01</span>Why this is hard (and worth it)</h2>
+  <p>Speech recognition (ASR) turns sound into text. Whisper was trained on 680 000 hours of audio and handles 99 languages, but <b>isiXhosa is not one of them</b>.
+    Ask it to transcribe isiXhosa and it will guess at a language it knows and write nonsense. Teaching it a new language means adapting a 244-million-parameter
+    transformer with a few dozen hours of speech, without destroying what it already knows.</p>
+  <p>Along the way you meet the real problems AI engineers deal with: turning audio into something a network can read, data that is messy or unbalanced,
+    choosing what to measure, training runs that cost money and can be interrupted, and models that look good on training data but fail on new speakers.</p>
+  <div class="split">
+    <p><b>What makes isiXhosa special for the model:</b> long words built from many parts (agglutination), and click consonants written <i>c</i>, <i>q</i> and <i>x</i>.
+      One wrong syllable makes the whole long word "wrong", so we also track errors per letter, not only per word.</p>
+    <p><b>Your edge:</b> real South Africans switch between isiXhosa and English mid-sentence, especially for technical words. Most models handle that badly.
+      Stage 4 makes that your niche, with your own voice.</p>
+  </div>
+</section>
+
+<section id="facts">
+  <h2><span class="n">02</span>What we know before starting</h2>
+  <p class="sub">Checked on 16 October 2026. Links are the sources.</p>
+  <div class="facts">
+    <div class="fact"><b>Training data exists</b><p>The NCHLT isiXhosa Speech Corpus: about 56 hours of transcribed speech, about 200 speakers, a test set of 8 held-out speakers.
+      Creative Commons Attribution 3.0; you accept the terms when downloading.</p>
+      <a class="src" href="https://repo.sadilar.org/handle/20.500.12185/279">repo.sadilar.org · NCHLT isiXhosa</a></div>
+    <div class="fact"><b>More data</b><p>Google FLEURS has an isiXhosa section (<code>xh_za</code>), read sentences. Mozilla Common Voice has only a tiny amount of isiXhosa so far.
+      A larger NCHLT "auxiliary" isiXhosa corpus also exists.</p>
+      <a class="src" href="https://datacollective.mozillafoundation.org/datasets/cmn1q21i400xkmm0707onm8fb">Common Voice · Xhosa</a></div>
+    <div class="fact"><b>You are not the first</b><p>ElevenLabs sells isiXhosa transcription and reports a 3.1 % word error rate on FLEURS. Some community Whisper fine-tunes exist.
+      That is fine: the point is that <i>you</i> can build one, and the mixed-language niche is still open.</p>
+      <a class="src" href="https://elevenlabs.io/speech-to-text/xhosa">ElevenLabs</a> · <a class="src" style="display:inline" href="https://huggingface.co/BuzzASR/xhosa">BuzzASR/xhosa</a></div>
+    <div class="fact"><b>The method works</b><p>A 2025 study fine-tuned Whisper for Amharic (also poorly served): mixing FLEURS with new data worked best,
+      training only on new data did not, and normalising the text clearly helped.</p>
+      <a class="src" href="https://arxiv.org/abs/2503.18485v1">arXiv 2503.18485</a></div>
+  </div>
+</section>
+
+<section id="plan">
+  <h2><span class="n">03</span>The five stages</h2>
+  <p class="sub">Each stage ends with something you can show. Don't start a stage until the previous one's "done when" is true.</p>
+
+  <div class="stage"><span class="tag">Stage 1 · one evening · $0</span>
+    <h3>Baseline: watch Whisper fail</h3>
+    <table>
+      <tr><th>Agents do</th><td>Once you've accepted the NCHLT licence and downloaded it, agents run the stock <code>whisper-small</code> on 100 test clips (your laptop is enough) and score it.</td></tr>
+      <tr><th>You'll understand</th><td>How audio becomes a log-mel spectrogram (sound as an image), how the tokenizer turns text into numbers, and how WER and CER are computed.</td></tr>
+      <tr><th>Done when</th><td>You have one number: the baseline WER (expect it to be terrible, likely above 80 %), and you can explain why it is bad.</td></tr>
+    </table></div>
+
+  <div class="stage"><span class="tag">Stage 2 · a weekend · ~$3–6</span>
+    <h3>First fine-tune</h3>
+    <table>
+      <tr><th>Agents do</th><td>Train <code>whisper-small</code> on the NCHLT training set on one AWS L4 GPU (spot price, checkpoints saved to S3 so interruptions don't lose work).</td></tr>
+      <tr><th>You'll understand</th><td>The training loop, learning rate and warm-up, batch size vs GPU memory, mixed precision, reading loss curves.</td></tr>
+      <tr><th>Done when</th><td>WER on the 8 held-out speakers has dropped by a large margin from the baseline, and you know which kinds of words it still gets wrong.</td></tr>
+    </table></div>
+
+  <div class="stage"><span class="tag">Stage 3 · 1–2 weeks of evenings · ~$8–15</span>
+    <h3>Make it better</h3>
+    <table>
+      <tr><th>Agents do</th><td>Clean and normalise the transcripts, add FLEURS, try audio augmentation, compare <code>whisper-small</code> with a larger model, and compare against Meta's MMS model as an outside benchmark.</td></tr>
+      <tr><th>You'll understand</th><td>Running experiments properly: change one thing at a time, keep a results table, spot overfitting.</td></tr>
+      <tr><th>Done when</th><td>A results table of at least five runs, and a clear best model you can defend.</td></tr>
+    </table></div>
+
+  <div class="stage hot"><span class="tag">Stage 4 · your niche · ~$3–6</span>
+    <h3>isiXhosa + English, the way people speak</h3>
+    <table>
+      <tr><th>Agents do</th><td>You record 1–2 hours of yourself explaining tutoring topics in mixed isiXhosa and English (the one hands-on job only you can do). Agents prepare transcripts for you to check, hold some out as a test set, and fine-tune on it.</td></tr>
+      <tr><th>You'll understand</th><td>Building your own dataset (recording, transcribing, consistent spelling), and evaluating on data the model has never heard.</td></tr>
+      <tr><th>Done when</th><td>Your model beats the stage-3 model on your mixed-language test set, with numbers to prove it.</td></tr>
+    </table></div>
+
+  <div class="stage"><span class="tag">Stage 5 · a few evenings · ~$0</span>
+    <h3>Ship it</h3>
+    <table>
+      <tr><th>Agents do</th><td>Publish the model on Hugging Face with an honest model card (scores, data, licence, limits), a free demo page where anyone can speak and see the transcript, and a write-up on ntlaks.dev.</td></tr>
+      <tr><th>You'll understand</th><td>Deployment, documentation, explaining technical work to recruiters.</td></tr>
+      <tr><th>Done when</th><td>A stranger can try your model in their browser.</td></tr>
+    </table></div>
+</section>
+
+<section id="money">
+  <h2><span class="n">04</span>Money &amp; guardrails</h2>
+  <table>
+    <tr><th>Budget</th><td>About <b>$15–30</b> of GPU time in total, from roughly $133 of AWS credits (they expire June 2027). Out of pocket: $0 while credits last.</td></tr>
+    <tr><th>Hardware</th><td>One <code>g6.xlarge</code> (NVIDIA L4, 24 GB), about $0.80/hour on demand and often less as spot. Stage 1 runs on your laptop.</td></tr>
+    <tr><th>Guardrails</th><td>The same as the Studio render farm: every job has a hard time cap and shuts itself down, checkpoints go to S3, and the $20/month GPU brake and alert stay on.</td></tr>
+    <tr><th>Reuse</th><td>The AWS plumbing (<code>cloud/render.sh</code>, budgets, IAM role, bucket) already exists in Mgaguli SA Studio; we adapt it for training jobs instead of renders.</td></tr>
+  </table>
+</section>
+
+<section id="rules">
+  <h2><span class="n">05</span>Licences &amp; ethics</h2>
+  <ul>
+    <li>NCHLT is CC BY 3.0: <b>credit the creators</b> (CSIR Meraka Institute and North-West University, via SADiLaR) in the model card and write-up. Don't re-upload the raw audio anywhere.</li>
+    <li>Common Voice data (if used) must not be re-hosted, and speakers must never be identified.</li>
+    <li>Anyone else's voice in stage 4 needs their clear permission. Your own voice is yours.</li>
+    <li>Be honest in the model card: report the test set, the numbers and where it fails. No cherry-picked demos.</li>
+    <li>AWS credits: confirm in AWS Billing which services they cover before using anything beyond EC2 and S3.</li>
+  </ul>
+</section>
+
+<section id="words">
+  <h2><span class="n">06</span>Words you'll meet</h2>
+  <dl class="gl">
+    <dt>ASR</dt><dd>Automatic speech recognition: audio in, text out.</dd>
+    <dt>Fine-tuning</dt><dd>Continuing to train an already-trained model on new data, so it adapts instead of starting from zero.</dd>
+    <dt>Log-mel spectrogram</dt><dd>A picture of sound: time across, pitch bands up, loudness as brightness. Whisper "reads" this image.</dd>
+    <dt>Tokenizer</dt><dd>Splits text into pieces (tokens) and numbers them. Long isiXhosa words become many tokens.</dd>
+    <dt>WER / CER</dt><dd>Word / character error rate: the percentage of words (or letters) the model got wrong. Lower is better.</dd>
+    <dt>Epoch</dt><dd>One full pass through the training data.</dd>
+    <dt>Learning rate</dt><dd>How big each training step is. Too high and training explodes; too low and nothing happens.</dd>
+    <dt>Overfitting</dt><dd>The model memorises the training speakers and does worse on new ones. Held-out test speakers catch this.</dd>
+    <dt>Spot instance</dt><dd>A spare AWS machine at a discount that can be taken back at short notice; fine if you checkpoint.</dd>
+    <dt>Checkpoint</dt><dd>A saved copy of the model mid-training, so you can resume or roll back.</dd>
+  </dl>
+</section>
+
+<section id="end">
+  <h2><span class="n">08</span>The end product</h2>
+  <p class="sub">A demo anyone can try, your model on Hugging Face with an honest report card, and the story on ntlaks.dev.</p>
+  <figure><img src="docs/end-product.png" alt="Sketch: a demo page with a microphone button, the Hugging Face model page with error-rate bars, and a write-up on ntlaks.dev.">
+    <figcaption>Bar lengths are placeholders; the real numbers come from stages 1 to 3.</figcaption></figure>
+</section>
+
+<section id="evidence">
+  <h2><span class="n">09</span>The evidence trail</h2>
+  <p class="sub">The project folder is the source of truth, not chat. Agents record every run, error and decision as they work, including failures,
+    so the write-up, the model card and your interview answers can all point to real records.</p>
+  <figure><img src="docs/evidence.png" alt="Sketch: training runs, errors, choices and sessions flow into runs/, problems.md, decisions.md and JOURNAL.md, which feed the write-up.">
+    <figcaption>Files: <code>JOURNAL.md</code> · <code>results.md</code> · <code>problems.md</code> · <code>decisions.md</code> · <code>runs/R-xxxx/</code> · <code>evidence/</code>. Rules in AGENTS.md.</figcaption></figure>
+</section>
+
+<section id="you">
+  <h2><span class="n">10</span>What I need from you to start</h2>
+  <div class="ask">
+    <ol>
+      <li><b>Do you speak isiXhosa yourself?</b> It decides whether stage 4 uses your own recordings and whether you can judge the model's mistakes by ear.</li>
+      <li><b>A SADiLaR account</b> to accept the NCHLT licence and download the data (only you can accept licence terms).</li>
+      <li><b>A free Hugging Face account</b> for publishing the model.</li>
+    </ol>
+    <p style="margin:14px 0 0"><b>How we work.</b> You don't write code. Your Claude Code agents write, test, run and operate everything, from the training scripts to logging into the GPU servers.
+      Your job is to <b>understand and decide</b>: before each stage you get a one-page drawing of how it works, after it a plain-language explainer of what happened and what the numbers mean,
+      and every real choice (model size, data, spend) comes to you with a recommendation and is logged in <code>decisions.md</code>. The "you'll understand" rows above are what you should be able to explain
+      to an interviewer at the end of each stage.</p>
+  </div>
+</section>
+
+<footer>isiXhosa Speech AI · spec v1 · a learning project by Ntlakanipho Mgaguli · AGENTS.md has the context for coding agents</footer>
+</div>
+<script>
+  // decorative waveform: a fixed pseudo-random speech envelope
+  const g = document.getElementById("bars"); let s = 7;
+  const r = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  for (let i = 0; i < 140; i++) {
+    const x = i * 7, env = Math.sin(i / 139 * Math.PI) ** 0.6 * (0.35 + 0.65 * Math.abs(Math.sin(i / 9)));
+    const h = Math.max(2, env * (0.4 + 0.6 * r()) * 66);
+    const b = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    Object.entries({ x, y: 35 - h / 2, width: 3.2, height: h, rx: 1.6 }).forEach(([k, v]) => b.setAttribute(k, v));
+    g.appendChild(b);
+  }
+</script>
+</body>
+</html>
