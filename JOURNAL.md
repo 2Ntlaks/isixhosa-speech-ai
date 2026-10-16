@@ -19,3 +19,18 @@ Format:
 - Result: plan agreed in principle; founder reading the spec. Founder does not write code; agents do.
 - Cost: $0
 - Next: founder answers the three questions in SPEC §7; then stage 1 (baseline) on the laptop.
+
+## 2026-10-16 19:00 — Data in the cloud
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Did: founder confirmed he speaks isiXhosa (D-0003), chose cloud storage for datasets (D-0004, docs/data-flow.png)
+  and accepted NCHLT CC BY 3.0 (D-0005). Found that SADiLaR serves NCHLT without a login, so no SADiLaR account
+  is needed. Wrote cloud/fetch_data.sh + cloud/node/fetch_bootstrap.sh (small CPU node, self-terminating) and
+  cloud/wait.sh. Ran jobs fetch-fleurs-1 and fetch-nchlt-1. Drew docs/stage1.png for the next stage.
+- Result: s3://mgaguli-studio-render-<acct>/datasets/ holds 9.55 GB, 46 667 objects.
+  fleurs_xh_za: train/dev/test .tsv + audio tar.gz (2.9 GB), ~3 min. nchlt_xho: zip MD5 matched SADiLaR
+  (0e8918da0e1ac9acb3a300c7198c33dd), extracted to datasets/nchlt_xho/extracted/ (11 GB incl. local zip; zip itself
+  not uploaded), ~15 min. Checksums in each MANIFEST.txt. NCHLT test set: 8 speakers (4 m, 4 f), 2 770 clips,
+  many of them single words or short phrases. Problems P-0001 (no progress meter, fixed), P-0002 (SSM not set up).
+- Cost: EC2 < $0.01 (two t3.small, ~20 min total); S3 ~ $0.23 one-off for uploads + ~ $0.22/month storage.
+- Next: stage 1 baseline on the laptop (R-0001): fixed list of 100 test clips across the 8 speakers, stock
+  whisper-small, WER + CER, samples.md for the founder to judge by ear. Fix P-0002 before stage 2.

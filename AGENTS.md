@@ -80,3 +80,4 @@ founder's IP, and the instance still self-terminates under its time cap. Never c
 
 - 2026-10-16: folder, spec and evidence system created (details in JOURNAL.md). Waiting on the founder: does he speak isiXhosa, SADiLaR account, Hugging Face account.
 - 2026-10-16: founder speaks isiXhosa (D-0003). Still waiting on: SADiLaR account + NCHLT download, Hugging Face account.
+- 2026-10-16: NCHLT + FLEURS xh_za are in S3 under datasets/ (no SADiLaR account needed, D-0005). Next: stage 1 baseline. Hugging Face account needed only for stage 5.
