@@ -136,3 +136,24 @@ Format:
   Caught before any number was recorded.
 - Cost: nothing; ~5 minutes.
 - Lesson: when a report shows fewer rows than inputs, stop and find out why before reading the numbers.
+
+## P-0011 · 2026-10-17 · Live page server stopped: laptop ran low on memory
+- Stage / run: live page (src/live.py, D-0014)
+- Symptom: the background server was stopped by Claude Code ("stopped because the system is running low on memory");
+  the page showed "server not running".
+- Cause: both models loaded at full precision in one process (medium ~3.5 GB + small ~1.3 GB) on a 15 GB laptop that
+  also runs a browser and other apps.
+- Fix: one model per server by default, loaded in bfloat16 (medium 1.9 GB); then CTranslate2 int8 copies (R-0013):
+  medium ~0.8 GB + small ~0.25 GB, both loaded together.
+- Cost: nothing; ~10 minutes; no recordings lost.
+- Lesson: on the laptop, check free memory before loading a model; size the model format to the machine.
+
+## P-0012 · 2026-10-17 · Shortening Whisper's 30 s window to speed it up broke the output
+- Stage / run: live page speed work (before R-0013)
+- Symptom: encoding only the recorded audio (+1 to 3 s) instead of the full padded 30 s gave repeated words:
+  CER 488 % (+3 s) and 838 % (+1 s) on the 20 listening clips, against 3.16 % with the full window.
+- Cause: Whisper (and our fine-tunes) were only ever trained on 30 s windows; the decoder relies on the padding.
+  The whisper.cpp "audio_ctx" trick needs a model trained or tuned for shorter windows.
+- Fix: not used; the full window stays. Speed came from the int8 engine instead (R-0013).
+- Cost: nothing; ~5 minutes.
+- Lesson: speed tricks are experiments too: measure accuracy before shipping them.

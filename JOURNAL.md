@@ -98,3 +98,20 @@ Format:
 - Next: results page (evidence/R-0012-stage3-medium-results.html) and progress page update. Founder decides: stage 4
   (own mixed isiXhosa + English recordings, which also targets the main remaining weakness: English loanwords and
   names) or stage 5 (publish R-0012). Remaining stage 3 ideas: real <|xh|> tag, more FLEURS weight, Meta MMS comparison.
+
+## 2026-10-17 22:50 — Talking to the model: Thetha, the live page (D-0014, R-0013)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Did: built a local listening page (evidence/make_listen.py -> data/listen/listen-R-0012.html, the 20 NCHLT clips with
+  four models' outputs and verdict buttons; stays local, contains NCHLT audio). Founder asked to speak to the model and
+  for an API; chose laptop now, Hugging Face later (D-0014). Built src/live.py (local HTTP API: /transcribe, /correct,
+  /models, /corrections.tsv; 127.0.0.1 only) and src/live.html ("Thetha": record button with a voice-reactive ring,
+  self-typing transcripts, click-to-correct, compare medium vs small, hold-to-talk, audio-file drop, copy, export).
+  Downloaded models/R-0012 and R-0007 to data/models/; local .venv with CPU torch. Server was stopped once for low
+  memory (P-0011). Speed work: shortening the 30 s window broke output (P-0012); CTranslate2 int8 kept accuracy.
+- Result: **R-0013: int8 CPU CER 5.67 / WER 31.74 vs GPU fp16 5.69 / 31.06 on 200 unseen-sentence clips; 186/200
+  identical.** Live page speed: medium int8 ~3.9 s, small int8 ~1.4 s per recording (fp32 medium was ~11 s).
+  The founder and a friend tested it; 12 corrections saved so far in data/my_voice/live/ (local only).
+- Cost: $0 (laptop); S3 download of 4 GB of models.
+- Open: a friend's consent for keeping their recordings (asked, no answer yet); DirectML (Radeon iGPU) test pending
+  (.venv-dml installed); founder's listening-page verdicts.
+- Next: stage 4 plan (founder's own mixed isiXhosa + English recordings), or stage 5 (Hugging Face).
