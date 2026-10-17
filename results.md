@@ -16,3 +16,4 @@ Scores are on the fixed held-out test set named in the row. Never delete a row. 
 | R-0007 | 2026-10-17 | 3 | (same model) | (same) | NCHLT xho test, 2770 clips | 16.80 | 2.91 | - | - | vs R-0004 16.63 / 2.98; unseen sentences WER 34.9 / CER 5.8 (R-0004: 36.6 / 6.2) |
 | R-0008 | 2026-10-17 | 3 | whisper-medium smoke test (L4) | - | - | - | - | 0.25 | 0.20 | only fits with gradient checkpointing (17.4 GB, ~9 s/step); last check failed (P-0007) |
 | R-0009 | 2026-10-17 | 3 | whisper-medium smoke test (L40S 48 GB) | - | - | - | - | 0.16 | 0.30 | FAILED: out of memory at batch 16 x 2 without checkpointing (P-0008) |
+| R-0010 | 2026-10-17 | 3 | whisper-medium smoke test (L40S) | - | - | - | - | 0.27 | 0.50 | batch 8 x 4 fits (32.8 GB), 2.76 s/step; checkpoint 8.6 GB; two-dev-set eval works |

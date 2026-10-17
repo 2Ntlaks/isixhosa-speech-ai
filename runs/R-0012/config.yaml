@@ -1,0 +1,11 @@
+run: R-0012
+stage: 3
+what: R-0007's recipe with ONE change: openai/whisper-medium instead of whisper-small
+model: openai/whisper-medium
+language_tag: sw (D-0007)
+train: NCHLT train minus the same 6 dev speakers as R-0004/R-0007 + FLEURS xh_za train <= 30 s, FLEURS text normalised as scored (D-0010)
+dev: unchanged 600 NCHLT clips (speakers 005 023 066 077 173 192), best checkpoint on NCHLT dev CER; plus 200 FLEURS dev clips, information only
+steps: 4000; batch 8 x grad-accum 4 = 32; lr 1e-5, warmup 500, linear decay; bf16; no gradient checkpointing; checkpoints every 500, best kept
+generation max length: 96 during training evaluations (as R-0007)
+test: NCHLT test (2770 clips, max 96 tokens, seen/unseen split) and FLEURS test (clips <= 30 s, max 225 tokens)
+machine: g6e.xlarge (NVIDIA L40S 48 GB) on-demand, $1.861/h, 200 GB disk, max 6 h; expected ~3.7 h incl. R-0011, about $7

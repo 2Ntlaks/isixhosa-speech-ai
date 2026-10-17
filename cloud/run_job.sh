@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Run one experiment (runs/<RUN-ID>/job.sh) on an AWS GPU node.
 #   cloud/run_job.sh --run R-0001 [--max-hours 1] [--type g6.xlarge] [--market spot|ondemand]
+#   env: DISK_GB (root disk, default 100), FALLBACK_TYPES (other GPU types to try; "" = none)
 # Ships the committed code (git archive of HEAD, so the run maps to an exact commit), starts a self-terminating
 # GPU node, which installs requirements-gpu.txt, runs runs/<RUN-ID>/job.sh and uploads ./out to
 # s3://<bucket>/jobs/<RUN-ID>/out/. Then: cloud/wait.sh <RUN-ID> and cloud/collect.sh <RUN-ID>.
@@ -40,7 +41,7 @@ for T in $TYPE ${FALLBACK_TYPES-g5.xlarge g4dn.xlarge}; do   # other GPU types i
     ID=$(aws ec2 run-instances --image-id "$AMI" --instance-type "$T" "${MKT[@]}" --subnet-id "$SN" \
       --iam-instance-profile Name=mgaguli-render-node --user-data "file://$(P "$TMP/userdata.sh")" \
       --instance-initiated-shutdown-behavior terminate \
-      --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":100,"VolumeType":"gp3","DeleteOnTermination":true}}]' \
+      --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":${DISK_GB:-100},\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
       --metadata-options HttpTokens=required,HttpEndpoint=enabled \
       --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=xhosa-$RUN},{Key=project,Value=isixhosa-speech},{Key=kind,Value=gpu}]" \
       --query 'Instances[0].InstanceId' --output text 2>"$TMP/err") && break 2

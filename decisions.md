@@ -104,3 +104,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Recommendation: A. Decision: A (founder).
 - Note: the mgaguli-gpu-monthly brake ($20, EC2 compute before credits) showed $7.61 on 2026-10-17 with billing lag;
   after this experiment the month will be near $16-18. Further GPU work this month may need the founder to raise it.
+
+## D-0013 · 2026-10-17 · Run the full whisper-medium experiment (R-0011, R-0012)
+- Plan put to the founder with the measured R-0010 numbers: L40S, batch 8 x 4, ~2.7 s/step, ~3.7 h incl. stock-medium
+  baselines (R-0011) and both test sets, about $7 (6 h cap, worst case ~$11), 200 GB disk.
+- Options: A) run it now / B) keep October's GPU allowance spare and move to stage 4 or 5 with R-0007.
+- Recommendation: A. Decision: A. Founder: "tell me when it's done".
+- Budget consequence (told to the founder before approval): mgaguli-gpu-monthly counted $7.61 (lagged) + ~$5 of today's
+  runs not yet counted + ~$7 ≈ $19-20 for October, at the $20 brake. The brake blocks new launches, not a running job;
+  further October GPU runs need the founder to raise it. Project total after this run ≈ $12.70 of the $15-30 budget.
