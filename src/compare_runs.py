@@ -51,7 +51,7 @@ def main():
     # the 20 sample clips first shown in R-0001's samples.md, so every run is compared on the same audio
     first = folders[0]
     sample_ids = [line.split("|")[1].strip() for line in open(os.path.join(first, "samples.md"), encoding="utf-8")
-                  if line.startswith("| nchlt_")]
+                  if line.startswith(("| nchlt_", "| fleurs_"))]
     report["samples"] = [{"id": i, "speaker": runs[next(iter(runs))][0][i]["speaker"],
                           "reference": runs[next(iter(runs))][0][i]["text"],
                           **{name: {"hyp": p[i]["hyp"], "cer": p[i]["cer"]} for name, (p, _) in runs.items()}}

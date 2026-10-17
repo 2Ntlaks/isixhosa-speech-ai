@@ -67,3 +67,16 @@ Format:
 - Next: results page for R-0004; founder listens to the same 20 clips. Stage 3 plan, one change per run: add FLEURS
   (more varied, full sentences), whisper-medium, real <|xh|> tag, augmentation, compare with Meta MMS; keep the
   unseen-sentence score as the headline.
+
+## 2026-10-17 15:10 — Stage 3, experiment 1: adding FLEURS (R-0005, R-0006, R-0007)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Did: founder approved (D-0009) and asked for a reviewer sub-agent. Wrote src/fleurs.py, FLEURS support in
+  src/baseline.py and src/train.py, runs/R-0007/job.sh. A separate reviewer agent checked the code before launch: no
+  crash, but two fairness problems, both fixed (FLEURS text normalised for training, D-0010; NCHLT generation limit kept
+  at 96). Ran R-0005, R-0006, R-0007 on one on-demand node; progress now visible live (P-0006 fixed).
+- Result: FLEURS test (all unseen sentences): R-0006 stock+tag CER 65.45 / WER 185.34; R-0005 (NCHLT-only model)
+  29.81 / 94.86 (glues words); **R-0007 (NCHLT+FLEURS) 10.16 / 44.38**. NCHLT test R-0007 2.91 / 16.80 (R-0004
+  2.98 / 16.63); NCHLT unseen 5.8 / 34.9 (R-0004 6.2 / 36.6). Best model so far: R-0007.
+- Cost: ~$1.97 (2.45 h g6.xlarge on-demand). Project total ~ $4.50.
+- Next: results page; founder listens. Stage 3 options: whisper-medium on NCHLT+FLEURS; add a FLEURS dev set to pick
+  checkpoints; give FLEURS more weight; real <|xh|> tag; Meta MMS comparison.

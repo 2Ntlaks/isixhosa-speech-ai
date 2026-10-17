@@ -1,0 +1,539 @@
+{
+ "clips_compared": 1034,
+ "runs": {
+  "R-0006": {
+   "model": "openai/whisper-small",
+   "language": "sw",
+   "wer": 185.34,
+   "cer": 65.45,
+   "exact_match_pct": 0.0,
+   "by_text_in_training": {
+    "unseen": {
+     "wer": 185.3,
+     "cer": 65.5,
+     "n": 1034
+    }
+   },
+   "per_speaker_cer": {
+    "fleurs": 65.5
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 875,
+     "matched": 14,
+     "pct": 1.6
+    },
+    "th": {
+     "in_reference": 1200,
+     "matched": 27,
+     "pct": 2.2
+    },
+    "hl": {
+     "in_reference": 489,
+     "matched": 17,
+     "pct": 3.5
+    },
+    "dl": {
+     "in_reference": 436,
+     "matched": 34,
+     "pct": 7.8
+    },
+    "x": {
+     "in_reference": 606,
+     "matched": 14,
+     "pct": 2.3
+    },
+    "q": {
+     "in_reference": 793,
+     "matched": 17,
+     "pct": 2.1
+    },
+    "c": {
+     "in_reference": 1051,
+     "matched": 318,
+     "pct": 30.3
+    },
+    "ng": {
+     "in_reference": 2298,
+     "matched": 1563,
+     "pct": 68.0
+    }
+   },
+   "check": {
+    "wer": 185.34395018858888,
+    "cer": 65.45161615144497,
+    "n": 1034
+   }
+  },
+  "R-0005": {
+   "model": "models/R-0004",
+   "language": "sw",
+   "wer": 94.86,
+   "cer": 29.81,
+   "exact_match_pct": 0.0,
+   "by_text_in_training": {
+    "unseen": {
+     "wer": 94.9,
+     "cer": 29.8,
+     "n": 1034
+    }
+   },
+   "per_speaker_cer": {
+    "fleurs": 29.8
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 875,
+     "matched": 624,
+     "pct": 71.3
+    },
+    "th": {
+     "in_reference": 1200,
+     "matched": 1091,
+     "pct": 90.9
+    },
+    "hl": {
+     "in_reference": 489,
+     "matched": 448,
+     "pct": 91.6
+    },
+    "dl": {
+     "in_reference": 436,
+     "matched": 352,
+     "pct": 80.7
+    },
+    "x": {
+     "in_reference": 606,
+     "matched": 517,
+     "pct": 85.3
+    },
+    "q": {
+     "in_reference": 793,
+     "matched": 728,
+     "pct": 91.8
+    },
+    "c": {
+     "in_reference": 1051,
+     "matched": 591,
+     "pct": 56.2
+    },
+    "ng": {
+     "in_reference": 2298,
+     "matched": 1995,
+     "pct": 86.8
+    }
+   },
+   "check": {
+    "wer": 94.85721127941088,
+    "cer": 29.810693787131203,
+    "n": 1034
+   }
+  },
+  "eval_fleurs": {
+   "model": "out/model/final",
+   "language": "sw",
+   "wer": 44.38,
+   "cer": 10.16,
+   "exact_match_pct": 1.26,
+   "by_text_in_training": {
+    "unseen": {
+     "wer": 44.4,
+     "cer": 10.2,
+     "n": 1034
+    }
+   },
+   "per_speaker_cer": {
+    "fleurs": 10.2
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 875,
+     "matched": 779,
+     "pct": 89.0
+    },
+    "th": {
+     "in_reference": 1200,
+     "matched": 1096,
+     "pct": 91.3
+    },
+    "hl": {
+     "in_reference": 489,
+     "matched": 476,
+     "pct": 97.3
+    },
+    "dl": {
+     "in_reference": 436,
+     "matched": 421,
+     "pct": 96.6
+    },
+    "x": {
+     "in_reference": 606,
+     "matched": 582,
+     "pct": 96.0
+    },
+    "q": {
+     "in_reference": 793,
+     "matched": 776,
+     "pct": 97.9
+    },
+    "c": {
+     "in_reference": 1051,
+     "matched": 854,
+     "pct": 81.3
+    },
+    "ng": {
+     "in_reference": 2298,
+     "matched": 2205,
+     "pct": 96.0
+    }
+   },
+   "check": {
+    "wer": 44.38124887744716,
+    "cer": 10.162981716702388,
+    "n": 1034
+   }
+  }
+ },
+ "samples": [
+  {
+   "id": "fleurs_10486071292324504416",
+   "speaker": "fleurs",
+   "reference": "ngobusuku phakathi kwe-150 no-200 yekopi zenziwe ezaziwa ngoku zizi-\"dunlap broadsides",
+   "R-0006": {
+    "hyp": "Ngubusu kwa paga tiku ewa 150-200 teko pizizi, heza ziwa nguhu. Zizi tanda progzite.",
+    "cer": 42.4
+   },
+   "R-0005": {
+    "hyp": "ngobusokuphakathi kweawandathemlifftinothwandethekobuzenziyo ezaziwangoku zizidandlabhoksayidi",
+    "cer": 52.9
+   },
+   "eval_fleurs": {
+    "hyp": "ngobusuku phakathi kwe 115 200 ye kophu zenziwe ezaziwa ngoku zizidandlabrok side",
+    "cer": 18.8
+   }
+  },
+  {
+   "id": "fleurs_2534783373396212530",
+   "speaker": "fleurs",
+   "reference": "ngelixa lomzabalanzo wenkululeko owawuququzelelwa ngumgushuzo we mau indibanisela enoxolo yahlangana kwidolophu yanemiphumela yokubulawa kwenkosi u topua tamasese leaof iii",
+   "R-0006": {
+    "hyp": "Ngeli kalumza balazwe nkululek uwutukozele luangumuku kumuku shuuzu wemawe indibani sele enotole yehsangana kuitolubi yeh, yanimi pumele yukubu lawa kwenkos utupawutama seze liwof tetehete.",
+    "cer": 42.4
+   },
+   "R-0005": {
+    "hyp": "ngelixalomzabalazi wenkululeko awuququzelelwa ngumgugushuzo wemawuindibaniselelo enoxoleyihlangana kwidolophieyanemiphumela yokubulawa kwenkosiuthophawudamaseseleyofethe",
+    "cer": 18.0
+   },
+   "eval_fleurs": {
+    "hyp": "ngelixa lomzabalazo wenkululeko owokuquzilelwa ngumgugushuza wemawu indibanisela enoxolo yahlangana kwidolophu yanemiphumela yokubulawa kwenkosi uthepha udamasese liwofu the 3th",
+    "cer": 15.7
+   }
+  },
+  {
+   "id": "fleurs_13692997799061083008",
+   "speaker": "fleurs",
+   "reference": "siyavumelana nengxelo ye-usoc yokuba umdla weembaleki zethu kunye neeklabhu kunye nemidlalo yabo inokuncediswa ngcono ngokuqhubela phambili notshintsho olunentsingiselo kumbutho wethu endaweni yokumiselwa ngokusesikweni",
+   "R-0006": {
+    "hyp": "Siavumela naine na loye USO se yukuba. Omla wemba lekes hitu kunye ne klapo, kunye ne mila loye abo. Inokun na jusu anga onongu kubela pambi. Pambi lino change olo ninsingi solo kumutowe tuenda weinu yukos miselo e kukuse siku en.",
+    "cer": 41.6
+   },
+   "R-0005": {
+    "hyp": "siyavumelana enengxelo usyokuba umdlawembalekizithukunyenemidlaloyabo inokuncediswangcono ngokuqhubelaphambilinotshintshonensingiselo kumothowethuengawenyokosimiselwa ngokusesikweni",
+    "cer": 21.9
+   },
+   "eval_fleurs": {
+    "hyp": "siyavumelana nengxelo ye usoc yokuba umdla wembaleki zethu kunye neklapho kunye nemidlalo yabo inokuncedisa ngcono ngokuqhubela phambili notshintsho nentsingiselo kumotorwethu endaweni yoko semiselwa ngokusisikweni",
+    "cer": 7.8
+   }
+  },
+  {
+   "id": "fleurs_3241932101248649768",
+   "speaker": "fleurs",
+   "reference": "owase australia u mitchell gourley wagqiba kweye shumi elinanye i-men's standing super-g owase czech umgqatswa uoldrich jelinek wagqiba kwindawo yeshumi elinesithandathu i-men's sitting super-g",
+   "R-0006": {
+    "hyp": "Owa se Australia o Michel Kuali wa kebaku ye shumeli nani immense standing super G. Owa se Shizek umkazo old rich jelly neck wa kebaku ndaw ye shumeli nisi tanda jj immense sitting super G.",
+    "cer": 31.6
+   },
+   "R-0005": {
+    "hyp": "owaseaustraliya umitshagoli wagqibakweyeshumelenanye imentsithasupaji owaseshisekomgqatswalitrezjeleneka wagqibakwendaweshumelenisithandatshumentsithisupaji",
+    "cer": 38.9
+   },
+   "eval_fleurs": {
+    "hyp": "owase australia umichael goreley wagqiba kweyeshumi elinane imanestandard super g owase shizek umgqatswa u aldrich jelinek wagqiba kwindawo yeshumi elinesithandardu imanestandard super g",
+    "cer": 18.7
+   }
+  },
+  {
+   "id": "fleurs_3491774685723973734",
+   "speaker": "fleurs",
+   "reference": "eyakhiwa ngamajiphutha ngesentyhuri yesithathu ipiramidi enkulu yenye yezona zinto zinkulu zakhiwa ngembeko kufaro ofileyo",
+   "R-0006": {
+    "hyp": "Eya kiwa ga majiputan, gasen kyuhe, yesitato. Ipiramit engulu enye ezona zindu zengulu za kwegembego kufara ofile.",
+    "cer": 29.5
+   },
+   "R-0005": {
+    "hyp": "eyakhiwa ngamajiputa ngasetyhureyesithathu ipherametyenkuluyenyeezonazintozinkuluzakwengembeko kufaraofileyo",
+    "cer": 19.7
+   },
+   "eval_fleurs": {
+    "hyp": "eyakhiwa ngamajiputa ngasetyhuri yesithathu iphiramidi enkulu yenye yezona zinto zinkulu zakhe ngembeko kufaro ofileyo",
+    "cer": 6.6
+   }
+  },
+  {
+   "id": "fleurs_9660387766418745218",
+   "speaker": "fleurs",
+   "reference": "kuwo onke ama-1960 u-brzezinski wasebenzela ujohn f kennedy njengomcebisi wakhe emva koko ulawulo luka-lyndon b johnson",
+   "R-0006": {
+    "hyp": "Kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa k",
+    "cer": 345.4
+   },
+   "R-0005": {
+    "hyp": "kuwonkamaneninistu ubrzezenski wasebenzela ujongefnethi njengomcebisiwakembakokoulawula",
+    "cer": 43.7
+   },
+   "eval_fleurs": {
+    "hyp": "kuwo onke ama 1960 ubrzezinski wasebenzela ujohn f canadian njengomcebisi wakhe imva koko ulawula luka leandon beejohnson",
+    "cer": 11.8
+   }
+  },
+  {
+   "id": "fleurs_2130529400122434927",
+   "speaker": "fleurs",
+   "reference": "shukumisa lemigubo yomileyo kunye uze ke ngezandla ezicocekileyo uyikhame ibe ligaqa",
+   "R-0006": {
+    "hyp": "Shukumisa nemyun kubu yu mele yu kuni uzeke. Gezanda ezi tote gile yu uwe kame ibe likad.",
+    "cer": 36.9
+   },
+   "R-0005": {
+    "hyp": "shukumisale nguguboyomileyo uzekezandlaezicocileyo uikhamileyo iggaqa",
+    "cer": 33.3
+   },
+   "eval_fleurs": {
+    "hyp": "shukumisa neengugubo yomileyo kunye uzeke ngezandla ezicocileyo uyikhama ibe ligagqa",
+    "cer": 11.9
+   }
+  },
+  {
+   "id": "fleurs_15258908964120407010",
+   "speaker": "fleurs",
+   "reference": "esona sakhiwo sephiramidi sase-giza siso sodwa esisamileyo kwizimanga ezisixhenxe",
+   "R-0006": {
+    "hyp": "Enso nasa ki wase pyramidisa sikiza, siso soto esi samilei kwezi manga esi sikrein.",
+    "cer": 38.3
+   },
+   "R-0005": {
+    "hyp": "esonasakhiwo siperemithisasekise sisosodwa esisamileyo kwezimanga esixhenxe",
+    "cer": 19.8
+   },
+   "eval_fleurs": {
+    "hyp": "esona sakhiwo seperemitis asegiza sisosodwa esisamileyo kwizimanga esixhenxe",
+    "cer": 12.3
+   }
+  },
+  {
+   "id": "fleurs_3953089687514887219",
+   "speaker": "fleurs",
+   "reference": "amabantu basenokungayicingeli into yokuba ukunyamezela nokuqonda nako kuyafuneka kubahambi ababuyela emakhaya",
+   "R-0006": {
+    "hyp": "Amapa ndu basenu konga itingili into yu kuba, unkun yemeze lau nuku konda, na kukuia funia kakubaha ambi, ababu yela emakai.",
+    "cer": 31.2
+   },
+   "R-0005": {
+    "hyp": "amabantu besenokungayicingeli intoyokuba unkunyamezela unokuqonda nakokuyafuneka kubahambiabuyela emakhaya",
+    "cer": 7.3
+   },
+   "eval_fleurs": {
+    "hyp": "amabantu basenokungayicingeli into yokuba unkunyamezela nokuqonda ngako kuyafuneka kubahambi ababuyela emakhaya",
+    "cer": 1.8
+   }
+  },
+  {
+   "id": "fleurs_12112683153769973427",
+   "speaker": "fleurs",
+   "reference": "ngokwe-nuclear agency yasejapan i-radioactive caesium ne iodine ifumanekile kule planti",
+   "R-0006": {
+    "hyp": "Gogo nuclear agency ase Japan iradioactive kasiya ni aiwati nifumana kakule plant",
+    "cer": 29.9
+   },
+   "R-0005": {
+    "hyp": "ngokonyukliya agentsiyasetshabaniratywekthivkhasem iodnifumanekakuleplanti",
+    "cer": 46.0
+   },
+   "eval_fleurs": {
+    "hyp": "ngokwenyukliya i agentsi yasejapan iradiu ektif kasim ne iod ifumaneka kule planti",
+    "cer": 29.9
+   }
+  },
+  {
+   "id": "fleurs_16898575292984310509",
+   "speaker": "fleurs",
+   "reference": "lengxelo ibalileke kakhulu ngandlela zonke zepolisi ekhoyo yabongameleyo e iraq kwaye inyanzelisa utshintsho olukhawulezileyo",
+   "R-0006": {
+    "hyp": "Lengmalu ibarulege kakulungalde lazongezu polisi ekoe yabongamelaewe Irak, kwae yanyanzelisa utinjolu kawlezele.",
+    "cer": 32.0
+   },
+   "R-0005": {
+    "hyp": "lengxelo ibalulekekakhulungandlela zongezopolisiekhoyoabongameleyoiraka kwayeyanyanzelisautshintsholukhawulezileyo",
+    "cer": 15.2
+   },
+   "eval_fleurs": {
+    "hyp": "le ngxelo ibaluleke kakhulu ngandlela zonke zepolisi ekhoyo yabongamileyo e iraq kwaye iyanye nzelisa utshintsho olukhawulezileyo",
+    "cer": 5.6
+   }
+  },
+  {
+   "id": "fleurs_5304864880694090551",
+   "speaker": "fleurs",
+   "reference": "asiqinisekanga kodwa kusenokwenzeka ibinolwimi olukubini ibisitya iintlanzi ezinkulu ezinye iimasaurs kwaye isenokuba yayisitya inyama",
+   "R-0006": {
+    "hyp": "Asikini se kanga koutoku senu wendze kaibinu nondwemi olu kubini, ibe seitya entlanusi ezin kulu ezin ni imasasas, kwae isenu kubaya e seitya inyap.",
+    "cer": 32.8
+   },
+   "R-0005": {
+    "hyp": "asiqinisekangakodwa kusenokwenzeka ibinolwimi olukubeni ibesityaentlanzi ezinkulu kwayisenokubayasityainyama",
+    "cer": 21.6
+   },
+   "eval_fleurs": {
+    "hyp": "asiqinisekanga kodwa kusenokwenzeka ibinolwimi olukubeni ibesitya eentlanzisi ezinkulu ezinye iimazsauza kwaye isenokuba yaye isitya inyama",
+    "cer": 8.2
+   }
+  },
+  {
+   "id": "fleurs_15455981619225497211",
+   "speaker": "fleurs",
+   "reference": "iindaba zobumnandi i-tmz iyaqonda ukuba umfoti wamisa isithuthi sakhe kwelinye icala lesepulveda boulevard kwaye wazama ukuthatha imifanekiso yamapolisa ngaphambi kokuwela indlela aqhubekeke eyalela ipolisa lasecalifornia kuhola wendlela oqhuba isitopu amyalele ukuba abuyele ngaphesheya kabini",
+   "R-0006": {
+    "hyp": "Iyenda abazubum nandi, iti TMZ iaakonda kwa mufutu wa misa, isi tutisa kikuli nii kala lei seipulvelta bolavad. Kwa hii waza mahutatemi fani ki suyema polisa ngapambi kwa kua ela indlela akube kegi. Eya leila i polisa lise Kalifoni ya kua rola wendlela, okuba isi topu amia lele wkuba, abu ela na peshie ya kabin.",
+    "cer": 34.0
+   },
+   "R-0005": {
+    "hyp": "indabazobumnandi itmz iyaqondakumfotwamisathisithuthisakhekulinyicala lesiphevelta bolavathikwayewazamakuthathemifanekisweemapolisa ngakokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokokok",
+    "cer": 122.1
+   },
+   "eval_fleurs": {
+    "hyp": "indaba zobumnandi i tmz iyaqonda ukuba umfoto wamisa isithuthi sakhe kwelinye icala le saple vial da bolivade kwaye waza makuthatha imifanekiso yemapolisa ngaphambi kuwela indlela aqhubekeke eyalela ipolisa lasecalifornia kugola wendlela uqhuba isitopu amyalelwe ukuba abuyela ngaphesheya kabini",
+    "cer": 8.5
+   }
+  },
+  {
+   "id": "fleurs_11600269803920691365",
+   "speaker": "fleurs",
+   "reference": "amasiko amandulo kunye nezizwe zaqala ukuzigcina ukuze bafikelele lula ebisini iinwele inyama kunye nezikhumba",
+   "R-0006": {
+    "hyp": "Amasi kwa mandu lukuninezu izwe sa kalahu kuzitrin, awkuzu bafikere lula ebesin, inu ele inu ya makuninezu kum.",
+    "cer": 39.1
+   },
+   "R-0005": {
+    "hyp": "amasikwamanduli kunyinezizwezaqala ukuzigcina ukuzibafikelelelulayibisenileyo iniyamakunyinezikhombo",
+    "cer": 22.7
+   },
+   "eval_fleurs": {
+    "hyp": "amasikwa amandu le kunye nezizwe zaqala ukuzigcina ukuze bafikelele lula ibiseni iinwele inyama kunye nezikhombo",
+    "cer": 7.3
+   }
+  },
+  {
+   "id": "fleurs_7078555978867912690",
+   "speaker": "fleurs",
+   "reference": "emveni kokwehla kwesiganeko u ibson wathunyelwa kwisibhedlela kodwa wasweleka ngokukhawuleza emva koko",
+   "R-0006": {
+    "hyp": "Mwenu kukusika na kuhu ipsen wa tuni ewa kusipel lile koto wa sule kanguku kauleza emba koko.",
+    "cer": 45.1
+   },
+   "R-0005": {
+    "hyp": "emvenokokwehla kwisikaneko ibsenwathunyelwakwisibhedlele kodoswelekangokukhawuleza embakoku",
+    "cer": 18.6
+   },
+   "eval_fleurs": {
+    "hyp": "emveni kokwehla kwesiganeko u y wathunyelwa kwisibhedlele kodwa wasweleka ngokukhawuleza emva koko",
+    "cer": 5.9
+   }
+  },
+  {
+   "id": "fleurs_10236432127936911058",
+   "speaker": "fleurs",
+   "reference": "izinto ezinjenge calcium kunye ne potassium zithathwa njengezinyithi ewe kukwakho nesinyithi esinjengesilivere negolide",
+   "R-0006": {
+    "hyp": "Izinjengi kausia mkulia nipotezi yam zi tatoa, jengi zi niti weku kwa ko, nisi niti esinjengi silivia rungi neko liti.",
+    "cer": 47.9
+   },
+   "R-0005": {
+    "hyp": "ezinjengekhawusamkunye nipothisemzithathwa ngezinyeethiwekukwakho nesinyeethiesinjengesilivero ngenegolide",
+    "cer": 30.3
+   },
+   "eval_fleurs": {
+    "hyp": "izinto ezinjenge kalisayam kunye neepothesia mzithathwa njengezinyithi ewe kukwakho nesinye esinjenge siliviaris ngenegalithi",
+    "cer": 23.5
+   }
+  },
+  {
+   "id": "fleurs_17965786683998507525",
+   "speaker": "fleurs",
+   "reference": "umculo wephyramidi nokukhanya kwayo yenye yezinto ezinika umdla kulendawo ebantwaneni",
+   "R-0006": {
+    "hyp": "Omkuluo peremi tunogukanya kwa yo yenze yenze zindwe zinika umuha gulenda webanjwane",
+    "cer": 37.6
+   },
+   "R-0005": {
+    "hyp": "umculo opheremitwe nokukhanyekwayoyenyezindwezinikawumnyakulendawo ebantwane",
+    "cer": 25.9
+   },
+   "eval_fleurs": {
+    "hyp": "umculo ipheremiti nokukhanywa kwayo yenye ezinto ezizika umdla kule ndawo ebantwane",
+    "cer": 12.9
+   }
+  },
+  {
+   "id": "fleurs_8516109008886660172",
+   "speaker": "fleurs",
+   "reference": "ezi ngqimba bezifuneka ukuze kwenziwe iingqimba zesanti namalwandle aza kuba yindawo yokuhlala izilwanyana zasendle",
+   "R-0006": {
+    "hyp": "Eze mnye mbabezi funega wukuze kwenzi wii nnye mbaze sandu na maluwale aza kubain da uyukulala izluwanyan na zasengu.",
+    "cer": 34.8
+   },
+   "R-0005": {
+    "hyp": "ezengqemba bezifuneka ukuzekwenziyingqemazesanti namalwandleazakubayindawo yokuhlalaizilwanyanazasendle",
+    "cer": 13.9
+   },
+   "eval_fleurs": {
+    "hyp": "ezingqemba bezifuneka ukuze kwenziwe iingqemba zesanti namalwandle azakuba yindawo yokuhlala esilwanyana zasendle",
+    "cer": 5.2
+   }
+  },
+  {
+   "id": "fleurs_7326575262500520149",
+   "speaker": "fleurs",
+   "reference": "ibhulorho icwangciselwe ukuba isebenze ngokupheleleyo ngoseptemba 2017 xa iindawo zokukhangela amasiko ebrazil kulindeleke ukuba zigqitywe",
+   "R-0006": {
+    "hyp": "Apolo kwa ikwan mwsego ukuba e7z, ukupelile mwseptima 2017, wa indahuzu kwaingelama sego e prazil gulendele gobo ukuba zilpeki.",
+    "cer": 46.4
+   },
+   "R-0005": {
+    "hyp": "ibloko ichwangciselweyo kubasebenziyokupheleleweyo nusebsemathonisevendinixaindawuzokukhangelelamasikoyiprazelokulindeleko ukubaziqityi",
+    "cer": 36.2
+   },
+   "eval_fleurs": {
+    "hyp": "ibhuloko icwangciselwe ukuba isebenze ngokupheleleyo ngo septemba 2017 xa iindawo zokukhangela amasiko ebrazil kulindeleko ukuba ziqityi",
+    "cer": 5.1
+   }
+  },
+  {
+   "id": "fleurs_13014392712000870639",
+   "speaker": "fleurs",
+   "reference": "ukuphamzamiseka kokulala yindlela yokuphaphama nngethuba lakho lokulala oluqhelekileyo uphinde ulale ngokukhawuleza emizuzwini eyi 10-60",
+   "R-0006": {
+    "hyp": "Uku pa zamiseka kuku lala yinlena yuku papama, getuba lakulu kuku lala, ulka legle wupenda ulale, kukaulezaimizu zun 826.",
+    "cer": 38.2
+   },
+   "R-0005": {
+    "hyp": "ukupazamiseka kokulalayindlela yokupaphama ngethubalakolokulekulekulakulokulekulakulokulezayoemizuzwini",
+    "cer": 36.8
+   },
+   "eval_fleurs": {
+    "hyp": "ukuphazamiseka kokulala yindlela yokuphapama ngethuba lakho lokulala uluqhelekileyo uphinde ulale kukhawuleza imizuzwini eyi 10 60",
+    "cer": 5.9
+   }
+  }
+ ]
+}

@@ -1,0 +1,104 @@
+<body>
+<div class="wrap">
+  <div class="kicker">Runs R-0005 · R-0006 · R-0007 · Stage 3, experiment 1 · 17 October 2026</div>
+  <h1>Adding natural speech fixed <em>long sentences</em></h1>
+  <p class="lede">The stage 2 model scored 3% letter errors on NCHLT's short prompts, but on long, natural sentences it fell apart: it glued words together. We added 13 hours of FLEURS (full news-style sentences) to the training data and changed nothing else. On the hard exam, letter errors fell from 29.8% to 10.2% and word errors from 95% to 44%. The original NCHLT score did not get worse.</p>
+
+  <div class="nums">
+    <div class="num"><span class="k">FLEURS letters wrong</span><b>10.2<small>%</small></b><p>Was 29.8% for the stage 2 model, 65.5% for stock Whisper.</p></div>
+    <div class="num"><span class="k">FLEURS words wrong</span><b>44.4<small>%</small></b><p>Was 94.9%. Every sentence here is new to the model.</p></div>
+    <div class="num"><span class="k">NCHLT letters wrong</span><b>2.9<small>%</small></b><p>Was 3.0%. Adding FLEURS cost nothing on the original test.</p></div>
+  </div>
+
+  <section>
+    <h2>Two exams, three models</h2>
+    <p><b>NCHLT test</b>: short read prompts, 8 new speakers, most sentences also practised in training. <b>FLEURS test</b>: 1,034 long natural sentences (16 words on average), none of them in any training data. FLEURS is the honest exam.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Model</th><th>Trained on</th><th>NCHLT CER</th><th>NCHLT WER</th><th>FLEURS CER</th><th>FLEURS WER</th></tr></thead>
+        <tbody>
+          <tr><td>Stock Whisper + Swahili tag<br><span class="sub">R-0003 · R-0006</span></td><td>nothing</td><td class="n">45.7%</td><td class="n">164.5%</td><td class="n">65.5%</td><td class="n">185.3%</td></tr>
+          <tr><td>Stage 2 model<br><span class="sub">R-0004 · R-0005</span></td><td>NCHLT, 51 h</td><td class="n">2.98%</td><td class="n">16.6%</td><td class="n">29.8%</td><td class="n">94.9%</td></tr>
+          <tr><td><b>Stage 3 model</b><br><span class="sub">R-0007</span></td><td>NCHLT 51 h + FLEURS 13 h</td><td class="n hi">2.91%</td><td class="n">16.8%</td><td class="n hi">10.2%</td><td class="n hi">44.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">On the NCHLT sentences never seen in training, R-0007 also improved a little: CER 6.2% → 5.8%, WER 36.6% → 34.9%.</p>
+  </section>
+
+  <section>
+    <h2>The fix: word boundaries</h2>
+    <p>The FLEURS test has 16,703 real words. This is how many words each model wrote:</p>
+    <div class="chart" role="list" aria-label="Words written by each model on the FLEURS test">
+      <div class="bar" role="listitem" tabindex="0" data-tip="Stock Whisper + tag wrote 31,832 words: it chops isiXhosa into syllable-sized pieces"><span class="lab">Stock + tag<small>chops words up</small></span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">31,832</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="The true text has 16,703 words"><span class="lab"><b>True text</b><small>the target</small></span><div class="track"><div class="fill" style="width:52.5%;background:var(--ink)"></div></div><span class="val">16,703</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="R-0007 wrote 16,708 words: almost exactly right"><span class="lab">Stage 3 (R-0007)<small>+ FLEURS</small></span><div class="track"><div class="fill" style="width:52.5%"></div></div><span class="val">16,708</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="The stage 2 model wrote 5,910 words: it glues phrases into giant words"><span class="lab">Stage 2 (R-0004)<small>glues words</small></span><div class="track"><div class="fill" style="width:18.6%"></div></div><span class="val">5,910</span></div>
+      <div class="axis"><div></div><div><span>0</span><span>words written</span><span>31,832</span></div><div></div></div>
+    </div>
+    <p>The stage 2 model only ever heard 3-word prompts, so it never learned where words end in continuous speech. Thirteen hours of full sentences taught it.</p>
+  </section>
+
+  <section>
+    <h2>The same sentences, two ways</h2>
+    <p>Real FLEURS test clips (a fixed pick, not chosen). Letter error rate of the stage 3 model in brackets.</p>
+    <div class="scroll">
+      <table class="samples">
+        <thead><tr><th>True text</th><th>Stage 2 (R-0004)</th><th>Stage 3 (R-0007)</th></tr></thead>
+        <tbody>
+          <tr><td>emveni kokwehla kwesiganeko u ibson wathunyelwa kwisibhedlela kodwa wasweleka ngokukhawuleza emva koko</td><td>emvenokokwehla kwisikaneko ibsenwathunyelwakwisibhedlele kodoswelekangokukhawuleza embakoku</td><td>emveni kokwehla kwesiganeko u y wathunyelwa kwisibhedlele kodwa wasweleka ngokukhawuleza emva koko <span class="sub">(5.9%)</span></td></tr>
+          <tr><td>amabantu basenokungayicingeli into yokuba ukunyamezela nokuqonda nako kuyafuneka kubahambi ababuyela emakhaya</td><td>amabantu besenokungayicingeli intoyokuba unkunyamezela unokuqonda nakokuyafuneka kubahambiabuyela emakhaya</td><td>amabantu basenokungayicingeli into yokuba unkunyamezela nokuqonda ngako kuyafuneka kubahambi ababuyela emakhaya <span class="sub">(1.8%)</span></td></tr>
+          <tr><td>shukumisa lemigubo yomileyo kunye uze ke ngezandla ezicocekileyo uyikhame ibe ligaqa</td><td>shukumisale nguguboyomileyo uzekezandlaezicocileyo uikhamileyo iggaqa</td><td>shukumisa neengugubo yomileyo kunye uzeke ngezandla ezicocileyo uyikhama ibe ligagqa <span class="sub">(11.9%)</span></td></tr>
+          <tr><td>esona sakhiwo sephiramidi sase-giza siso sodwa esisamileyo kwizimanga ezisixhenxe</td><td>esonasakhiwo siperemithisasekise sisosodwa esisamileyo kwezimanga esixhenxe</td><td>esona sakhiwo seperemitis asegiza sisosodwa esisamileyo kwizimanga esixhenxe <span class="sub">(12.3%)</span></td></tr>
+          <tr><td>ngokwe-nuclear agency yasejapan i-radioactive caesium ne iodine ifumanekile kule planti</td><td>ngokonyukliya agentsiyasetshabaniratywekthivkhasem iodnifumanekakuleplanti</td><td>ngokwenyukliya i agentsi yasejapan iradiu ektif kasim ne iod ifumaneka kule planti <span class="sub">(29.9%)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">The last row shows what is still hard: English words inside isiXhosa (<i>nuclear agency</i>, <i>radioactive caesium</i>). The model writes them the way they sound in isiXhosa. That is exactly the gap stage 4, your mixed isiXhosa and English recordings, is meant to close.</p>
+  </section>
+
+  <section>
+    <h2>What is still wrong</h2>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">8.8%</td><td>Letter errors on a typical (median) FLEURS clip. 212 clips are under 5%; 62 clips are at 20% or worse.</td></tr>
+          <tr><td class="n">1.3%</td><td>Only 13 of 1,034 long sentences come out perfectly. In a 16-word sentence, one slip is enough to miss.</td></tr>
+          <tr><td class="n">12.8%</td><td>Letter errors on the 200 clips whose reference contains digits (9.5% without). FLEURS writes <i>1990</i> but speakers say the number in isiXhosa, so part of this is a scoring artefact, the same for every model.</td></tr>
+          <tr><td class="n">English</td><td>Names and borrowed English words (<i>Australia</i>, <i>nuclear</i>, <i>Dunlap</i>) are the biggest misses.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>How training went, and a lesson</h2>
+    <figure><img src="loss.png" alt="Left: R-0007 training loss falling from 3 to about 0.15. Right: dev letter error rate by step for R-0004 and R-0007, both falling from 7% to under 4%; R-0007 ends at 3.74%, R-0004 at 3.53%."><figcaption>On the NCHLT-only dev check, R-0007 ends slightly behind R-0004 (3.74% vs 3.53%), yet it is far better on FLEURS.</figcaption></figure>
+    <div class="note"><p><b>Lesson:</b> the dev check that picks the best checkpoint only contains NCHLT speakers, so on its own it would have said "adding FLEURS made things a bit worse". The two test sets showed the real picture. Next time the dev check should include FLEURS clips too, so it measures what we care about.</p></div>
+  </section>
+
+  <section>
+    <h2>What's next</h2>
+    <p>R-0007 is our best model so far. It is saved in your cloud storage at <code>models/R-0007/</code>. Options for the next experiment, one change each:</p>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">1</td><td><b>Bigger model</b> (<code>whisper-medium</code>, 3× the size) on NCHLT + FLEURS. Usually the biggest single gain. Needs a smoke test first to measure speed and memory; probably 2–3× slower, so roughly $4–6.</td></tr>
+          <tr><td class="n">2</td><td><b>FLEURS in the dev check</b>, so the best checkpoint is chosen on long sentences too. Cheap; it can ride along with option 1.</td></tr>
+          <tr><td class="n">3</td><td><b>More FLEURS weight</b>. It is only 7.5% of the training clips but the harder half of the exam.</td></tr>
+          <tr><td class="n">4</td><td><b>A real isiXhosa tag</b>, <b>audio augmentation</b>, and a <b>comparison with Meta's MMS</b>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <div>R-0007: openai/whisper-small · tag &lt;|sw|&gt; · 4,000 steps × 32 clips · lr 1e-5, warmup 500, linear decay · bf16 · best checkpoint step 4000 (dev CER 3.74%)</div>
+    <div>Train 45,703 clips, 64.2 h (NCHLT 42,269 + FLEURS 3,434; FLEURS text normalised as scored, D-0010) · dev: same 6 NCHLT speakers as R-0004</div>
+    <div>FLEURS test: 1,034 clips ≤ 30 s (7 longer left out), all male speakers, max 225 output tokens · NCHLT test: 2,770 clips, max 96 tokens (as R-0004)</div>
+    <div>Machine NVIDIA L4 (g6.xlarge, on-demand) · 2.45 h incl. R-0005, R-0006 · about $1.97 · commit 7e6acb3 · code reviewed by a separate agent before launch</div>
+    <div>Data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute, North-West University, via SADiLaR, CC BY 3.0) · Google FLEURS (CC BY 4.0).</div>
+  </footer>
+</div>
+</body>
+</html>
