@@ -31,11 +31,20 @@ Where we are: stage 3 is done. Best model **R-0012** (whisper-medium): 8.0 % let
       mixed in. One sentence each, 3-15 seconds.
 - [ ] Correct every transcript: click the text, fix it, press **Enter**. The corrected text is the "true text".
 
+## Deploying (stage 5)
+
+- [ ] **GitHub:** say yes and I create a **private** repository and push the project (backup + history). Recordings,
+      models and audio stay out (gitignored). Before it ever goes public: check for things that shouldn't be public
+      (e.g. the AWS account number in run records) and the dataset credits.
+- [ ] **Hugging Face account** (you create it), then log in on the laptop yourself: type `! hf auth login` in the chat
+      box. Never paste a token into the chat.
+- [ ] Then the agent: model repo (R-0012 + 8-bit copy + honest model card) and a Space (Thetha online, works on phones).
+
 ## When you have time
 
 - [ ] Listening page verdicts: open `data/listen/listen-R-0012.html`, judge the clips, press **Copy my notes**,
       paste them to me.
-- [ ] Hugging Face account (needed for stage 5: publishing R-0012 and putting Thetha online for your phone).
+
 
 ## Future work
 
