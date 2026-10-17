@@ -1,0 +1,90 @@
+{
+  "model": "out/model/final",
+  "language": "sw",
+  "test_set": "nchlt_xho.tst.xml",
+  "clips": 2770,
+  "audio_hours": 3.108,
+  "wer": 16.63,
+  "cer": 2.98,
+  "exact_match_pct": 64.51,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 2770
+  },
+  "per_speaker": {
+    "500": {
+      "wer": 6.6,
+      "cer": 1.3,
+      "n": 365
+    },
+    "501": {
+      "wer": 6.3,
+      "cer": 1.2,
+      "n": 383
+    },
+    "502": {
+      "wer": 19.3,
+      "cer": 4.1,
+      "n": 322
+    },
+    "503": {
+      "wer": 3.8,
+      "cer": 0.6,
+      "n": 365
+    },
+    "504": {
+      "wer": 13.2,
+      "cer": 3.0,
+      "n": 305
+    },
+    "505": {
+      "wer": 36.6,
+      "cer": 6.9,
+      "n": 312
+    },
+    "506": {
+      "wer": 30.8,
+      "cer": 4.5,
+      "n": 360
+    },
+    "507": {
+      "wer": 18.9,
+      "cer": 2.4,
+      "n": 358
+    }
+  },
+  "per_gender": {
+    "female": {
+      "wer": 16.9,
+      "cer": 3.2,
+      "n": 1352
+    },
+    "male": {
+      "wer": 16.3,
+      "cer": 2.8,
+      "n": 1418
+    }
+  },
+  "by_text_in_training": {
+    "seen": {
+      "wer": 12.1,
+      "cer": 2.2,
+      "n": 2259
+    },
+    "unseen": {
+      "wer": 36.6,
+      "cer": 6.2,
+      "n": 511
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 105.5,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L4",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}

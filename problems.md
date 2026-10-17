@@ -76,3 +76,14 @@ Format:
   would not install on Windows under the long scratch path (files silently missing, `DLL load failed while importing _C`).
 - Cost: ~8 min GPU, about $0.11.
 - Lesson: this is exactly what a smoke test is for; the cheapest place to find a bug is the smallest run.
+
+## P-0006 · 2026-10-17 · Training progress invisible in the log
+- Stage / run: stage 2, R-0004
+- Symptom: 6 minutes into training, node.log and out/train.log had no step counter or loss lines, while the GPU
+  showed 100 % use (checked over SSM: `0 /opt/work/out/train.log`).
+- Cause: job.sh pipes training output through `grep -vE ... | tee`. When grep writes into a pipe it buffers its output
+  in blocks instead of passing each line on, so lines arrive in large chunks, late.
+- Fix: for this run, watch the checkpoints in S3 instead (each trainer_state.json holds the dev score). For future runs,
+  use `grep --line-buffered` and `PYTHONUNBUFFERED=1`.
+- Cost: none; visibility only.
+- Lesson: check that a long job's progress is visible during the first minute, not after.

@@ -50,3 +50,20 @@ Format:
   Draw the stage 2 sheet (training loop, learning rate, checkpoints), then R-0002: first fine-tune of whisper-small on
   the NCHLT training set, same test set. Open choices to bring to the founder: language tag for isiXhosa
   (reuse an existing one vs add a new token), spot vs on-demand for a ~1-2 h run.
+
+## 2026-10-17 12:00 — Stage 2: first fine-tune works (R-0002, R-0003, R-0004)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Did: founder chose the Swahili tag (D-0007) and on-demand GPUs (D-0008). Fixed SSM access to nodes (P-0002).
+  Wrote src/train.py (Hugging Face Seq2SeqTrainer, 6 dev speakers held out, resume from checkpoints), runs/preflight.sh,
+  src/compare_runs.py, seen/unseen-sentence scoring in src/baseline.py. Found that 1 444 of 2 066 test sentences (82 % of
+  test clips) also occur in training. Smoke test R-0002 failed once (P-0005, missing accelerate) then passed
+  (resume works, 1.65 s/step). Ran R-0003 (stock + forced <|sw|>) and R-0004 (4000 steps) on one node.
+  Drew docs/stage2.png; wrote docs/progress.html (plain-language progress page for the founder).
+- Result: R-0003 CER 45.70 / WER 164.46. **R-0004 test CER 2.98 / WER 16.63; unseen sentences CER 6.2 / WER 36.6;
+  64.5 % of clips exact.** Dev CER plateaued from step 3000 (3.6 %); training loss steps down at each pass (memorisation).
+  Problems P-0005 (accelerate), P-0006 (grep buffering hid progress).
+- Cost: R-0002 $0.11 + $0.16, R-0003+R-0004 ~$1.85 (2.3 h g6.xlarge on-demand). Project total so far ~ $2.50.
+  S3 now also holds models/R-0004 (1 GB) and checkpoints under jobs/ (expire after 30 days).
+- Next: results page for R-0004; founder listens to the same 20 clips. Stage 3 plan, one change per run: add FLEURS
+  (more varied, full sentences), whisper-medium, real <|xh|> tag, augmentation, compare with Meta MMS; keep the
+  unseen-sentence score as the headline.
