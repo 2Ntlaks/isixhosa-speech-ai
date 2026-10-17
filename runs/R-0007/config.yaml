@@ -1,0 +1,11 @@
+run: R-0007
+stage: 3
+what: R-0004's recipe with ONE change: FLEURS train added to the training data
+model: openai/whisper-small
+language_tag: sw (D-0007)
+train: NCHLT train minus the same 6 dev speakers as R-0004 (42 269 clips, 51.2 h) + FLEURS xh_za train <= 30 s (~3 434 clips, ~13 h), FLEURS normalised transcripts
+dev: unchanged from R-0004 (600 clips, NCHLT speakers 005 023 066 077 173 192); FLEURS is added after the dev split
+steps: 4000; batch 16 x 2 = 32; lr 1e-5, warmup 500, linear decay; bf16; checkpoints every 500, best dev CER kept
+generation max length: 225 (was 96; NCHLT needs <= 27 tokens so NCHLT scores stay comparable)
+test: NCHLT test (2770 clips, seen/unseen split) and FLEURS test (1034 clips <= 30 s, all unseen sentences)
+machine: g6.xlarge on-demand (D-0008), 100 GB disk, max 4 h; expected ~2.7 h incl. R-0005 and R-0006, about $2.20

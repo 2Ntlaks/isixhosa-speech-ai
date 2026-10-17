@@ -1,7 +1,9 @@
-"""Stage 1: score a stock (untrained-on-isiXhosa) Whisper model on the NCHLT test set.
+"""Score a Whisper model (stock or fine-tuned) on a test set: NCHLT (--xml) or FLEURS (--fleurs-tsv + --fleurs-audio).
 
   python src/baseline.py --xml data/nchlt_xho/transcriptions/nchlt_xho.tst.xml --root data --out out \
       --model openai/whisper-small --language auto
+  python src/baseline.py --fleurs-tsv data/fleurs_xh_za/test.tsv --fleurs-audio data/fleurs_xh_za/audio/test \
+      --root data --out out --model models/R-0004 --language sw
 
 --language auto lets Whisper pick a language per clip (it has no isiXhosa tag) and records which one it picked.
 --dry-run skips the model and uses the reference text as the "guess" (should score 0 %), to test the plumbing.
@@ -17,11 +19,12 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(__file__))
-from nchlt import load_split  # noqa: E402
+import fleurs  # noqa: E402
+import nchlt  # noqa: E402
 from scoring import NORMALISATION, normalise, score  # noqa: E402
 
 
-def whisper_transcriber(model_name, language, batch_size):
+def whisper_transcriber(model_name, language, max_new_tokens):
     import numpy as np
     import soundfile as sf
     import torch
@@ -50,7 +53,7 @@ def whisper_transcriber(model_name, language, batch_size):
                 langs = [t.strip("<|>") for t in proc.tokenizer.convert_ids_to_tokens(ids.tolist())]
             else:
                 langs = [language] * len(clips)
-            out = model.generate(feats, language=langs, task="transcribe", max_new_tokens=96)
+            out = model.generate(feats, language=langs, task="transcribe", max_new_tokens=max_new_tokens)
         return proc.batch_decode(out, skip_special_tokens=True), langs
 
     env = {"torch": torch.__version__, "device": device,
@@ -60,7 +63,9 @@ def whisper_transcriber(model_name, language, batch_size):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--xml", required=True)
+    ap.add_argument("--xml", help="NCHLT test transcription XML")
+    ap.add_argument("--fleurs-tsv", help="FLEURS split .tsv (instead of --xml)")
+    ap.add_argument("--fleurs-audio", help="folder holding that FLEURS split's .wav files")
     ap.add_argument("--root", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--model", default="openai/whisper-small")
@@ -71,10 +76,20 @@ def main():
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--train-xml", help="training split; adds scores on test clips whose sentence never occurs in training")
+    ap.add_argument("--train-fleurs-tsv", help="FLEURS training .tsv, also counted as 'seen in training'")
+    ap.add_argument("--max-seconds", type=float, default=30.0,
+                    help="leave out longer clips: Whisper only hears the first 30 s, so scoring them would be unfair")
+    ap.add_argument("--max-new-tokens", type=int, default=225, help="FLEURS sentences need up to ~145 tokens")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
-    clips = load_split(a.xml, a.root)
+    if bool(a.xml) == bool(a.fleurs_tsv):
+        sys.exit("give exactly one of --xml or --fleurs-tsv")
+    clips = nchlt.load_split(a.xml, a.root) if a.xml else fleurs.load_split(a.fleurs_tsv, a.fleurs_audio or "")
+    too_long = [c for c in clips if c["duration"] > a.max_seconds]
+    clips = [c for c in clips if c["duration"] <= a.max_seconds]
+    if too_long:
+        print(f"left out {len(too_long)} clips over {a.max_seconds:.0f} s", flush=True)
     if a.limit:
         clips = clips[: a.limit]
     print(f"{len(clips)} clips, {sum(c['duration'] for c in clips) / 3600:.2f} h, "
@@ -83,7 +98,7 @@ def main():
     if a.dry_run:
         transcribe, env = (lambda b: ([c["text"] for c in b], ["dry"] * len(b))), {"device": "none"}
     else:
-        transcribe, env = whisper_transcriber(a.model, a.language, a.batch_size)
+        transcribe, env = whisper_transcriber(a.model, a.language, a.max_new_tokens)
 
     order = sorted(range(len(clips)), key=lambda i: clips[i]["duration"])  # similar lengths batch well
     t0 = time.time()
@@ -96,7 +111,11 @@ def main():
             print(f"  {k + len(batch)}/{len(clips)} clips, {time.time() - t0:.0f} s", flush=True)
     secs = time.time() - t0
 
-    seen = {normalise(c["text"]) for c in load_split(a.train_xml, a.root)} if a.train_xml else set()
+    seen = set()
+    if a.train_xml:
+        seen |= {normalise(c["text"]) for c in nchlt.load_split(a.train_xml, a.root)}
+    if a.train_fleurs_tsv:
+        seen |= {normalise(c["text"]) for c in fleurs.load_split(a.train_fleurs_tsv, "")}
     for c in clips:
         c["text_in_training"] = "seen" if normalise(c["text"]) in seen else "unseen"
         s = score([c["text"]], [c["hyp"]])
@@ -119,14 +138,14 @@ def main():
         import transformers
         env["transformers"] = transformers.__version__
     metrics = {
-        "model": a.model, "language": a.language, "test_set": os.path.basename(a.xml),
-        "clips": len(clips), "audio_hours": round(sum(c["duration"] for c in clips) / 3600, 3),
+        "model": a.model, "language": a.language, "test_set": os.path.basename(a.xml or a.fleurs_tsv),
+        "clips": len(clips), "left_out_over_max_seconds": len(too_long), "max_new_tokens": a.max_new_tokens, "audio_hours": round(sum(c["duration"] for c in clips) / 3600, 3),
         "wer": round(total["wer"], 2), "cer": round(total["cer"], 2),
         "exact_match_pct": round(100 * sum(c["exact"] for c in clips) / len(clips), 2),
         "empty_output_pct": round(100 * sum(not normalise(c["hyp"]) for c in clips) / len(clips), 2),
         "detected_languages": dict(collections.Counter(c["lang"] for c in clips).most_common()),
         "per_speaker": group("speaker"), "per_gender": group("gender"),
-        **({"by_text_in_training": group("text_in_training")} if a.train_xml else {}),
+        **({"by_text_in_training": group("text_in_training")} if (a.train_xml or a.train_fleurs_tsv) else {}),
         "normalisation": NORMALISATION, "seconds": round(secs, 1), "batch_size": a.batch_size,
         "env": {**env, "python": platform.python_version()},
     }
@@ -146,7 +165,7 @@ def main():
                 picks.append(rng.choice(pool))
     with open(os.path.join(a.out, "samples.md"), "w", encoding="utf-8") as f:
         f.write(f"# Samples: {a.model}, language={a.language}\n\n")
-        f.write("| clip | speaker | Whisper's language | reference (NCHLT) | Whisper's output | WER % | CER % |\n")
+        f.write("| clip | speaker | Whisper's language | reference | Whisper's output | WER % | CER % |\n")
         f.write("|---|---|---|---|---|---|---|\n")
         for c in picks:
             f.write(f"| {c['id']} | {c['speaker']} {c['gender'][0]} | {c['lang']} | {c['text']} | "

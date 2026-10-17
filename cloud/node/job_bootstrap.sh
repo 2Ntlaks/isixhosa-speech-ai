@@ -5,7 +5,7 @@ LOG=/var/log/xhosa-job.log
 exec > >(tee -a "$LOG") 2>&1
 S3="s3://$BUCKET/jobs/$JOB"
 shutdown -h +"$MAXMIN"                       # hard cost cap, whatever happens below
-export HOME=/root BUCKET JOB COMMIT HF_HOME=/opt/hf PATH="/root/.local/bin:$PATH"
+export HOME=/root BUCKET JOB COMMIT HF_HOME=/opt/hf PATH="/root/.local/bin:$PATH" PYTHONUNBUFFERED=1   # progress reaches the log (P-0006)
 W=/opt/work; mkdir -p "$W/out" && cd "$W"
 log_up() { aws s3 cp "$LOG" "$S3/node.log" --only-show-errors || true; }
 finish() { aws s3 sync out "$S3/out/" --only-show-errors; echo "$1" | aws s3 cp - "$S3/$1" || true; log_up; shutdown -h now; exit 0; }

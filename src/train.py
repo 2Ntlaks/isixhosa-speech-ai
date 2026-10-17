@@ -1,4 +1,4 @@
-"""Stage 2: fine-tune Whisper on the NCHLT isiXhosa training split.
+"""Fine-tune Whisper on the NCHLT isiXhosa training split, optionally plus FLEURS (--fleurs-tsv/--fleurs-audio).
 
   python src/train.py --xml data/nchlt_xho/transcriptions/nchlt_xho.trn.xml --root data --out out/model \
       --model openai/whisper-small --language sw --max-steps 4000
@@ -23,8 +23,9 @@ from transformers import (Seq2SeqTrainer, Seq2SeqTrainingArguments, WhisperForCo
                           WhisperProcessor)
 
 sys.path.insert(0, os.path.dirname(__file__))
+import fleurs  # noqa: E402
 from nchlt import load_split  # noqa: E402
-from scoring import score  # noqa: E402
+from scoring import normalise, score  # noqa: E402
 
 
 def target_text(text):
@@ -104,6 +105,9 @@ def main():
     ap.add_argument("--dev-clips", type=int, default=600, help="dev clips scored at each evaluation")
     ap.add_argument("--max-seconds", type=float, default=30.0)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--fleurs-tsv", help="extra training data: a FLEURS split .tsv (added to train only, never to dev)")
+    ap.add_argument("--fleurs-audio", help="folder holding that FLEURS split's .wav files")
+    ap.add_argument("--generation-max-length", type=int, default=225)
     ap.add_argument("--only-existing", action="store_true",
                     help="use only clips whose audio is on disk (preflight with a few speakers downloaded)")
     a = ap.parse_args()
@@ -114,9 +118,20 @@ def main():
         clips = [c for c in clips if os.path.exists(c["path"])]
     train, dev, dev_speakers = split_dev(clips, a.dev_speakers, a.seed)
     dev = random.Random(a.seed).sample(dev, min(a.dev_clips, len(dev)))
+    extra, fleurs_dropped = [], 0
+    if a.fleurs_tsv:  # added after the dev split, so dev (and test) stay identical to NCHLT-only runs
+        fl = fleurs.load_split(a.fleurs_tsv, a.fleurs_audio)
+        for c in fl:  # FLEURS keeps hyphens, digits and some punctuation; train on the exact form we score (D-0010)
+            c["text"] = normalise(c["text"])
+        extra = [c for c in fl if c["duration"] <= a.max_seconds and c["text"]]
+        fleurs_dropped = len(fl) - len(extra)
+        if a.only_existing:
+            extra = [c for c in extra if os.path.exists(c["path"])]
+        train = train + extra
     info = {"train_clips": len(train), "train_hours": round(sum(c["duration"] for c in train) / 3600, 2),
             "train_speakers": len({c["speaker"] for c in train}), "dev_speakers": dev_speakers,
-            "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips)}
+            "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips),
+            "fleurs_train_clips": len(extra), "fleurs_dropped_over_max_seconds": fleurs_dropped, "fleurs_train_hours": round(sum(c["duration"] for c in extra) / 3600, 2)}
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
@@ -144,7 +159,7 @@ def main():
         per_device_eval_batch_size=32, learning_rate=a.lr, warmup_steps=a.warmup, max_steps=a.max_steps,
         lr_scheduler_type="linear", bf16=torch.cuda.is_available(), eval_strategy="steps", eval_steps=a.eval_every,
         save_strategy="steps", save_steps=a.eval_every, save_total_limit=2, load_best_model_at_end=True,
-        metric_for_best_model="cer", greater_is_better=False, predict_with_generate=True, generation_max_length=96,
+        metric_for_best_model="cer", greater_is_better=False, predict_with_generate=True, generation_max_length=a.generation_max_length,
         logging_steps=25, report_to="none", dataloader_num_workers=4, remove_unused_columns=False,
         label_names=["labels"], seed=a.seed)
     trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc), eval_dataset=Clips(dev, proc),

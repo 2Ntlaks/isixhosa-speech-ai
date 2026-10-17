@@ -68,3 +68,22 @@ Format:
 Note 2026-10-17 (finding, not a decision): 1 444 of the 2 066 distinct NCHLT test sentences also occur in the training
 split (read by other speakers). From R-0002 on, every evaluation also reports WER/CER on the test clips whose
 sentence never occurs in training ("unseen text"), so memorised prompts can't inflate the headline.
+
+## D-0009 · 2026-10-17 · Stage 3, experiment 1: add FLEURS (R-0005, R-0006, R-0007)
+- Options: next stage 3 step: A) add FLEURS train data / B) bigger model (whisper-medium) / C) real <|xh|> tag /
+  D) augmentation / E) compare with Meta MMS
+- Recommendation: A first. R-0004 plateaued from step 3000 and is weak on unseen sentences (6.2 % vs 2.2 % CER);
+  varied data targets exactly that. FLEURS test (350 sentences, none in any training data) also becomes a second,
+  harder exam. Same recipe as R-0004, one change. ~2.7 h on one on-demand node, about $2.20.
+- Decision: A. Founder: "yes do what you have to do", and asked for a reviewer sub-agent to check the code before launch.
+- Why: founder agreed with the recommendation; independent review before paid compute.
+
+## D-0010 · 2026-10-17 · How FLEURS text is written for training (agent default, founder may override)
+- Finding (reviewer agent): FLEURS's "normalised" transcripts keep hyphens after prefixes before loanwords, names and
+  numbers (i-australia, kwi-intanethi, ka-2009; 2 901 hyphens in train), digits and some punctuation. NCHLT text has none.
+- Options: A) train on the exact scoring form: hyphen -> space, punctuation removed (scoring.normalise) / B) join the
+  hyphenated parts (i-australia -> iaustralia) / C) keep hyphens as written.
+- Choice: A. Training targets then match exactly what is scored on both test sets; such words are rare in NCHLT
+  (48 joined-form and 300 split-form occurrences across NCHLT train+test), so NCHLT comparability is barely affected.
+- Open for the founder: standard isiXhosa orthography writes the hyphen (e-Afrika). If the shipped model should write
+  hyphens, that is a later change to both training text and scoring, as its own experiment.
