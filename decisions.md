@@ -50,3 +50,21 @@ Format:
   (shows what happens today, and records which language it mistakes isiXhosa for).
 - Decision: B, auto-detect. Founder: "you can do it in the cloud and report results here... I trust you".
 - Why: keep the laptop free; founder will read results on a results page.
+
+## D-0007 · 2026-10-17 · Language tag for isiXhosa in the first fine-tune
+- Options: A) reuse Swahili's tag (<|sw|>) / B) add a new <|xh|> token (resize embeddings, new token starts untrained)
+- Recommendation: A. Simple, common practice; in R-0001 Whisper's own top guess was Swahili (876 of 2770 clips)
+  and those clips were closest (CER 40.3 %). B is a clean stage 3 experiment.
+- Decision: A, borrow Swahili's tag.
+- Why: founder chose the recommended option. The model card must say the model emits <|sw|> for isiXhosa.
+
+## D-0008 · 2026-10-17 · Spot or on-demand GPU for the first fine-tune
+- Options: A) spot first, on-demand fallback (~$1-3) / B) on-demand only (~$0.80/h, ~$2-3)
+- Recommendation: A (cheaper; checkpoints every 500 steps make interruptions survivable).
+- Decision: B, on-demand only.
+- Why: founder prefers never being interrupted for a few dollars more (and spot had no capacity on 2026-10-16, P-0003).
+  Checkpoints still go to S3 every 500 steps.
+
+Note 2026-10-17 (finding, not a decision): 1 444 of the 2 066 distinct NCHLT test sentences also occur in the training
+split (read by other speakers). From R-0002 on, every evaluation also reports WER/CER on the test clips whose
+sentence never occurs in training ("unseen text"), so memorised prompts can't inflate the headline.

@@ -39,7 +39,9 @@ for T in $TYPE ${FALLBACK_TYPES:-g5.xlarge g4dn.xlarge}; do   # capacity shortag
     echo "== trying $T ($MARKET) in $SN"
     ID=$(aws ec2 run-instances --image-id "$AMI" --instance-type "$T" "${MKT[@]}" --subnet-id "$SN" \
       --iam-instance-profile Name=mgaguli-render-node --user-data "file://$(P "$TMP/userdata.sh")" \
-      --instance-initiated-shutdown-behavior terminate --metadata-options HttpTokens=required,HttpEndpoint=enabled \
+      --instance-initiated-shutdown-behavior terminate \
+      --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":100,"VolumeType":"gp3","DeleteOnTermination":true}}]' \
+      --metadata-options HttpTokens=required,HttpEndpoint=enabled \
       --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=xhosa-$RUN},{Key=project,Value=isixhosa-speech},{Key=kind,Value=gpu}]" \
       --query 'Instances[0].InstanceId' --output text 2>"$TMP/err") && break 2
     grep -qE "InsufficientInstanceCapacity|Unsupported|MaxSpotInstanceCountExceeded" "$TMP/err" || { cat "$TMP/err"; exit 1; }

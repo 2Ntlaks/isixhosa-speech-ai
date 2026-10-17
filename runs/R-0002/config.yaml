@@ -1,0 +1,12 @@
+run: R-0002
+stage: 2
+what: smoke test of the training pipeline, not a real model
+model: openai/whisper-small
+language_tag: sw (D-0007)
+train: NCHLT xho train split minus 6 dev speakers (seed 42), clips <= 30 s
+steps: 20, then resume to 40   # tests checkpoint + resume
+batch: 16 x 2 gradient accumulation = 32 clips per step
+learning_rate: 1e-5, warmup 5 steps (smoke only), linear decay
+precision: bf16
+eval: 64 dev clips at steps 20 and 40; then 300 test clips (speaker 500 only, first 300)
+machine: g6.xlarge on-demand (D-0008), 100 GB disk, max 1 h

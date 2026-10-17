@@ -70,6 +70,7 @@ def main():
     ap.add_argument("--samples", type=int, default=20)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--train-xml", help="training split; adds scores on test clips whose sentence never occurs in training")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -95,7 +96,9 @@ def main():
             print(f"  {k + len(batch)}/{len(clips)} clips, {time.time() - t0:.0f} s", flush=True)
     secs = time.time() - t0
 
+    seen = {normalise(c["text"]) for c in load_split(a.train_xml, a.root)} if a.train_xml else set()
     for c in clips:
+        c["text_in_training"] = "seen" if normalise(c["text"]) in seen else "unseen"
         s = score([c["text"]], [c["hyp"]])
         c["wer"], c["cer"] = round(s["wer"], 1), round(s["cer"], 1)
         c["exact"] = normalise(c["text"]) == normalise(c["hyp"])
@@ -123,6 +126,7 @@ def main():
         "empty_output_pct": round(100 * sum(not normalise(c["hyp"]) for c in clips) / len(clips), 2),
         "detected_languages": dict(collections.Counter(c["lang"] for c in clips).most_common()),
         "per_speaker": group("speaker"), "per_gender": group("gender"),
+        **({"by_text_in_training": group("text_in_training")} if a.train_xml else {}),
         "normalisation": NORMALISATION, "seconds": round(secs, 1), "batch_size": a.batch_size,
         "env": {**env, "python": platform.python_version()},
     }

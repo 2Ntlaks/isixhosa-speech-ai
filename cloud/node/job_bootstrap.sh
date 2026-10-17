@@ -11,7 +11,7 @@ log_up() { aws s3 cp "$LOG" "$S3/node.log" --only-show-errors || true; }
 finish() { aws s3 sync out "$S3/out/" --only-show-errors; echo "$1" | aws s3 cp - "$S3/$1" || true; log_up; shutdown -h now; exit 0; }
 echo "=== $(date -u +%T) node up · $JOB · commit $COMMIT"
 command -v aws >/dev/null || { curl -s https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/a.zip && cd /tmp && unzip -q a.zip && ./aws/install && cd "$W"; }
-( while sleep 60; do log_up; done ) &
+( n=0; while sleep 60; do log_up; n=$((n + 1)); [ $((n % 5)) -eq 0 ] && aws s3 sync out "$S3/out/" --only-show-errors; done ) &   # progress + checkpoints to S3 every 5 min
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
 
 aws s3 cp "$S3/code.tar.gz" . --only-show-errors && tar xzf code.tar.gz || finish FAILED
