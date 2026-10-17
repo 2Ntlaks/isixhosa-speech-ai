@@ -102,3 +102,17 @@ Format:
 - Cost: ~$0.20.
 - Lesson: when a smoke test finds the set-up that fits, every later step must use it; and model memory scales with
   parameters x ~16 bytes before any data.
+
+## P-0008 · 2026-10-17 · whisper-medium ran out of memory even on a 48 GB GPU (smoke test tried one set-up only)
+- Stage / run: stage 3, R-0009
+- Symptom:
+  ```
+  torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 94.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 61.31 MiB is free.
+  ```
+  at batch 16 x 2 without gradient checkpointing on the L40S.
+- Cause: activations for 16 clips x 30 s of audio through 24 encoder + 24 decoder layers are larger than I estimated
+  (on top of ~12 GB for weights, gradients and optimiser state). And the smoke test tried only that one set-up, so a
+  "no" ended the run instead of moving on to the next option: the same mistake as P-0007.
+- Fix: R-0010 tries both remaining set-ups in one run and keeps the faster one that fits.
+- Cost: ~$0.30.
+- Lesson: a smoke test is for answering "which set-up?", so it should try every candidate, not stop at the first failure.
