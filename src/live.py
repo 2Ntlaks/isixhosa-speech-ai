@@ -1,6 +1,6 @@
 """Talk to the model: a small speech-to-text API and recording page on this laptop (D-0014).
 
-  .venv/Scripts/python src/live.py [--model data/models/R-0012] [--port 7860]
+  .venv/Scripts/python src/live.py [--model R-0012] [--port 7860] [--all-models]
 Then open http://127.0.0.1:7860 and press record. Runs on the CPU; listens on this computer only (127.0.0.1).
 
 API (what the page uses; any program can call it the same way):
@@ -40,7 +40,8 @@ loaded, lock = {}, threading.Lock()
 
 def available():
     """Models whose weights are fully downloaded (the aws CLI only creates model.safetensors when a download completes)."""
-    return sorted(d for d in os.listdir(MODELS) if os.path.isfile(os.path.join(MODELS, d, "model.safetensors")))
+    ready = sorted(d for d in os.listdir(MODELS) if os.path.isfile(os.path.join(MODELS, d, "model.safetensors")))
+    return ready if all_models else [d for d in ready if d == default]  # one model in memory unless --all-models
 
 
 def model(name):
@@ -48,7 +49,7 @@ def model(name):
         path = os.path.join(MODELS, name)
         t = time.time()
         loaded[name] = (WhisperProcessor.from_pretrained(path),
-                        WhisperForConditionalGeneration.from_pretrained(path, torch_dtype=torch.float32).eval())
+                        WhisperForConditionalGeneration.from_pretrained(path, torch_dtype=dtype, low_cpu_mem_usage=True).eval())
         print(f"loaded {name} in {time.time() - t:.0f} s", flush=True)
     return loaded[name]
 
@@ -65,7 +66,7 @@ def decode(data):
 def transcribe(audio, name):
     proc, m = model(name)
     pieces = [audio[i:i + CHUNK] for i in range(0, len(audio), CHUNK)]
-    feats = proc(pieces, sampling_rate=SR, return_tensors="pt").input_features
+    feats = proc(pieces, sampling_rate=SR, return_tensors="pt").input_features.to(dtype)
     with lock, torch.no_grad():  # one recording at a time; the CPU is the bottleneck anyway
         out = m.generate(feats, language="sw", task="transcribe", max_new_tokens=225)  # sw tag, as trained (D-0007)
     return " ".join(t.strip() for t in proc.batch_decode(out, skip_special_tokens=True)).strip()
@@ -135,11 +136,15 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="R-0012", help="folder name in data/models/")
     ap.add_argument("--port", type=int, default=7860)
+    ap.add_argument("--dtype", choices=["bfloat16", "float32"], default="bfloat16",
+                    help="bfloat16 halves memory (medium ~1.6 GB instead of ~3.1 GB); test scores were made in float16 on GPU")
+    ap.add_argument("--all-models", action="store_true",
+                    help="offer every downloaded model (each stays in memory once used: medium ~3 GB, small ~1 GB)")
     a = ap.parse_args()
     if not FFMPEG:
         sys.exit("ffmpeg not found on PATH (needed to read browser recordings)")
-    default = a.model
+    default, all_models, dtype = a.model, a.all_models, getattr(torch, a.dtype)
     model(default)
     transcribe(np.zeros(SR, dtype=np.float32), default)  # warm-up, so the first real recording isn't slow
-    print(f"ready: open http://127.0.0.1:{a.port}  (model {default}, CPU, {torch.get_num_threads()} threads)", flush=True)
+    print(f"ready: open http://127.0.0.1:{a.port}  (model {default}, {a.dtype}, CPU, {torch.get_num_threads()} threads)", flush=True)
     ThreadingHTTPServer(("127.0.0.1", a.port), Handler).serve_forever()
