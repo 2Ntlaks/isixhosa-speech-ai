@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>isiXhosa Speech AI Progress</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, a stage tracker near the top, then the story in time order. Same look as SPEC.html. */
+:root {
+  --paper: #f4efe4; --paper2: #ebe4d4; --ink: #1d1b16; --dim: #6c6455; --rule: #d6ccb6;
+  --ochre: #b8641c; --green: #1f5c45; --red: #a63a2a;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "DM Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+    --ochre: #e0954c; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+  --ochre: #e0954c; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 18.5px/1.62 var(--serif); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 36px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+code, .mono { font-family: var(--mono); font-size: .82em; }
+code { background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+h1 { font-size: clamp(36px, 6.4vw, 60px); line-height: 1.04; font-weight: 600; margin: 10px 0 14px; text-wrap: balance; }
+h1 em { color: var(--ochre); }
+h2 { font-size: 29px; font-weight: 600; margin: 0; text-wrap: balance; }
+h3 { font-size: 21px; margin: 0; }
+.lede { font-size: 21px; margin: 0; max-width: 62ch; }
+section { padding-top: 46px; display: grid; gap: 14px; }
+section > p { margin: 0; max-width: 66ch; }
+.sub { color: var(--dim); }
+figure { margin: 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: #fdfdfc; }
+figcaption { font-family: var(--mono); font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+/* stage tracker */
+.stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 26px; }
+.st { border-top: 4px solid var(--rule); padding-top: 8px; display: grid; gap: 2px; align-content: start; min-width: 0; }
+.st b { font-size: 16px; line-height: 1.25; }
+.st span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.st.done { border-color: var(--green); } .st.done span { color: var(--green); }
+.st.now { border-color: var(--ochre); } .st.now span { color: var(--ochre); }
+
+/* "right now" box */
+.now-box { border: 1px solid var(--ochre); background: var(--paper2); padding: 18px 22px; display: grid; gap: 10px; }
+.now-box ol { margin: 0; padding-left: 22px; display: grid; gap: 4px; }
+.now-box li.on { font-weight: 600; }
+.now-box li.on::marker { color: var(--ochre); }
+
+/* timeline */
+.tl { display: grid; gap: 0; border-left: 2px solid var(--rule); margin-left: 6px; }
+.ev { padding: 0 0 22px 22px; position: relative; display: grid; gap: 4px; }
+.ev::before { content: ""; position: absolute; left: -7px; top: 9px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--paper); border: 2px solid var(--ink); }
+.ev.ok::before { border-color: var(--green); background: var(--green); }
+.ev.bad::before { border-color: var(--red); background: var(--red); }
+.ev .when { font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: .06em; }
+.ev p { margin: 0; max-width: 64ch; }
+
+/* results */
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  font-weight: 500; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.big { font-size: 20px; font-weight: 600; }
+.scroll { overflow-x: auto; }
+.pending { color: var(--dim); font-style: italic; }
+
+.ex { background: var(--paper2); border: 1px solid var(--rule); padding: 14px 18px; display: grid; gap: 6px; font-size: 17px; }
+.ex .k { font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
+
+dl { margin: 0; display: grid; grid-template-columns: 190px minmax(0, 1fr); }
+dt { font-family: var(--mono); font-size: 14px; color: var(--green); padding: 10px 12px 10px 0; border-top: 1px solid var(--rule); }
+dd { margin: 0; padding: 9px 0; border-top: 1px solid var(--rule); font-size: 17px; }
+
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.card { border: 1px solid var(--rule); padding: 14px 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.card .id { font-family: var(--mono); font-size: 12px; color: var(--ochre); }
+.card p { margin: 0; font-size: 16.5px; }
+.card .lesson { color: var(--dim); font-style: italic; }
+
+.money { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.money div { padding: 14px 16px 16px 0; display: grid; gap: 2px; }
+.money div + div { padding-left: 16px; border-left: 1px solid var(--rule); }
+.money b { font-size: 34px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.money span { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ochre); }
+.money p { margin: 0; font-size: 15px; color: var(--dim); }
+
+footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+@media (max-width: 680px) {
+  body { font-size: 17.5px; }
+  .stages { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .st b { font-size: 13px; }
+  .cards, .money { grid-template-columns: 1fr; }
+  .money div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+  dl { grid-template-columns: 1fr; } dd { border-top: 0; padding-top: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">isiXhosa Speech AI · progress so far · updated 17 October 2026, morning</div>
+  <h1>Teaching an AI to hear <em>isiXhosa</em></h1>
+  <p class="lede">Whisper is a free speech-to-text model from OpenAI that understands 99 languages, but not isiXhosa. We are teaching it isiXhosa using 56 hours of recorded speech, on a computer rented from Amazon by the hour. You make the decisions; Claude Code agents write and run everything. This page is the story so far, in plain words.</p>
+
+  <div class="stages" aria-label="The five stages">
+    <div class="st done"><span>Done</span><b>1 · Watch it fail</b></div>
+    <div class="st now"><span>Running now</span><b>2 · First training</b></div>
+    <div class="st"><span>Next</span><b>3 · Make it better</b></div>
+    <div class="st"><span>Later</span><b>4 · Your voice, mixed with English</b></div>
+    <div class="st"><span>Last</span><b>5 · Share it</b></div>
+  </div>
+
+  <section>
+    <h2>What is happening right now</h2>
+    <div class="now-box">
+      <p>One rented GPU computer in the USA (an NVIDIA L4) is working through this list. It started at 09:31 your time and switches itself off when done, after 4 hours at most.</p>
+      <ol>
+        <li>Set up and a 2-minute safety test, to make sure nothing is broken before the long part.</li>
+        <li>Copy the 46,651 isiXhosa audio clips from our storage onto the computer.</li>
+        <li class="on">R-0003: test plain Whisper again, but tell it "this is Swahili" so it stops guessing languages. This measures how much of the improvement comes from that alone.</li>
+        <li class="on">R-0004: the real training. Whisper listens to 51 hours of isiXhosa from 195 speakers, about 3 times over (~1.8 hours).</li>
+        <li>Final exam: 2,770 clips from 8 speakers it has never heard.</li>
+      </ol>
+      <p class="sub">Expected finish: about 11:40 your time. Expected cost: about $1.85.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The plan on one page</h2>
+    <figure><img src="roadmap.png" alt="Roadmap: speech data and Whisper go into fine-tuning on an AWS GPU to produce your model; five stages from baseline to shipping"><figcaption>The whole project. Five stages, each ends with something you can show.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>What happened, in order</h2>
+    <div class="tl">
+      <div class="ev ok"><span class="when">16 Oct · morning</span><h3>Project set up</h3><p>Spec, roadmap drawing, and a record-keeping system: every run, problem and decision is written down as it happens, so the final write-up can point to real evidence.</p></div>
+      <div class="ev ok"><span class="when">16 Oct · afternoon</span><h3>Your decisions</h3><p>You speak isiXhosa, so stage 4 can use your own voice and you can judge the model's mistakes by ear. You chose to keep the data in the cloud, not on your laptop, and accepted the NCHLT data licence (free to use if we credit its creators).</p></div>
+      <div class="ev ok"><span class="when">16 Oct · evening</span><h3>Data downloaded straight into the cloud</h3><p>Two small temporary computers fetched the two datasets into private Amazon storage in about 15 minutes, then switched themselves off: NCHLT (56 hours, about 200 speakers) and Google FLEURS (extra isiXhosa). Every file has a fingerprint (checksum) to prove it arrived intact.</p></div>
+      <div class="ev ok"><span class="when">16 Oct · evening</span><h3>Stage 1: plain Whisper failed, as expected (R-0001)</h3><p>It got about 3 of every 4 letters wrong, guessed 52 different languages, and wrote 30% of its answers in the wrong alphabet. But it often heard the sounds roughly right; it just can't spell isiXhosa.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 08:30</span><h3>Your choices for training</h3><p>Borrow Swahili's "language label" for isiXhosa (Whisper has none), and use regular, never-interrupted GPU computers.</p></div>
+      <div class="ev bad"><span class="when">17 Oct · 08:53</span><h3>Test run failed: a missing piece of software (R-0002, try 1)</h3><p>The small rehearsal run stopped at the first training step because one library was not installed. Cost about $0.11. Fixed, and a 2-minute safety test now runs first, so mistakes like this get caught early and cheaply.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 09:12</span><h3>Test run worked end to end (R-0002, try 2)</h3><p>Trained 40 tiny steps, stopped, restarted from the saved copy, scored itself. Measured speed: 1.65 seconds per step, which is how we priced the real run. Even 40 steps cut letter errors on one speaker from 60% to 17%.</p></div>
+      <div class="ev"><span class="when">17 Oct · 09:31</span><h3>The real training started (R-0003 + R-0004)</h3><p>Running now. See the box above.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Results so far</h2>
+    <p>Two scores, both "lower is better". <b>CER</b> counts wrong letters, <b>WER</b> counts wrong words. For isiXhosa, CER is the fairer one: words are long, so a single wrong letter makes the whole word count as wrong.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Run</th><th>What</th><th>Letters wrong (CER)</th><th>Words wrong (WER)</th></tr></thead>
+        <tbody>
+          <tr><td class="n">R-0001</td><td>Plain Whisper, guessing the language itself. All 2,770 test clips.</td><td class="n big">75.1%</td><td class="n">196.6%</td></tr>
+          <tr><td class="n">R-0002</td><td>Rehearsal only: 40 tiny training steps, one speaker, 300 clips. Not a real result.</td><td class="n">16.8%</td><td class="n">77.5%</td></tr>
+          <tr><td class="n">R-0003</td><td>Plain Whisper told "this is Swahili". No training.</td><td class="pending">running</td><td class="pending">running</td></tr>
+          <tr><td class="n">R-0004</td><td>Whisper trained on 51 hours of isiXhosa.</td><td class="pending">~11:40</td><td class="pending">~11:40</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Why can WER go above 100%? Whisper chops long isiXhosa words into pieces, and every extra piece counts as one more error.</p>
+    <div class="ex">
+      <span class="k">One real clip, speaker 500</span>
+      <div><b>What was said:</b> esalika ekhayeni lakhe</div>
+      <div><b>Plain Whisper:</b> Esa lika ekayeni lakia.</div>
+      <div><b>After 40 training steps:</b> esalika ekhaenilake</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the training works</h2>
+    <figure><img src="stage2.png" alt="Stage 2: speakers split into train, dev and test; a training step is listen, guess, compare, nudge, repeated 4000 times; learning rate warms up then decreases; a checkpoint every 500 steps saved to S3"><figcaption>Listen → guess → compare → nudge, repeated 4,000 times. Every 500 steps, a check on 6 held-out speakers and a saved copy.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Words you'll keep hearing</h2>
+    <dl>
+      <dt>Fine-tuning</dt><dd>Taking a model that already knows a lot (Whisper) and continuing to train it on new data (isiXhosa), instead of starting from zero.</dd>
+      <dt>Language tag</dt><dd>The first thing Whisper writes for every clip: which language it is. isiXhosa has no tag, so we borrow Swahili's (decision D-0007).</dd>
+      <dt>Train / dev / test</dt><dd>Train speakers are who it learns from. Dev speakers are a quiz to pick the best saved copy. Test speakers are the final exam, never seen during training.</dd>
+      <dt>Seen vs unseen</dt><dd>82% of test clips use sentences that other people also read in the training data. We report a separate score on the unseen sentences, because that's the honest measure of real understanding.</dd>
+      <dt>Checkpoint</dt><dd>A saved copy of the model partway through training, so a crash doesn't lose everything and we can keep the best one.</dd>
+      <dt>Overfitting</dt><dd>When the model memorises the training speakers instead of learning the language. Shows up as the dev score getting worse while training continues.</dd>
+      <dt>GPU</dt><dd>The kind of chip that makes AI training fast. We rent one by the hour from Amazon (about $0.80/hour).</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Problems we hit, and what they taught us</h2>
+    <div class="cards">
+      <div class="card"><span class="id">P-0001</span><h3>No progress bar on a download</h3><p>A 15-minute download said nothing until it finished. Now every long job reports progress.</p><p class="lesson">Long cloud jobs must report on themselves.</p></div>
+      <div class="card"><span class="id">P-0002</span><h3>Couldn't look inside the GPU computers</h3><p>Fixed: agents can now run checks on a running machine without opening it to the internet.</p><p class="lesson">Decide how you'll get inside before you need to.</p></div>
+      <div class="card"><span class="id">P-0003</span><h3>No discounted GPUs available</h3><p>Amazon's cheap "spot" computers were all taken, so we used a regular one.</p><p class="lesson">Cheap capacity isn't guaranteed.</p></div>
+      <div class="card"><span class="id">P-0004</span><h3>Windows hid a character in file names</h3><p>An invisible line-ending character made files look missing. Fixed in the script.</p><p class="lesson">Windows and Linux tools disagree about invisible characters.</p></div>
+      <div class="card"><span class="id">P-0005</span><h3>A missing software library</h3><p>The rehearsal caught it before the expensive run. A 2-minute safety test now runs first.</p><p class="lesson">The cheapest place to find a bug is the smallest run.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Money</h2>
+    <div class="money">
+      <div><span>Spent so far</span><b>~$0.64</b><p>Data download, stage 1, two rehearsal runs.</p></div>
+      <div><span>Running now</span><b>~$1.85</b><p>The real training, hard limit 4 hours (~$3.20 at most).</p></div>
+      <div><span>Project budget</span><b>$15–30</b><p>Out of about $133 of AWS credits. Storage adds about $0.22 a month.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What comes next</h2>
+    <p>When training finishes, you get a results page comparing plain Whisper, Whisper told "Swahili", and trained Whisper, plus 20 clips to judge by ear. Then stage 3: one improvement at a time (cleaner text, more data from FLEURS, a bigger model, a real isiXhosa language tag), each measured against the same test speakers.</p>
+    <p class="sub">Still open for you: listen to a few clips in <code>data/listen/R-0001/</code> and tell me if the problem sounds like spelling or word boundaries. A Hugging Face account is only needed at stage 5.</p>
+  </section>
+
+  <footer>Every number here comes from a run in runs/R-xxxx/ and results.md · decisions D-0001…D-0008 in decisions.md · problems P-0001…P-0005 in problems.md · data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0) and Google FLEURS.</footer>
+</div>
+</body>
+</html>
