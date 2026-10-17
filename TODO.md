@@ -37,7 +37,8 @@ Where we are: stage 3 is done. Best model **R-0012** (whisper-medium): 8.0 % let
       paste them to me.
 - [ ] Hugging Face account (needed for stage 5: publishing R-0012 and putting Thetha online for your phone).
 
-## Parked (decided, later)
+## Future work
 
-- isiXhosa -> English translation: train Whisper itself on FLEURS isiXhosa audio + official English text (D-0015),
-  after stage 4 has started. ~$4 GPU run.
+- **isiXhosa -> English translation** (D-0015): train Whisper itself on FLEURS isiXhosa audio + the official English
+  text, after stage 4. ~$4 GPU run. Measure against FLEURS's English before showing it; launch it labelled
+  "English, experimental" next to transcription, never instead of it.
