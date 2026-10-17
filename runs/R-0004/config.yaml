@@ -1,0 +1,15 @@
+run: R-0004
+stage: 2
+what: first real fine-tune
+model: openai/whisper-small (244M parameters, all trained)
+language_tag: sw (D-0007)
+train: NCHLT xho train split minus 6 dev speakers (005 023 066 077 173 192, seed 42), clips <= 30 s: 42 269 clips, 51.2 h, 195 speakers
+dev: 600 clips from the 6 dev speakers, scored every 500 steps; best dev CER is kept
+test: NCHLT xho test split, all 2 770 clips, 8 speakers (500-507), never used in training; also split seen/unseen sentences
+steps: 4000 (~3 passes over the training data)
+batch: 16 x 2 gradient accumulation = 32 clips per step
+learning_rate: 1e-5, warmup 500 steps, linear decay to 0
+precision: bf16
+checkpoints: every 500 steps, 2 kept, synced to S3 every 5 min; final model to s3://.../models/R-0004/
+machine: g6.xlarge on-demand (D-0008), 100 GB disk, max 4 h
+measured speed (R-0002): 1.65 s/step -> ~1.8 h of training, ~2.3 h machine time in total, about $1.85

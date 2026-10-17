@@ -1,0 +1,4 @@
+300 clips, 0.30 h, 1 speakers
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+  32/300 clips, 1 s
+{"wer": 77.47, "cer": 16.75, "exact_match_pct": 4.0, "detected_languages": {"sw": 300}, "seconds": 11.0}

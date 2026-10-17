@@ -15,5 +15,17 @@
 - Fix: accelerate==1.1.1 added to requirements-gpu.txt; new runs/preflight.sh (2 training steps on 4 speakers
   before the full download) so this class of error costs ~3 min instead of ~8.
 
-## Attempt 2
-(filled in after the run)
+## Attempt 2 · 2026-10-17 07:12 UTC · DONE (commit 08971f3)
+- Preflight OK (2 steps on 4 speakers, saved and reloaded) about 3 min after boot. Full data sync ~6 min.
+- Part 1: 20 steps from the stock model, checkpoint-20 saved. Part 2: "resuming from out/model/checkpoints/checkpoint-20",
+  continued to 40 steps. Resume works.
+- **Speed: 1.65 s per step** (32 clips per step) on the L4, steady. Batch 16 x 2 fits in memory.
+- Dev CER (64 clips): 20.2 % after 20 steps, 18.3 % after 40. Test, first 300 clips (all speaker 500):
+  WER 77.5 %, CER 16.8 % (R-0001 on the same speaker: WER 161.7 %, CER 60.0 %).
+- **Surprise:** the 2-step preflight model already scored dev CER 25.8 % (16 clips). That much improvement can't come
+  from 2 tiny training steps, so most of the jump must come from *forcing the <|sw|> tag* (no wrong-language or
+  wrong-script guesses), not from learning. Follow-up: R-0003 scores the stock model with the tag forced, so stage 2's
+  real gain is measured against a fair baseline.
+- Harmless messages: "missing keys ['proj_out.weight']" (output layer shares weights with the input embeddings, so it
+  isn't stored separately); torch.load / tokenizer deprecation warnings.
+- Machine time ~12 min, about $0.16. Checkpoints and smoke model in S3 under jobs/R-0002/out/model/ (expire in 30 days).

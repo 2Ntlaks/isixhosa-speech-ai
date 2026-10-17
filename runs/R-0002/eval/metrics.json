@@ -1,0 +1,50 @@
+{
+  "model": "out/model/final",
+  "language": "sw",
+  "test_set": "nchlt_xho.tst.xml",
+  "clips": 300,
+  "audio_hours": 0.3,
+  "wer": 77.47,
+  "cer": 16.75,
+  "exact_match_pct": 4.0,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 300
+  },
+  "per_speaker": {
+    "500": {
+      "wer": 77.5,
+      "cer": 16.7,
+      "n": 300
+    }
+  },
+  "per_gender": {
+    "male": {
+      "wer": 77.5,
+      "cer": 16.7,
+      "n": 300
+    }
+  },
+  "by_text_in_training": {
+    "seen": {
+      "wer": 77.4,
+      "cer": 16.7,
+      "n": 299
+    },
+    "unseen": {
+      "wer": 100.0,
+      "cer": 41.7,
+      "n": 1
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 11.0,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L4",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}

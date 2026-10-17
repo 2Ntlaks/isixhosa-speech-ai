@@ -1,0 +1,23 @@
+{"train_clips": 42269, "train_hours": 51.2, "train_speakers": 195, "dev_speakers": ["005", "023", "066", "077", "173", "192"], "dev_clips_scored": 64, "dropped_over_max_seconds": 6}
+max_steps is given, it will override any value given in num_train_epochs
+starting from the stock model
+  0%|          | 0/20 [00:00<?, ?it/s]Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+  5%|▌         | 1/20 [00:02<00:52,  2.77s/it] 10%|█         | 2/20 [00:04<00:37,  2.06s/it] 15%|█▌        | 3/20 [00:05<00:31,  1.86s/it] 20%|██        | 4/20 [00:07<00:28,  1.76s/it] 25%|██▌       | 5/20 [00:09<00:25,  1.71s/it] 30%|███       | 6/20 [00:10<00:23,  1.68s/it] 35%|███▌      | 7/20 [00:12<00:21,  1.67s/it] 40%|████      | 8/20 [00:14<00:19,  1.65s/it] 45%|████▌     | 9/20 [00:15<00:18,  1.65s/it] 50%|█████     | 10/20 [00:17<00:16,  1.64s/it] 55%|█████▌    | 11/20 [00:18<00:14,  1.64s/it] 60%|██████    | 12/20 [00:20<00:13,  1.64s/it] 65%|██████▌   | 13/20 [00:22<00:11,  1.64s/it] 70%|███████   | 14/20 [00:23<00:09,  1.64s/it] 75%|███████▌  | 15/20 [00:25<00:08,  1.64s/it] 80%|████████  | 16/20 [00:27<00:06,  1.64s/it] 85%|████████▌ | 17/20 [00:28<00:04,  1.64s/it] 90%|█████████ | 18/20 [00:30<00:03,  1.64s/it] 95%|█████████▌| 19/20 [00:32<00:01,  1.65s/it]100%|██████████| 20/20 [00:33<00:00,  1.65s/it]The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+  0%|          | 0/2 [00:00<?, ?it/s][ATrainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+100%|██████████| 2/2 [00:02<00:00,  1.24s/it][A                                               
+                                             [A100%|██████████| 20/20 [00:41<00:00,  1.65s/it]
+100%|██████████| 2/2 [00:04<00:00,  1.24s/it][A
+                                             [A/opt/work/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:2817: UserWarning: Moving the following attributes in the config to the generation config: {'max_length': 448, 'suppress_tokens': [1, 2, 7, 8, 9, 10, 14, 25, 26, 27, 28, 29, 31, 58, 59, 60, 61, 62, 63, 90, 91, 92, 93, 359, 503, 522, 542, 873, 893, 902, 918, 922, 931, 1350, 1853, 1982, 2460, 2627, 3246, 3253, 3268, 3536, 3846, 3961, 4183, 4667, 6585, 6647, 7273, 9061, 9383, 10428, 10929, 11938, 12033, 12331, 12562, 13793, 14157, 14635, 15265, 15618, 16553, 16604, 18362, 18956, 20075, 21675, 22520, 26130, 26161, 26435, 28279, 29464, 31650, 32302, 32470, 36865, 42863, 47425, 49870, 50254, 50258, 50360, 50361, 50362], 'begin_suppress_tokens': [220, 50257]}. You are seeing this warning because you've set generation parameters in the model config, as opposed to in the generation config.
+  warnings.warn(
+There were missing keys in the checkpoint model loaded: ['proj_out.weight'].
+                                               100%|██████████| 20/20 [00:47<00:00,  1.65s/it]100%|██████████| 20/20 [00:47<00:00,  2.37s/it]
+{'eval_loss': 1.3520129919052124, 'eval_wer': 88.54, 'eval_cer': 20.16, 'eval_runtime': 7.962, 'eval_samples_per_second': 8.038, 'eval_steps_per_second': 0.251, 'epoch': 0.02}
+{'train_runtime': 47.4463, 'train_samples_per_second': 13.489, 'train_steps_per_second': 0.422, 'train_loss': 2.0577651977539064, 'epoch': 0.02}
+{"best_checkpoint": "out/model/checkpoints/checkpoint-20", "best_dev_cer": 20.16}

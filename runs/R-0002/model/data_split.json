@@ -1,0 +1,15 @@
+{
+  "train_clips": 42269,
+  "train_hours": 51.2,
+  "train_speakers": 195,
+  "dev_speakers": [
+    "005",
+    "023",
+    "066",
+    "077",
+    "173",
+    "192"
+  ],
+  "dev_clips_scored": 64,
+  "dropped_over_max_seconds": 6
+}
