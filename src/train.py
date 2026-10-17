@@ -108,6 +108,12 @@ def main():
     ap.add_argument("--fleurs-tsv", help="extra training data: a FLEURS split .tsv (added to train only, never to dev)")
     ap.add_argument("--fleurs-audio", help="folder holding that FLEURS split's .wav files")
     ap.add_argument("--generation-max-length", type=int, default=225)
+    ap.add_argument("--fleurs-dev-tsv", help="also score FLEURS dev clips at each evaluation (information only;"
+                    " the best checkpoint is still chosen on NCHLT dev, as in earlier runs)")
+    ap.add_argument("--fleurs-dev-audio")
+    ap.add_argument("--fleurs-dev-clips", type=int, default=200)
+    ap.add_argument("--gradient-checkpointing", action="store_true",
+                    help="recompute activations instead of storing them: less GPU memory, ~30%% slower")
     ap.add_argument("--only-existing", action="store_true",
                     help="use only clips whose audio is on disk (preflight with a few speakers downloaded)")
     a = ap.parse_args()
@@ -128,10 +134,19 @@ def main():
         if a.only_existing:
             extra = [c for c in extra if os.path.exists(c["path"])]
         train = train + extra
+    fleurs_dev = []
+    if a.fleurs_dev_tsv:
+        fd = fleurs.load_split(a.fleurs_dev_tsv, a.fleurs_dev_audio)
+        for c in fd:
+            c["text"] = normalise(c["text"])
+        fd = [c for c in fd if c["duration"] <= a.max_seconds and c["text"]]
+        fleurs_dev = random.Random(a.seed).sample(fd, min(a.fleurs_dev_clips, len(fd)))
     info = {"train_clips": len(train), "train_hours": round(sum(c["duration"] for c in train) / 3600, 2),
             "train_speakers": len({c["speaker"] for c in train}), "dev_speakers": dev_speakers,
             "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips),
-            "fleurs_train_clips": len(extra), "fleurs_dropped_over_max_seconds": fleurs_dropped, "fleurs_train_hours": round(sum(c["duration"] for c in extra) / 3600, 2)}
+            "fleurs_train_clips": len(extra), "fleurs_dropped_over_max_seconds": fleurs_dropped, "fleurs_train_hours": round(sum(c["duration"] for c in extra) / 3600, 2),
+            "fleurs_dev_clips_scored": len(fleurs_dev), "model": a.model, "batch_size": a.batch_size,
+            "grad_accum": a.grad_accum, "gradient_checkpointing": a.gradient_checkpointing}
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
@@ -142,6 +157,8 @@ def main():
     model.generation_config.task = "transcribe"
     model.generation_config.forced_decoder_ids = None
     model.config.forced_decoder_ids = None
+    if a.gradient_checkpointing:
+        model.config.use_cache = False  # the decoder cache can't be used while recomputing activations
 
     def compute_metrics(pred):
         ids = pred.predictions
@@ -159,10 +176,11 @@ def main():
         per_device_eval_batch_size=32, learning_rate=a.lr, warmup_steps=a.warmup, max_steps=a.max_steps,
         lr_scheduler_type="linear", bf16=torch.cuda.is_available(), eval_strategy="steps", eval_steps=a.eval_every,
         save_strategy="steps", save_steps=a.eval_every, save_total_limit=2, load_best_model_at_end=True,
-        metric_for_best_model="cer", greater_is_better=False, predict_with_generate=True, generation_max_length=a.generation_max_length,
+        metric_for_best_model="nchlt_cer" if fleurs_dev else "cer", greater_is_better=False,
+        gradient_checkpointing=a.gradient_checkpointing, predict_with_generate=True, generation_max_length=a.generation_max_length,
         logging_steps=25, report_to="none", dataloader_num_workers=4, remove_unused_columns=False,
         label_names=["labels"], seed=a.seed)
-    trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc), eval_dataset=Clips(dev, proc),
+    trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc), eval_dataset={"nchlt": Clips(dev, proc), "fleurs": Clips(fleurs_dev, proc)} if fleurs_dev else Clips(dev, proc),
                              data_collator=Collator(proc, model.config.decoder_start_token_id),
                              compute_metrics=compute_metrics, processing_class=proc.feature_extractor)
     resume = last_checkpoint(ckpts)
@@ -174,8 +192,11 @@ def main():
     proc.save_pretrained(final)
     with open(os.path.join(a.out, "log_history.json"), "w") as f:
         json.dump(trainer.state.log_history, f, indent=1)
+    steps = trainer.state.global_step
     print(json.dumps({"best_checkpoint": trainer.state.best_model_checkpoint,
-                      "best_dev_cer": trainer.state.best_metric}), flush=True)
+                      "best_dev_cer": trainer.state.best_metric, "steps": steps,
+                      "peak_gpu_memory_gb": round(torch.cuda.max_memory_allocated() / 1e9, 2) if torch.cuda.is_available() else None}),
+          flush=True)
 
 
 if __name__ == "__main__":

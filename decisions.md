@@ -87,3 +87,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   (48 joined-form and 300 split-form occurrences across NCHLT train+test), so NCHLT comparability is barely affected.
 - Open for the founder: standard isiXhosa orthography writes the hyphen (e-Afrika). If the shipped model should write
   hyphens, that is a later change to both training text and scoring, as its own experiment.
+
+## D-0011 · 2026-10-17 · Stage 3, experiment 2: whisper-medium
+- Options: A) whisper-medium on NCHLT + FLEURS (one change vs R-0007: model size) / B) move on to stage 4 or 5 with R-0007
+- Recommendation: A, then stage 4. Larger models usually give the biggest single gain; English words inside isiXhosa are
+  the main remaining weakness, which stage 4 targets.
+- Decision: A. Founder: "yes go with whisper-medium".
+- Plan: smoke test R-0008 (~$0.40) to measure memory and speed; the real full-run time and cost go to the founder
+  before it starts. Same data, steps (4000 x 32 clips), learning rate (1e-5) and checkpoint rule as R-0007. FLEURS dev
+  is added as an information-only second dev check (selection stays on NCHLT dev, so it is not a second change).
