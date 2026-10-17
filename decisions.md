@@ -123,3 +123,15 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Notes: the server listens on 127.0.0.1 only. Recordings and the founder's corrections are kept (if the page's "keep"
   box is ticked) in data/my_voice/live/ (gitignored, never uploaded); corrections are the founder's own transcripts,
   usable as stage 4 test material. Local disk: ~4 GB for the two models in data/models/ plus ~1 GB for .venv.
+
+## D-0015 · 2026-10-17 · isiXhosa -> English translation: train Whisper to do it, later
+- Finding: R-0012 ignores Whisper's <|translate|> task and still writes isiXhosa (checked on 3 NCHLT clips); fine-tuning
+  only ever showed it the transcribe task.
+- Options: A) two steps on the laptop: transcript -> Meta NLLB-200 text translation (non-commercial licence) /
+  A2) same with Helsinki opus-mt-xh-en (CC BY 4.0, weaker) / B) fine-tune Whisper itself for speech -> English
+  (translate task) / C) Claude API as translator (text leaves the laptop; credits check).
+- Recommendation: A now, B later. Decision: B, later. Founder: "we will train it later to do that".
+- Plan notes for B: FLEURS reads the same FLoRes sentences in every language, so xh_za audio pairs with the official
+  en_us text by sentence id (~3.4k training clips, 13 h): training data and an honest test (BLEU/chrF on FLEURS test).
+  Train translate and transcribe together so transcription doesn't get worse; one change per run; GPU run ~$4.
+  Not before stage 4 has started.
