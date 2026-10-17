@@ -87,3 +87,18 @@ Format:
   use `grep --line-buffered` and `PYTHONUNBUFFERED=1`.
 - Cost: none; visibility only.
 - Lesson: check that a long job's progress is visible during the first minute, not after.
+
+## P-0007 · 2026-10-17 · whisper-medium does not fit the L4 GPU; my smoke test's last check used the wrong set-up
+- Stage / run: stage 3, R-0008
+- Symptom:
+  ```
+  torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 94.00 MiB. GPU 0 has a total capacity of 22.04 GiB of which 35.12 MiB is free. Including non-PyTorch memory, this process has 21.99 GiB memory in use.
+  ```
+  at batch 16 x 2 and at batch 8 x 4. Only gradient checkpointing fit (17.4 GB) and it was slow (~9 s/step, ~10 h for a full run).
+  The two-dev-set check then ran at batch 8 x 4 *without* checkpointing, ran out of memory, and stopped the job.
+- Cause: training needs weights, gradients and two Adam averages per weight (~12 GB for 769M parameters in fp32)
+  plus activations for 30 s of audio per clip. The last check's settings were mine: I didn't reuse the set-up that fit.
+- Fix: R-0009 on a 48 GB L40S (D-0012); every part of the smoke test now uses the same batch set-up.
+- Cost: ~$0.20.
+- Lesson: when a smoke test finds the set-up that fits, every later step must use it; and model memory scales with
+  parameters x ~16 bytes before any data.

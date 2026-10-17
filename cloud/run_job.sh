@@ -34,7 +34,7 @@ MKT=()
 [ "$MARKET" = spot ] && MKT=(--instance-market-options '{"MarketType":"spot","SpotOptions":{"SpotInstanceType":"one-time","InstanceInterruptionBehavior":"terminate"}}')
 SUBNETS=$(aws ec2 describe-subnets --filters Name=default-for-az,Values=true --query 'Subnets[].SubnetId' --output text)
 ID=""
-for T in $TYPE ${FALLBACK_TYPES:-g5.xlarge g4dn.xlarge}; do   # capacity shortages are common: try other GPU types
+for T in $TYPE ${FALLBACK_TYPES-g5.xlarge g4dn.xlarge}; do   # other GPU types if short (FALLBACK_TYPES="" = none)
   for SN in $SUBNETS; do                                      # ...and every availability zone
     echo "== trying $T ($MARKET) in $SN"
     ID=$(aws ec2 run-instances --image-id "$AMI" --instance-type "$T" "${MKT[@]}" --subnet-id "$SN" \

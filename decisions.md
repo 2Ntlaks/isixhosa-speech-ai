@@ -96,3 +96,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Plan: smoke test R-0008 (~$0.40) to measure memory and speed; the real full-run time and cost go to the founder
   before it starts. Same data, steps (4000 x 32 clips), learning rate (1e-5) and checkpoint rule as R-0007. FLEURS dev
   is added as an information-only second dev check (selection stays on NCHLT dev, so it is not a second change).
+
+## D-0012 · 2026-10-17 · How to train whisper-medium
+- Finding (R-0008): on the 24 GB L4, medium fits only with gradient checkpointing, ~9 s/step: ~10 h, ~$8.50, over the 6 h cap.
+- Options: A) NVIDIA L40S 48 GB (g6e.xlarge, $1.861/h): no checkpointing, est. ~3x faster, ~3 h, ~$6, after a ~$0.50 smoke
+  test / B) L4 overnight, ~10 h, ~$8.50, cap raised to 11 h / C) skip medium, go to stage 4 or 5 with R-0007.
+- Recommendation: A. Decision: A (founder).
+- Note: the mgaguli-gpu-monthly brake ($20, EC2 compute before credits) showed $7.61 on 2026-10-17 with billing lag;
+  after this experiment the month will be near $16-18. Further GPU work this month may need the founder to raise it.
