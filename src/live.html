@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thetha · Speak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12100d; --bg2:#1b1712; --card:#201b15; --ink:#f3ead9; --soft:#b5aa96; --faint:#6f6656; --line:#332b21;
+  --ember:#e2732b; --ember2:#ffb067; --green:#5cc79b; --red:#ff7a6b;
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;min-height:100vh;color:var(--ink);font:17px/1.55 Figtree,"Segoe UI",sans-serif;
+  background:radial-gradient(1200px 600px at 50% -10%, #3a2614 0%, transparent 60%), radial-gradient(circle at 1px 1px, #ffffff0a 1px, transparent 0) 0 0/24px 24px, var(--bg)}
+.wrap{max-width:860px;margin:0 auto;padding:40px 16px 80px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.brand{font:400 15px "JetBrains Mono",monospace;color:var(--ember2);letter-spacing:.08em;text-transform:uppercase}
+.brand b{color:var(--ink);font-weight:600}
+h1{font:400 clamp(44px,9vw,84px)/.95 "Instrument Serif",Georgia,serif;margin:22px 0 8px;letter-spacing:-.01em}
+h1 i{color:var(--ember)}
+.lede{color:var(--soft);max-width:600px;margin:0}
+
+.models{display:flex;gap:6px;flex-wrap:wrap}
+.m{border:1px solid var(--line);background:var(--bg2);color:var(--soft);border-radius:999px;padding:6px 14px;font:600 13px Figtree,sans-serif;cursor:pointer}
+.m small{font-weight:400;color:var(--faint)}
+.m[aria-pressed="true"]{border-color:var(--ember);color:var(--ink);background:#e2732b22}
+.m:focus-visible,.rec:focus-visible,.btn:focus-visible{outline:3px solid var(--ember2);outline-offset:3px}
+
+.stage{display:grid;place-items:center;margin:44px 0 18px;position:relative}
+.ring{position:absolute;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle, #e2732b55 0%, #e2732b00 70%);
+  transform:scale(var(--lvl,1));transition:transform .08s linear;pointer-events:none}
+.rec{position:relative;width:150px;height:150px;border-radius:50%;border:0;cursor:pointer;color:#1a0f05;
+  background:radial-gradient(circle at 35% 30%, var(--ember2), var(--ember) 60%, #b4531a);
+  box-shadow:0 0 0 10px #e2732b1a, 0 24px 50px -20px #e2732baa, inset 0 -6px 14px #0000002a;transition:transform .15s, border-radius .25s}
+.rec:hover{transform:scale(1.03)}
+.rec .ic{display:block;width:44px;height:44px;margin:auto;background:#1a0f05;border-radius:50%;transition:border-radius .25s,width .25s,height .25s}
+.rec.on .ic{border-radius:8px;width:40px;height:40px}
+.rec.busy{filter:saturate(.4) brightness(.8);cursor:progress}
+.status{font:600 14px "JetBrains Mono",monospace;color:var(--soft);text-align:center;min-height:1.6em;margin-top:18px}
+.status .t{color:var(--ink)}
+.status.err{color:var(--red)}
+.dots::after{content:"";animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+.hint{text-align:center;color:var(--faint);font-size:13px;margin:4px 0 0}
+.hint kbd{font:12px "JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--soft)}
+
+.keep{display:flex;justify-content:center;align-items:center;gap:8px;margin:18px 0 34px;color:var(--soft);font-size:14px}
+.keep input{accent-color:var(--ember);width:16px;height:16px}
+
+.out{display:grid;gap:14px}
+.res{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;animation:rise .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.res .txt{font:400 clamp(24px,4.4vw,34px)/1.2 "Instrument Serif",Georgia,serif;overflow-wrap:anywhere;margin:0 0 10px}
+.res .txt.none{color:var(--faint);font-style:italic}
+.res .meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:12px "JetBrains Mono",monospace;color:var(--faint)}
+.res .meta b{color:var(--soft);font-weight:600}
+.res audio{height:32px;max-width:100%}
+.fix{display:flex;gap:8px;margin-top:12px}
+.fix input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:9px 11px;font:16px Figtree,sans-serif}
+.fix input:focus{outline:none;border-color:var(--ember)}
+.btn{border:1px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:8px;padding:8px 14px;font:600 14px Figtree,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.saved{border-color:var(--green);color:var(--green)}
+.fixlab{font-size:13px;color:var(--faint);margin-top:12px}
+.empty{color:var(--faint);text-align:center;font-style:italic}
+footer{margin-top:44px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:560px){.rec{width:124px;height:124px}.ring{width:180px;height:180px}.fix{flex-direction:column}}
+@media (prefers-reduced-motion: reduce){.ring,.rec,.res{transition:none;animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><b>Thetha</b> · isiXhosa speech-to-text · on this laptop</div>
+    <div class="models" id="models" role="group" aria-label="Model"></div>
+  </header>
+  <h1>Thetha. <i>Ndiyamamela.</i></h1>
+  <p class="lede">Press the button, speak isiXhosa (English mixed in is fine), press again. The model writes what it heard. If it got something wrong, type what you really said: that becomes your own test data for stage 4.</p>
+
+  <div class="stage">
+    <div class="ring" id="ring"></div>
+    <button class="rec" id="rec" aria-label="Start recording"><span class="ic"></span></button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite">Loading…</div>
+  <p class="hint">or press <kbd>Space</kbd> · up to 60 seconds per recording</p>
+  <label class="keep"><input type="checkbox" id="keep" checked> Keep my recordings on this laptop (data/my_voice/live/, never uploaded)</label>
+
+  <div class="out" id="out"><p class="empty" id="empty">Your transcripts will appear here.</p></div>
+
+  <footer>Best model R-0012: whisper-medium fine-tuned on NCHLT (CSIR Meraka Institute, North-West University) and Google FLEURS isiXhosa. Test scores: 8.0 % letter errors on unseen long sentences, 2.3 % on NCHLT. Runs on this computer's processor; nothing leaves the laptop.</footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const DESC = {"R-0012": ["whisper-medium", "best"], "R-0007": ["whisper-small", "faster"]};
+let modelName = "R-0012", rec = null, chunks = [], stream = null, ctx = null, t0 = 0, timer = 0, raf = 0, busy = false;
+try { $("keep").checked = localStorage.getItem("thetha-keep") !== "0"; } catch (e) {}
+$("keep").onchange = () => { try { localStorage.setItem("thetha-keep", $("keep").checked ? "1" : "0"); } catch (e) {} };
+
+const status = (html, err) => { $("status").innerHTML = html; $("status").classList.toggle("err", !!err); };
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+fetch("/models").then(r => r.json()).then(list => {
+  const order = ["R-0012", "R-0007", ...list.filter(m => !DESC[m])].filter(m => list.includes(m));
+  if (!order.length) { status("No model downloaded yet (data/models/).", true); return; }
+  if (!order.includes(modelName)) modelName = order[0];  // medium may still be downloading
+  $("models").innerHTML = order.map(m => `<button class="m" data-m="${m}" aria-pressed="${m === modelName}">${DESC[m] ? DESC[m][0] : m} <small>${DESC[m] ? DESC[m][1] + " · " : ""}${m}</small></button>`).join("");
+  status("Ready. Press the button and speak.");
+}).catch(() => status("The server isn't answering. Is src/live.py running?", true));
+$("models").onclick = e => { const b = e.target.closest(".m"); if (!b || busy) return; modelName = b.dataset.m;
+  document.querySelectorAll(".m").forEach(x => x.setAttribute("aria-pressed", x === b)); };
+
+async function start() {
+  try { stream = await navigator.mediaDevices.getUserMedia({audio: {channelCount: 1, echoCancellation: false, noiseSuppression: false}}); }
+  catch (e) { status("No microphone access. Allow the microphone for this page (the icon in the address bar) and try again.", true); return; }
+  chunks = []; rec = new MediaRecorder(stream);
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  rec.onstop = send;
+  rec.start();
+  ctx = new AudioContext(); const an = ctx.createAnalyser(); an.fftSize = 1024; ctx.createMediaStreamSource(stream).connect(an);
+  const buf = new Float32Array(an.fftSize);
+  const loop = () => { an.getFloatTimeDomainData(buf); let s = 0; for (const v of buf) s += v * v;
+    $("ring").style.setProperty("--lvl", (1 + Math.min(1.2, Math.sqrt(s / buf.length) * 9)).toFixed(3)); raf = requestAnimationFrame(loop); };
+  loop();
+  t0 = Date.now(); $("rec").classList.add("on"); $("rec").setAttribute("aria-label", "Stop recording");
+  const tick = () => { const s = (Date.now() - t0) / 1000; status(`Listening <span class="t">${s.toFixed(1)} s</span>`); if (s >= 60) stop(); };
+  tick(); timer = setInterval(tick, 100);
+}
+function stop() {
+  if (!rec || rec.state !== "recording") return;
+  clearInterval(timer); cancelAnimationFrame(raf); $("ring").style.setProperty("--lvl", 1);
+  rec.stop(); stream.getTracks().forEach(t => t.stop()); if (ctx) ctx.close();
+  $("rec").classList.remove("on"); $("rec").setAttribute("aria-label", "Start recording");
+}
+async function send() {
+  const blob = new Blob(chunks, {type: rec.mimeType || "audio/webm"});
+  if ((Date.now() - t0) < 400) { status("That was too short. Hold on a little longer.", true); return; }
+  busy = true; $("rec").classList.add("busy"); $("rec").disabled = true;
+  status(`Writing with ${DESC[modelName] ? DESC[modelName][0] : modelName}<span class="dots"></span>`);
+  try {
+    const r = await fetch(`/transcribe?model=${encodeURIComponent(modelName)}&keep=${$("keep").checked ? 1 : 0}`, {method: "POST", body: blob});
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.status);
+    show(j, URL.createObjectURL(blob));
+    status("Ready. Press the button and speak.");
+  } catch (e) { status("Something went wrong: " + esc(String(e.message || e)), true); }
+  busy = false; $("rec").classList.remove("busy"); $("rec").disabled = false; $("rec").focus();
+}
+function show(j, url) {
+  $("empty") && $("empty").remove();
+  const el = document.createElement("article"); el.className = "res";
+  el.innerHTML = `<p class="txt ${j.text ? "" : "none"}">${j.text ? esc(j.text) : "(heard nothing it could write)"}</p>
+    <div class="meta"><span><b>${esc(j.model)}</b></span><span>${j.audio_seconds} s of speech</span><span>written in ${j.compute_seconds} s</span><audio controls src="${url}" aria-label="Your recording"></audio></div>
+    <div class="fixlab">What did you really say? Fix it and save (optional):</div>
+    <div class="fix"><input value="${esc(j.text)}" aria-label="What you really said" spellcheck="false"><button class="btn">Save</button></div>`;
+  const btn = el.querySelector(".btn"), inp = el.querySelector("input");
+  inp.oninput = () => { btn.textContent = "Save"; btn.classList.remove("saved"); };
+  btn.onclick = async () => {
+    const r = await fetch("/correct", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id: j.id, said: inp.value})});
+    btn.textContent = r.ok ? "Saved ✓" : "Not saved"; btn.classList.toggle("saved", r.ok);
+  };
+  $("out").prepend(el);
+}
+$("rec").onclick = () => { if (busy) return; (rec && rec.state === "recording") ? stop() : start(); };
+document.addEventListener("keydown", e => {
+  if (e.code !== "Space" || e.repeat || ["INPUT", "TEXTAREA", "BUTTON", "AUDIO"].includes(document.activeElement.tagName)) return;  // a focused button handles Space itself
+  e.preventDefault(); $("rec").click();
+});
+</script>
+</body>
+</html>

@@ -113,3 +113,13 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Budget consequence (told to the founder before approval): mgaguli-gpu-monthly counted $7.61 (lagged) + ~$5 of today's
   runs not yet counted + ~$7 ≈ $19-20 for October, at the $20 brake. The brake blocks new launches, not a running job;
   further October GPU runs need the founder to raise it. Project total after this run ≈ $12.70 of the $15-30 budget.
+
+## D-0014 · 2026-10-17 · Where the "talk to the model" API runs
+- Founder wants to speak and see the model transcribe live, and asked for an API.
+- Options: A) on the laptop: local API + recording page (src/live.py), CPU, free, private / B) Hugging Face Space: from any
+  device incl. phone, free but slow on the free CPU tier, needs the founder's HF account / C) AWS always-on GPU API:
+  fast, ~$0.80/h while on, breaks the $20 monthly brake; services beyond EC2/S3 need a credits check.
+- Recommendation: A now, B later (same code, and it is the stage 5 demo). Decision: "Laptop now, HF later" (founder).
+- Notes: the server listens on 127.0.0.1 only. Recordings and the founder's corrections are kept (if the page's "keep"
+  box is ticked) in data/my_voice/live/ (gitignored, never uploaded); corrections are the founder's own transcripts,
+  usable as stage 4 test material. Local disk: ~4 GB for the two models in data/models/ plus ~1 GB for .venv.
