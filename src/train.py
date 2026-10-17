@@ -104,10 +104,14 @@ def main():
     ap.add_argument("--dev-clips", type=int, default=600, help="dev clips scored at each evaluation")
     ap.add_argument("--max-seconds", type=float, default=30.0)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--only-existing", action="store_true",
+                    help="use only clips whose audio is on disk (preflight with a few speakers downloaded)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
     clips = [c for c in load_split(a.xml, a.root) if c["duration"] <= a.max_seconds and target_text(c["text"])]
+    if a.only_existing:
+        clips = [c for c in clips if os.path.exists(c["path"])]
     train, dev, dev_speakers = split_dev(clips, a.dev_speakers, a.seed)
     dev = random.Random(a.seed).sample(dev, min(a.dev_clips, len(dev)))
     info = {"train_clips": len(train), "train_hours": round(sum(c["duration"] for c in train) / 3600, 2),

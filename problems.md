@@ -55,3 +55,24 @@ Format:
 - Fix: cloud/collect.sh strips `\r` from the listing.
 - Cost: ~5 min, $0.
 - Lesson: when scripts pass text between Windows and Linux tools, invisible line-ending characters break exact names.
+
+## P-0002 update · 2026-10-17 · SSM fixed
+- Fix: attached the AWS managed policy AmazonSSMManagedInstanceCore to role mgaguli-render-node (shared with the
+  Studio render nodes, which now get SSM too). Verified on R-0002's node i-03c416a8b6fb0af97: registered "Online"
+  about 1 minute after boot; `aws ssm send-command` ran nvidia-smi / df / tail on it. No ports opened.
+- How agents look inside a node now: `aws ssm send-command --document-name AWS-RunShellScript ...` then
+  `aws ssm get-command-invocation` (or `aws ssm start-session` with the Session Manager plugin, installed locally).
+
+## P-0005 · 2026-10-17 · Training crashed: missing `accelerate` package
+- Stage / run: stage 2, R-0002 attempt 1 (smoke test)
+- Symptom:
+  ```
+  ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.26.0`: Please run `pip install transformers[torch]` or `pip install 'accelerate>={ACCELERATE_MIN_VERSION}'`
+  ```
+- Cause: the Hugging Face Trainer needs a helper library (accelerate) that isn't installed with transformers by
+  default. requirements-gpu.txt listed only what the stage 1 evaluator needed.
+- Fix: accelerate==1.1.1 pinned in requirements-gpu.txt. New runs/preflight.sh trains 2 steps on 4 speakers before the
+  full data download, so this kind of error shows up ~3 min after boot. A local CPU test was tried first but torch
+  would not install on Windows under the long scratch path (files silently missing, `DLL load failed while importing _C`).
+- Cost: ~8 min GPU, about $0.11.
+- Lesson: this is exactly what a smoke test is for; the cheapest place to find a bug is the smallest run.

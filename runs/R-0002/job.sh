@@ -1,6 +1,7 @@
 #!/bin/bash
 # R-0002: smoke test of the stage 2 training pipeline (not a real model). Runs on the GPU node.
 set -euo pipefail
+bash runs/preflight.sh
 aws s3 sync "s3://$BUCKET/datasets/nchlt_xho/extracted/nchlt_xho/" data/nchlt_xho/ --only-show-errors
 echo "audio: $(find data/nchlt_xho/audio -name '*.wav' | wc -l) wav files, $(du -sh data | cut -f1)"
 T=data/nchlt_xho/transcriptions
