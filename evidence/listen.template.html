@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listening Booth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4eee2; --card:#fbf8f1; --ink:#1d2738; --soft:#5d6574; --faint:#9aa0a8; --line:#e2d9c6;
+  --orange:#b8621b; --green:#2e8b6a; --wave:#d9cdb6; --mark:#f5d9bf; --markink:#8a3d0b; --shadow:0 1px 0 #e7dfcf, 0 14px 30px -18px rgba(60,40,10,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#15181e; --card:#1d2129; --ink:#ece6d9; --soft:#aab0ba; --faint:#6f7683; --line:#2d323c;
+    --orange:#e08a45; --green:#4fbf95; --wave:#3a3f4a; --mark:#5a3618; --markink:#ffd2a8; --shadow:0 1px 0 #262a33, 0 14px 30px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15181e; --card:#1d2129; --ink:#ece6d9; --soft:#aab0ba; --faint:#6f7683; --line:#2d323c;
+  --orange:#e08a45; --green:#4fbf95; --wave:#3a3f4a; --mark:#5a3618; --markink:#ffd2a8; --shadow:0 1px 0 #262a33, 0 14px 30px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 "Atkinson Hyperlegible",Georgia,serif;
+  background-image:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 0);background-size:22px 22px}
+.wrap{max-width:1040px;margin:0 auto;padding:48px 16px 80px}
+.kicker{overflow-wrap:anywhere;font:600 12px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--orange)}
+h1{font:400 clamp(38px,7vw,68px)/1.02 "Young Serif",Georgia,serif;margin:.25em 0 .3em;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--orange)}
+.lede{max-width:680px;color:var(--soft);font-size:18px}
+.lede b{color:var(--ink)}
+.local{display:inline-block;max-width:100%;overflow-wrap:anywhere;margin-top:6px;font:12px/1.4 "JetBrains Mono",monospace;color:var(--soft);border:1px dashed var(--line);padding:6px 10px;border-radius:6px}
+
+/* the staircase scoreboard */
+.stairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:end;margin:40px 0 12px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;box-shadow:var(--shadow);position:relative}
+.step:nth-child(1){min-height:120px}.step:nth-child(2){min-height:140px}.step:nth-child(3){min-height:162px}.step:nth-child(4){min-height:186px;border-color:var(--orange)}
+.step .run{font:600 11px "JetBrains Mono",monospace;color:var(--faint)}
+.step h3{font:400 19px/1.15 "Young Serif",Georgia,serif;margin:2px 0 2px}
+.step .what{font-size:13px;color:var(--soft);min-height:2.4em}
+.step .big{font:600 30px/1 "JetBrains Mono",monospace;margin-top:8px}
+.step .big small{font-size:14px;color:var(--soft);font-weight:400}
+.step .cer{font:12px "JetBrains Mono",monospace;color:var(--soft)}
+.step:nth-child(4) .big{color:var(--orange)}
+.stairs-note{font-size:13px;color:var(--faint);margin:0 0 30px}
+
+/* controls */
+.bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;margin-bottom:18px;
+  background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.bar .sp{flex:1}
+button{font:inherit;color:inherit;cursor:pointer}
+.tg{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:14px}
+.tg[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tg:focus-visible,.play:focus-visible,.chip:focus-visible,.wave:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.count{font:13px "JetBrains Mono",monospace;color:var(--soft)}
+
+/* clip cards */
+.clip{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:20px;margin-bottom:16px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);animation:in .5s ease forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.clip.hide{display:none}
+.side .no{font:400 44px/1 "Young Serif",Georgia,serif;color:var(--wave)}
+.player{display:flex;align-items:center;gap:12px;margin:10px 0 8px}
+.play{flex:none;width:48px;height:48px;border-radius:50%;border:0;background:var(--orange);color:#fff;display:grid;place-items:center;
+  box-shadow:0 6px 14px -6px var(--orange);transition:transform .15s}
+.play:hover{transform:scale(1.06)}
+.play svg{width:18px;height:18px;fill:currentColor}
+.wave{flex:1;height:44px;cursor:pointer;display:block;border-radius:4px}
+.wave .b{fill:var(--wave)} .wave .p{fill:var(--orange)}
+.meta{font:12px/1.6 "JetBrains Mono",monospace;color:var(--soft)}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-top:4px}
+.tag.unseen{border-color:var(--green);color:var(--green)}
+.said .lab{font:600 11px "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+.said p{font:400 clamp(20px,3vw,26px)/1.3 "Young Serif",Georgia,serif;margin:2px 0 14px;overflow-wrap:anywhere}
+.tries{border-top:1px solid var(--line)}
+.try{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:12px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--line)}
+.try .who{font-size:13px;color:var(--soft);line-height:1.25}
+.try .who b{display:block;color:var(--ink);font-weight:700}
+.try .txt{overflow-wrap:anywhere;min-width:0}
+.try .c{font:600 13px "JetBrains Mono",monospace;text-align:right;color:var(--soft)}
+.try.old .txt{color:var(--soft);font-size:15px}
+.try.best{background:linear-gradient(90deg,color-mix(in srgb,var(--orange) 9%,transparent),transparent 70%);margin:0 -10px;padding:9px 10px;border-radius:6px}
+.try.best .txt{font-size:18px}
+.try .ok{color:var(--green)}
+mark{background:var(--mark);color:var(--markink);border-radius:3px;padding:0 3px;text-decoration:underline wavy color-mix(in srgb,var(--markink) 50%,transparent);text-underline-offset:3px}
+.empty{color:var(--faint);font-style:italic}
+
+/* the founder's ear */
+.ear{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ear .q{font-size:13px;color:var(--soft);margin-right:4px}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.chip.bad[aria-pressed="true"]{background:var(--orange);border-color:var(--orange)}
+.note{width:100%;margin-top:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 10px;font:15px/1.4 "Atkinson Hyperlegible",sans-serif;resize:vertical;min-height:38px}
+
+.send{margin-top:36px;background:var(--ink);color:var(--paper);border-radius:14px;padding:24px}
+.send h2{font:400 28px/1.1 "Young Serif",Georgia,serif;margin:0 0 6px}
+.send p{color:color-mix(in srgb,var(--paper) 75%,transparent);margin:0 0 14px;max-width:640px}
+.send button{background:var(--orange);border:0;color:#fff;border-radius:999px;padding:10px 20px;font-weight:700}
+.send textarea{width:100%;margin-top:12px;min-height:120px;border-radius:8px;border:0;padding:10px;font:13px/1.5 "JetBrains Mono",monospace;background:color-mix(in srgb,var(--paper) 92%,transparent);color:#1d2738;display:none}
+.send .done{margin-left:10px;font-size:14px}
+footer{margin-top:30px;font-size:13px;color:var(--faint)}
+
+@media (max-width:760px){
+  .stairs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .step h3{font-size:17px;overflow-wrap:anywhere}
+  .bar .sp{display:none}
+  .step:nth-child(n){min-height:0}
+  .clip{grid-template-columns:minmax(0,1fr);gap:10px;padding:16px}
+  html,body{overflow-x:hidden}
+  .side .no{font-size:30px}
+  .try{grid-template-columns:minmax(0,1fr) 66px}
+  .note{min-height:60px}
+  .try .who{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion: reduce){.clip{animation:none;opacity:1;transform:none}.play{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Listening booth · 20 NCHLT test clips · 8 speakers the models never trained on</div>
+  <h1>Hear it, then <em>judge it.</em></h1>
+  <p class="lede">The same 20 clips we listened to in stage 1. Press play, read what was said, then see what each model wrote, from plain Whisper up to our best model, <b>whisper-medium (R-0012)</b>. <b>Marked words</b> don't match the true text. Then tell me what your ear says.</p>
+  <span class="local">This file lives only on your laptop (data/listen/). It contains NCHLT audio, so it must not be shared or uploaded.</span>
+
+  <div class="stairs" id="stairs"></div>
+  <p class="stairs-note">Clips written exactly right, out of 20 · letter error rate (CER) on these 20 clips. Each step is one improvement.</p>
+
+  <div class="bar" role="toolbar" aria-label="Filters">
+    <button class="tg" id="fAll" aria-pressed="true">All 20 clips</button>
+    <button class="tg" id="fSlip" aria-pressed="false">Only where medium slipped</button>
+    <button class="tg" id="fOld" aria-pressed="true">Show plain Whisper rows</button>
+    <span class="sp"></span>
+    <button class="tg" id="slow" aria-pressed="false">Play at 0.75×</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="clips"></div>
+
+  <div class="send">
+    <h2>Send me your ear</h2>
+    <p>Your verdicts and notes are kept in this browser while you work. When you're done, press the button and paste the result into our chat. I'll record it as your listening notes, and it tells us what to fix next.</p>
+    <button id="copy">Copy my notes</button><span class="done" id="done" role="status"></span>
+    <textarea id="out" readonly aria-label="Your notes as text"></textarea>
+  </div>
+
+  <footer>Outputs from runs R-0001, R-0003, R-0007 and R-0012 (predictions.jsonl in runs/). Text shown in scoring form (lowercase, no punctuation). Audio: NCHLT isiXhosa Speech Corpus, CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0.</footer>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+const KEY = "listen-R-0012-notes";
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { notes = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch (e) {} };
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const VERDICTS = [["right","Medium got it right",""],["slip","Small slip",""],["wrong","Medium got a word wrong","bad"],["ref","The true text looks wrong",""]];
+const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>';
+
+document.getElementById("stairs").innerHTML = DATA.models.map(m =>
+  `<div class="step"><div class="run">${m.run}</div><h3>${esc(m.label)}</h3><div class="what">${esc(m.what)}</div>
+   <div class="big">${m.exact}<small> / 20 exact</small></div><div class="cer">CER ${m.cer}%</div></div>`).join("");
+
+const waveSvg = (pk, i) => {
+  const bars = pk.map((v, j) => { const h = Math.max(1.6, v * 38); return `<rect x="${j + .18}" y="${(22 - h / 2).toFixed(2)}" width=".64" height="${h.toFixed(2)}" rx=".3"/>`; }).join("");
+  return `<svg class="wave" id="w${i}" viewBox="0 0 ${pk.length} 44" preserveAspectRatio="none" tabindex="0" role="slider" aria-label="Position in clip ${i + 1}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <defs><clipPath id="cp${i}"><rect id="cr${i}" x="0" y="0" width="0" height="44"/></clipPath></defs>
+    <g class="b">${bars}</g><g class="p" clip-path="url(#cp${i})">${bars}</g></svg>`;
+};
+
+const box = document.getElementById("clips");
+box.innerHTML = DATA.clips.map((c, i) => {
+  const best = c.rows[3];
+  const tries = c.rows.map((r, k) => `<div class="try ${k < 2 ? "old" : ""} ${k === 3 ? "best" : ""}">
+      <div class="who"><b>${esc(r.label)}</b>${r.run}</div><div class="txt">${r.html}</div>
+      <div class="c ${r.exact ? "ok" : ""}">${r.exact ? "✓ exact" : r.cer + "%"}</div></div>`).join("");
+  const v = (notes[c.id] || {}).v, t = (notes[c.id] || {}).t || "";
+  const chips = VERDICTS.map(([k, l, cls]) => `<button class="chip ${cls}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join("");
+  return `<article class="clip" data-i="${i}" data-slip="${!best.exact}" style="animation-delay:${Math.min(i, 8) * 60}ms">
+    <div class="side"><div class="no">${String(i + 1).padStart(2, "0")}</div>
+      <div class="player"><button class="play" id="p${i}" aria-label="Play clip ${i + 1}">${PLAY}</button>${waveSvg(c.peaks, i)}</div>
+      <div class="meta">speaker ${c.speaker} · ${c.gender} · ${c.seconds.toFixed(1)} s<br>
+        <span class="tag ${c.seen === "unseen" ? "unseen" : ""}">${c.seen === "unseen" ? "sentence never in training" : "sentence also read in training"}</span></div></div>
+    <div><div class="said"><div class="lab">What was said</div><p>${c.ref}</p></div>
+      <div class="tries">${tries}</div>
+      <div class="ear"><span class="q">Your ear:</span>${chips}
+        <textarea class="note" rows="1" placeholder="What did you hear? e.g. the speaker said … / the click is right but …" aria-label="Your note on clip ${i + 1}">${esc(t)}</textarea></div></div>
+  </article>`;
+}).join("");
+
+/* audio: one at a time */
+const audios = DATA.clips.map(c => { const a = new Audio(); a.preload = "none"; a.dataset.src = "data:audio/wav;base64," + c.audio; return a; });
+let current = null, raf = 0, rate = 1;
+const setProgress = (i, f) => {
+  const n = DATA.clips[i].peaks.length;
+  document.getElementById("cr" + i).setAttribute("width", (f * n).toFixed(2));
+  document.getElementById("w" + i).setAttribute("aria-valuenow", Math.round(f * 100));
+};
+const tick = () => { if (current !== null) { const a = audios[current]; if (a.duration) setProgress(current, a.currentTime / a.duration); raf = requestAnimationFrame(tick); } };
+const stop = i => { audios[i].pause(); document.getElementById("p" + i).innerHTML = PLAY; document.getElementById("p" + i).setAttribute("aria-label", `Play clip ${i + 1}`); };
+const play = (i, at) => {
+  if (current !== null && current !== i) stop(current);
+  const a = audios[i];
+  if (!a.src) a.src = a.dataset.src;
+  a.playbackRate = rate;
+  if (at !== undefined) { const go = () => { a.currentTime = at * a.duration; }; a.duration ? go() : a.addEventListener("loadedmetadata", go, {once: true}); }
+  a.play().catch(() => {});
+  current = i;
+  const b = document.getElementById("p" + i); b.innerHTML = PAUSE; b.setAttribute("aria-label", `Pause clip ${i + 1}`);
+  cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+};
+audios.forEach((a, i) => a.addEventListener("ended", () => { stop(i); setProgress(i, 1); current = null; }));
+audios.forEach((a, i) => a.addEventListener("timeupdate", () => { if (a.duration) setProgress(i, a.currentTime / a.duration); }));
+window.__listenTest = () => audios.map(a => [+a.currentTime.toFixed(2), a.duration ? +a.duration.toFixed(2) : null, a.error ? a.error.code : 0]);
+box.addEventListener("click", e => {
+  const p = e.target.closest(".play");
+  if (p) { const i = +p.id.slice(1); (current === i && !audios[i].paused) ? (stop(i), current = null) : play(i); return; }
+  const w = e.target.closest(".wave");
+  if (w) { const r = w.getBoundingClientRect(); play(+w.id.slice(1), Math.min(.99, Math.max(0, (e.clientX - r.left) / r.width))); return; }
+  const ch = e.target.closest(".chip");
+  if (ch) {
+    const c = DATA.clips[+ch.closest(".clip").dataset.i], n = notes[c.id] || (notes[c.id] = {});
+    n.v = n.v === ch.dataset.v ? undefined : ch.dataset.v;
+    ch.parentElement.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === n.v));
+    save();
+  }
+});
+box.addEventListener("keydown", e => {
+  const w = e.target.closest(".wave"); if (!w) return;
+  const i = +w.id.slice(1), a = audios[i];
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); document.getElementById("p" + i).click(); }
+  if ((e.key === "ArrowRight" || e.key === "ArrowLeft") && a.duration) { e.preventDefault(); a.currentTime = Math.max(0, Math.min(a.duration, a.currentTime + (e.key === "ArrowRight" ? 1 : -1))); setProgress(i, a.currentTime / a.duration); }
+});
+box.addEventListener("input", e => {
+  if (!e.target.classList.contains("note")) return;
+  const c = DATA.clips[+e.target.closest(".clip").dataset.i];
+  (notes[c.id] || (notes[c.id] = {})).t = e.target.value; save();
+});
+
+/* filters */
+const fAll = document.getElementById("fAll"), fSlip = document.getElementById("fSlip"), fOld = document.getElementById("fOld");
+const count = document.getElementById("count");
+const filter = slip => {
+  fAll.setAttribute("aria-pressed", !slip); fSlip.setAttribute("aria-pressed", slip);
+  let n = 0; document.querySelectorAll(".clip").forEach(el => { const h = slip && el.dataset.slip !== "true"; el.classList.toggle("hide", h); if (!h) n++; });
+  count.textContent = `${n} shown`;
+};
+fAll.onclick = () => filter(false); fSlip.onclick = () => filter(true); filter(false);
+fOld.onclick = () => { const on = fOld.getAttribute("aria-pressed") !== "true"; fOld.setAttribute("aria-pressed", on);
+  document.querySelectorAll(".try.old").forEach(el => el.style.display = on ? "" : "none"); };
+const slow = document.getElementById("slow");
+slow.onclick = () => { rate = rate === 1 ? .75 : 1; slow.setAttribute("aria-pressed", rate !== 1); audios.forEach(a => a.playbackRate = rate); };
+
+/* export */
+document.getElementById("copy").onclick = async () => {
+  const lab = Object.fromEntries(VERDICTS.map(([k, l]) => [k, l]));
+  const lines = DATA.clips.map((c, i) => { const n = notes[c.id] || {}; if (!n.v && !n.t) return null;
+    return `${String(i + 1).padStart(2, "0")} ${c.id}: ${n.v ? lab[n.v] : "-"}${n.t ? " | " + n.t.trim() : ""}`; }).filter(Boolean);
+  const text = "Listening notes, R-0012 listening booth\n" + (lines.length ? lines.join("\n") : "(no notes yet)");
+  const out = document.getElementById("out"), done = document.getElementById("done");
+  out.value = text; out.style.display = "block";
+  try { await navigator.clipboard.writeText(text); done.textContent = `Copied ${lines.length} note(s). Paste them into our chat.`; }
+  catch (e) { out.select(); done.textContent = "Select the text below and copy it."; }
+};
+</script>
+</body>
+</html>
