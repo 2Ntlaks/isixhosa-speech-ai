@@ -80,3 +80,21 @@ Format:
 - Cost: ~$1.97 (2.45 h g6.xlarge on-demand). Project total ~ $4.50.
 - Next: results page; founder listens. Stage 3 options: whisper-medium on NCHLT+FLEURS; add a FLEURS dev set to pick
   checkpoints; give FLEURS more weight; real <|xh|> tag; Meta MMS comparison.
+
+## 2026-10-17 19:55 — Stage 3, experiment 2: whisper-medium (R-0008 to R-0012)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Did: founder chose whisper-medium (D-0011). Added FLEURS dev tracking (information only) and gradient checkpointing to
+  src/train.py. Smoke tests: R-0008 on the L4 showed medium fits only with checkpointing at ~9 s/step (P-0007), so the
+  founder chose the 48 GB L40S (D-0012); R-0009 ran out of memory at batch 16 x 2 (P-0008); R-0010 tried both remaining
+  set-ups and found batch 8 x 4 without checkpointing fits (32.8 GB). Added a DISK_GB option to cloud/run_job.sh
+  (medium checkpoints are 8.6 GB). Founder approved the full run with the October budget consequence (D-0013). No L40S
+  free at first (P-0009); retried and launched. Fixed a naming bug in src/compare_runs.py (P-0010).
+- Result: stock medium + tag (R-0011): NCHLT CER 33.74 / WER 137.21, FLEURS 45.86 / 142.32. **R-0012 (medium, NCHLT +
+  FLEURS): FLEURS test CER 8.03 / WER 37.83 (R-0007 10.16 / 44.38); NCHLT test CER 2.33 / WER 12.71 (R-0007 2.91 /
+  16.80); NCHLT unseen sentences CER 5.0 / WER 28.7 (R-0007 5.8 / 34.9).** Better on every measure. Best model: R-0012.
+  Training ran at 1.52 s/step, much faster than the smoke test suggested, so the run took 2.3 h instead of 3.7 h.
+- Cost: R-0008 $0.20, R-0009 $0.30, R-0010 $0.50, R-0011 + R-0012 ~$4.34. Project total ~ $9.85. October EC2 compute
+  for the mgaguli-gpu-monthly brake should land near $17 of $20 once billing catches up.
+- Next: results page (evidence/R-0012-stage3-medium-results.html) and progress page update. Founder decides: stage 4
+  (own mixed isiXhosa + English recordings, which also targets the main remaining weakness: English loanwords and
+  names) or stage 5 (publish R-0012). Remaining stage 3 ideas: real <|xh|> tag, more FLEURS weight, Meta MMS comparison.

@@ -1,0 +1,23 @@
+{
+  "train_clips": 45703,
+  "train_hours": 64.23,
+  "train_speakers": 196,
+  "dev_speakers": [
+    "005",
+    "023",
+    "066",
+    "077",
+    "173",
+    "192"
+  ],
+  "dev_clips_scored": 600,
+  "dropped_over_max_seconds": 6,
+  "fleurs_train_clips": 3434,
+  "fleurs_dropped_over_max_seconds": 32,
+  "fleurs_train_hours": 13.03,
+  "fleurs_dev_clips_scored": 200,
+  "model": "openai/whisper-medium",
+  "batch_size": 8,
+  "grad_accum": 4,
+  "gradient_checkpointing": false
+}

@@ -35,7 +35,11 @@ def pattern_recall(preds):
 def main():
     sys.stdout.reconfigure(encoding="utf-8")  # outputs include Arabic, Hindi, Khmer script
     folders = sys.argv[1:]
-    runs = {os.path.basename(f.rstrip("/")): load(f) for f in folders}
+    def name(f):  # run ID: runs/R-0012/eval_fleurs -> R-0012 (P-0010: several folders are called eval_*)
+        parts = os.path.normpath(f).split(os.sep)
+        return next((x for x in reversed(parts) if x.startswith("R-")), parts[-1])
+    runs = {name(f): load(f) for f in folders}
+    assert len(runs) == len(folders), "two folders map to the same run name"
     ids = sorted(set.intersection(*(set(p) for p, _ in runs.values())))
     report = {"clips_compared": len(ids), "runs": {}}
     for name, (preds, metrics) in runs.items():

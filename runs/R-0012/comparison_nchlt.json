@@ -1,0 +1,731 @@
+{
+ "clips_compared": 2770,
+ "runs": {
+  "R-0012": {
+   "model": "model/final",
+   "language": "sw",
+   "wer": 12.71,
+   "cer": 2.33,
+   "exact_match_pct": 71.48,
+   "by_text_in_training": {
+    "seen": {
+     "wer": 9.0,
+     "cer": 1.7,
+     "n": 2259
+    },
+    "unseen": {
+     "wer": 28.7,
+     "cer": 5.0,
+     "n": 511
+    }
+   },
+   "per_speaker_cer": {
+    "500": 0.7,
+    "501": 1.0,
+    "502": 3.6,
+    "503": 0.5,
+    "504": 2.1,
+    "505": 5.9,
+    "506": 3.2,
+    "507": 2.0
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 483,
+     "matched": 471,
+     "pct": 97.5
+    },
+    "th": {
+     "in_reference": 764,
+     "matched": 760,
+     "pct": 99.5
+    },
+    "hl": {
+     "in_reference": 295,
+     "matched": 290,
+     "pct": 98.3
+    },
+    "dl": {
+     "in_reference": 157,
+     "matched": 154,
+     "pct": 98.1
+    },
+    "x": {
+     "in_reference": 268,
+     "matched": 255,
+     "pct": 95.1
+    },
+    "q": {
+     "in_reference": 326,
+     "matched": 318,
+     "pct": 97.5
+    },
+    "c": {
+     "in_reference": 399,
+     "matched": 395,
+     "pct": 99.0
+    },
+    "ng": {
+     "in_reference": 1124,
+     "matched": 1094,
+     "pct": 97.3
+    }
+   },
+   "check": {
+    "wer": 12.705069692858023,
+    "cer": 2.3320909713242566,
+    "n": 2770
+   }
+  },
+  "R-0007": {
+   "model": "out/model/final",
+   "language": "sw",
+   "wer": 16.8,
+   "cer": 2.91,
+   "exact_match_pct": 64.4,
+   "by_text_in_training": {
+    "seen": {
+     "wer": 12.7,
+     "cer": 2.2,
+     "n": 2259
+    },
+    "unseen": {
+     "wer": 34.9,
+     "cer": 5.8,
+     "n": 511
+    }
+   },
+   "per_speaker_cer": {
+    "500": 1.3,
+    "501": 1.2,
+    "502": 4.3,
+    "503": 0.9,
+    "504": 3.0,
+    "505": 6.5,
+    "506": 4.2,
+    "507": 2.4
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 483,
+     "matched": 467,
+     "pct": 96.7
+    },
+    "th": {
+     "in_reference": 764,
+     "matched": 756,
+     "pct": 99.0
+    },
+    "hl": {
+     "in_reference": 295,
+     "matched": 290,
+     "pct": 98.3
+    },
+    "dl": {
+     "in_reference": 157,
+     "matched": 154,
+     "pct": 98.1
+    },
+    "x": {
+     "in_reference": 268,
+     "matched": 252,
+     "pct": 94.0
+    },
+    "q": {
+     "in_reference": 326,
+     "matched": 310,
+     "pct": 95.1
+    },
+    "c": {
+     "in_reference": 399,
+     "matched": 389,
+     "pct": 97.5
+    },
+    "ng": {
+     "in_reference": 1124,
+     "matched": 1088,
+     "pct": 96.8
+    }
+   },
+   "check": {
+    "wer": 16.80029604045886,
+    "cer": 2.9116908800486803,
+    "n": 2770
+   }
+  },
+  "R-0011": {
+   "model": "openai/whisper-medium",
+   "language": "sw",
+   "wer": 137.21,
+   "cer": 33.74,
+   "exact_match_pct": 1.44,
+   "by_text_in_training": {
+    "seen": {
+     "wer": 133.9,
+     "cer": 32.5,
+     "n": 2259
+    },
+    "unseen": {
+     "wer": 151.6,
+     "cer": 38.9,
+     "n": 511
+    }
+   },
+   "per_speaker_cer": {
+    "500": 27.1,
+    "501": 26.8,
+    "502": 28.8,
+    "503": 33.4,
+    "504": 32.0,
+    "505": 29.4,
+    "506": 53.0,
+    "507": 31.4
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 483,
+     "matched": 6,
+     "pct": 1.2
+    },
+    "th": {
+     "in_reference": 764,
+     "matched": 9,
+     "pct": 1.2
+    },
+    "hl": {
+     "in_reference": 295,
+     "matched": 22,
+     "pct": 7.5
+    },
+    "dl": {
+     "in_reference": 157,
+     "matched": 10,
+     "pct": 6.4
+    },
+    "x": {
+     "in_reference": 268,
+     "matched": 2,
+     "pct": 0.7
+    },
+    "q": {
+     "in_reference": 326,
+     "matched": 0,
+     "pct": 0.0
+    },
+    "c": {
+     "in_reference": 399,
+     "matched": 58,
+     "pct": 14.5
+    },
+    "ng": {
+     "in_reference": 1124,
+     "matched": 932,
+     "pct": 82.9
+    }
+   },
+   "check": {
+    "wer": 137.21475268286665,
+    "cer": 33.744580512664484,
+    "n": 2770
+   }
+  },
+  "R-0003": {
+   "model": "openai/whisper-small",
+   "language": "sw",
+   "wer": 164.46,
+   "cer": 45.7,
+   "exact_match_pct": 0.87,
+   "by_text_in_training": {
+    "seen": {
+     "wer": 157.5,
+     "cer": 42.7,
+     "n": 2259
+    },
+    "unseen": {
+     "wer": 194.8,
+     "cer": 58.0,
+     "n": 511
+    }
+   },
+   "per_speaker_cer": {
+    "500": 38.0,
+    "501": 42.7,
+    "502": 34.3,
+    "503": 46.8,
+    "504": 44.0,
+    "505": 37.2,
+    "506": 72.1,
+    "507": 39.6
+   },
+   "patterns": {
+    "kh": {
+     "in_reference": 483,
+     "matched": 6,
+     "pct": 1.2
+    },
+    "th": {
+     "in_reference": 764,
+     "matched": 7,
+     "pct": 0.9
+    },
+    "hl": {
+     "in_reference": 295,
+     "matched": 17,
+     "pct": 5.8
+    },
+    "dl": {
+     "in_reference": 157,
+     "matched": 7,
+     "pct": 4.5
+    },
+    "x": {
+     "in_reference": 268,
+     "matched": 1,
+     "pct": 0.4
+    },
+    "q": {
+     "in_reference": 326,
+     "matched": 3,
+     "pct": 0.9
+    },
+    "c": {
+     "in_reference": 399,
+     "matched": 47,
+     "pct": 11.8
+    },
+    "ng": {
+     "in_reference": 1124,
+     "matched": 842,
+     "pct": 74.9
+    }
+   },
+   "check": {
+    "wer": 164.46280991735537,
+    "cer": 45.69711721305241,
+    "n": 2770
+   }
+  }
+ },
+ "samples": [
+  {
+   "id": "nchlt_xho_500m_0092",
+   "speaker": "500",
+   "reference": "esalika ekhayeni lakhe",
+   "R-0012": {
+    "hyp": "esalika ekhayeni lakhe",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "esalika ekhayeni lakhe",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Esalika ekayenilaake.",
+    "cer": 18.2
+   },
+   "R-0003": {
+    "hyp": "Esa lika ekayeni lakia.",
+    "cer": 18.2
+   }
+  },
+  {
+   "id": "nchlt_xho_501m_0376",
+   "speaker": "501",
+   "reference": "yaba ngumhla omkhulu",
+   "R-0012": {
+    "hyp": "yaba ngumhla omkhulu",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "yaba ngumhla omkhulu",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Yabangu misha umkul.",
+    "cer": 40.0
+   },
+   "R-0003": {
+    "hyp": "Ya bang kumisa umkul",
+    "cer": 45.0
+   }
+  },
+  {
+   "id": "nchlt_xho_502f_0092",
+   "speaker": "502",
+   "reference": "nzulu umnumzana u",
+   "R-0012": {
+    "hyp": "nzulu umnumzana u",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "nzulu umnumzana u",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Nzulu umnum sana u.",
+    "cer": 11.8
+   },
+   "R-0003": {
+    "hyp": "Njulu umnumzana uhu",
+    "cer": 17.6
+   }
+  },
+  {
+   "id": "nchlt_xho_503f_0226",
+   "speaker": "503",
+   "reference": "iingwevu zasempoza zadibanisana",
+   "R-0012": {
+    "hyp": "iingwevu zasempoza zadibanisana",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "iingwevu zasempoza zadibanisana",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Ingwe vusa semposa, satibani sana.",
+    "cer": 29.0
+   },
+   "R-0003": {
+    "hyp": "Inwefuza sem pausa sa tibani san.",
+    "cer": 45.2
+   }
+  },
+  {
+   "id": "nchlt_xho_504f_0113",
+   "speaker": "504",
+   "reference": "ukuba igama likadingindawo",
+   "R-0012": {
+    "hyp": "ukuba igama likadingindawo",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "ukuba igama likandingindawo",
+    "cer": 3.8
+   },
+   "R-0011": {
+    "hyp": "Ukoba ikama lika ndi ngi dao",
+    "cer": 26.9
+   },
+   "R-0003": {
+    "hyp": "Ukovaika malikandi gidao",
+    "cer": 38.5
+   }
+  },
+  {
+   "id": "nchlt_xho_505m_0394",
+   "speaker": "505",
+   "reference": "uliphalisayo ihashe ngumkhulawa",
+   "R-0012": {
+    "hyp": "uniphalisayo ihashe ngokumkhalwa",
+    "cer": 16.1
+   },
+   "R-0007": {
+    "hyp": "uliphalisayo ihashe ngokumkhalwa",
+    "cer": 12.9
+   },
+   "R-0011": {
+    "hyp": "Unipalisaayo ihaashingu gumukalo",
+    "cer": 41.9
+   },
+   "R-0003": {
+    "hyp": "Unipalisa yu eaashimbu gumkalo",
+    "cer": 51.6
+   }
+  },
+  {
+   "id": "nchlt_xho_506f_0353",
+   "speaker": "506",
+   "reference": "yemiphunga eyosulelayo banokuyifumana",
+   "R-0012": {
+    "hyp": "yemiphunga esulelayo banokuyifumana",
+    "cer": 5.4
+   },
+   "R-0007": {
+    "hyp": "yemiphunga esulelayo banokwifumana",
+    "cer": 10.8
+   },
+   "R-0011": {
+    "hyp": "Yemi punga ee sulela yu banu kufumana.",
+    "cer": 27.0
+   },
+   "R-0003": {
+    "hyp": "ya mi punga esu le layu bano kwefumana",
+    "cer": 35.1
+   }
+  },
+  {
+   "id": "nchlt_xho_507m_0403",
+   "speaker": "507",
+   "reference": "sompu esindulula imbaleki",
+   "R-0012": {
+    "hyp": "sommumpu esindulula iimbaleki",
+    "cer": 16.0
+   },
+   "R-0007": {
+    "hyp": "sompu esindulula iimbaleki",
+    "cer": 4.0
+   },
+   "R-0011": {
+    "hyp": "Sumpo esindulula imbaliki.",
+    "cer": 12.0
+   },
+   "R-0003": {
+    "hyp": "Sum puesen dulula ima leki",
+    "cer": 28.0
+   }
+  },
+  {
+   "id": "nchlt_xho_500m_0491",
+   "speaker": "500",
+   "reference": "obuqhelekileyo kwinkcazo [s] yakho",
+   "R-0012": {
+    "hyp": "obuqhelekileyo kwinkcazo yakho",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "obuqhelekileyo kwingcazo yakho",
+    "cer": 3.3
+   },
+   "R-0011": {
+    "hyp": "Obuthele kileya yukuin nazo yako.",
+    "cer": 30.0
+   },
+   "R-0003": {
+    "hyp": "Obu khele kileyo kwenazo ya ako.",
+    "cer": 30.0
+   }
+  },
+  {
+   "id": "nchlt_xho_501m_0253",
+   "speaker": "501",
+   "reference": "nomfo wakuqumbu owayetolika",
+   "R-0012": {
+    "hyp": "nomfo wakuqumbu owayetolika",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "nomfo wakuqumbu owayetolika",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Nwufuwa kutumbu o wa yetoliika.",
+    "cer": 33.3
+   },
+   "R-0003": {
+    "hyp": "Nwomfu waku kumbo, owa yetolika.",
+    "cer": 22.2
+   }
+  },
+  {
+   "id": "nchlt_xho_502f_0271",
+   "speaker": "502",
+   "reference": "emthatha",
+   "R-0012": {
+    "hyp": "emthatha",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "emthatha",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Emtata.",
+    "cer": 25.0
+   },
+   "R-0003": {
+    "hyp": "Imtaata",
+    "cer": 37.5
+   }
+  },
+  {
+   "id": "nchlt_xho_503f_0089",
+   "speaker": "503",
+   "reference": "wazi loo nto",
+   "R-0012": {
+    "hyp": "wazi loo nto",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "wazi loo nto",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "was alone.",
+    "cer": 58.3
+   },
+   "R-0003": {
+    "hyp": "was zelond",
+    "cer": 66.7
+   }
+  },
+  {
+   "id": "nchlt_xho_504f_0507",
+   "speaker": "504",
+   "reference": "inene ndithi kuwe",
+   "R-0012": {
+    "hyp": "inene ndithi kuwe",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "inene ndithi kuwe",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Inene niti kue",
+    "cer": 17.6
+   },
+   "R-0003": {
+    "hyp": "Inana niti kule",
+    "cer": 29.4
+   }
+  },
+  {
+   "id": "nchlt_xho_505m_0018",
+   "speaker": "505",
+   "reference": "nabeendawo",
+   "R-0012": {
+    "hyp": "nabe ndawo",
+    "cer": 10.0
+   },
+   "R-0007": {
+    "hyp": "nabeendawo",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Nabendao.",
+    "cer": 20.0
+   },
+   "R-0003": {
+    "hyp": "Nabindaw",
+    "cer": 30.0
+   }
+  },
+  {
+   "id": "nchlt_xho_506f_0296",
+   "speaker": "506",
+   "reference": "ngezulu ndiqinisekile uyalazi",
+   "R-0012": {
+    "hyp": "ngezulu ndiqinisekile uyalazi",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "ngezulu ndiqinisekile uyalazi",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Gezulu ni kunisegi lewe ya lazi.",
+    "cer": 37.9
+   },
+   "R-0003": {
+    "hyp": "gizulu li kini segile wiyalazi",
+    "cer": 34.5
+   }
+  },
+  {
+   "id": "nchlt_xho_507m_0379",
+   "speaker": "507",
+   "reference": "nketho zazisiweyo okuthethi",
+   "R-0012": {
+    "hyp": "nketho zazisiweyo okuthethi",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "nketho zazisiweyo okuthethi",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Kato zazisi weyo oku tetee",
+    "cer": 29.6
+   },
+   "R-0003": {
+    "hyp": "kwae tozazisweyo oku tete",
+    "cer": 40.7
+   }
+  },
+  {
+   "id": "nchlt_xho_500m_0446",
+   "speaker": "500",
+   "reference": "yamachunu",
+   "R-0012": {
+    "hyp": "yamachunu",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "yamachunu",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Yamatrunu.",
+    "cer": 22.2
+   },
+   "R-0003": {
+    "hyp": "Yamatru no.",
+    "cer": 44.4
+   }
+  },
+  {
+   "id": "nchlt_xho_501m_0003",
+   "speaker": "501",
+   "reference": "karhulumente",
+   "R-0012": {
+    "hyp": "karhulumente",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "karhulumente",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Kahulumente",
+    "cer": 8.3
+   },
+   "R-0003": {
+    "hyp": "Kahulumente",
+    "cer": 8.3
+   }
+  },
+  {
+   "id": "nchlt_xho_502f_0523",
+   "speaker": "502",
+   "reference": "uthi yishi endiza",
+   "R-0012": {
+    "hyp": "uthi yishi ediza",
+    "cer": 5.9
+   },
+   "R-0007": {
+    "hyp": "uthi yishi ediza",
+    "cer": 5.9
+   },
+   "R-0011": {
+    "hyp": "Uchiishi etiiza.",
+    "cer": 29.4
+   },
+   "R-0003": {
+    "hyp": "Uchiishi Ediza",
+    "cer": 23.5
+   }
+  },
+  {
+   "id": "nchlt_xho_503f_0239",
+   "speaker": "503",
+   "reference": "monti",
+   "R-0012": {
+    "hyp": "monti",
+    "cer": 0.0
+   },
+   "R-0007": {
+    "hyp": "monti",
+    "cer": 0.0
+   },
+   "R-0011": {
+    "hyp": "Moonti",
+    "cer": 20.0
+   },
+   "R-0003": {
+    "hyp": "Munt",
+    "cer": 40.0
+   }
+  }
+ ]
+}

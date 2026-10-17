@@ -116,3 +116,23 @@ Format:
 - Fix: R-0010 tries both remaining set-ups in one run and keeps the faster one that fits.
 - Cost: ~$0.30.
 - Lesson: a smoke test is for answering "which set-up?", so it should try every candidate, not stop at the first failure.
+
+## P-0009 · 2026-10-17 · No L40S GPU free anywhere in us-east-1 at launch time
+- Stage / run: stage 3, R-0012
+- Symptom: `cloud/run_job.sh` tried g6e.xlarge on-demand in all 6 default subnets and ended with
+  `no GPU capacity anywhere right now (ondemand)` (InsufficientInstanceCapacity), although R-0010 got one an hour earlier.
+- Cause: AWS had no spare L40S machines of that size at that moment. Capacity for newer GPU types comes and goes.
+- Fix: a retry loop (same machine type, every 3 minutes, up to 45 minutes); it launched at the next try. No other
+  machine type was used, so speed and cost stayed as approved.
+- Cost: nothing (failed launches are free); ~5 minutes.
+- Lesson: for scarce GPU types, retry the same type before changing the plan; a different type would change cost or memory.
+
+## P-0010 · 2026-10-17 · Comparison tool mixed up runs whose folders have the same name
+- Stage / run: stage 3, R-0012 analysis
+- Symptom: `src/compare_runs.py runs/R-0012/eval_fleurs runs/R-0007/eval_fleurs ...` reported only 2 runs instead of 4;
+  the first entry was named eval_fleurs and showed stock medium's scores (45.86) instead of R-0012's.
+- Cause: runs were named by the last folder name, so three folders called eval_fleurs overwrote each other.
+- Fix: runs are now named by the run ID in their path (R-0012), and the tool stops if two folders still collide.
+  Caught before any number was recorded.
+- Cost: nothing; ~5 minutes.
+- Lesson: when a report shows fewer rows than inputs, stop and find out why before reading the numbers.

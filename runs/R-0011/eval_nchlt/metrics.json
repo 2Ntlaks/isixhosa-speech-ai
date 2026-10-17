@@ -1,0 +1,92 @@
+{
+  "model": "openai/whisper-medium",
+  "language": "sw",
+  "test_set": "nchlt_xho.tst.xml",
+  "clips": 2770,
+  "left_out_over_max_seconds": 0,
+  "max_new_tokens": 96,
+  "audio_hours": 3.108,
+  "wer": 137.21,
+  "cer": 33.74,
+  "exact_match_pct": 1.44,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 2770
+  },
+  "per_speaker": {
+    "500": {
+      "wer": 117.6,
+      "cer": 27.1,
+      "n": 365
+    },
+    "501": {
+      "wer": 110.5,
+      "cer": 26.8,
+      "n": 383
+    },
+    "502": {
+      "wer": 114.7,
+      "cer": 28.8,
+      "n": 322
+    },
+    "503": {
+      "wer": 118.1,
+      "cer": 33.4,
+      "n": 365
+    },
+    "504": {
+      "wer": 126.4,
+      "cer": 32.0,
+      "n": 305
+    },
+    "505": {
+      "wer": 116.6,
+      "cer": 29.4,
+      "n": 312
+    },
+    "506": {
+      "wer": 216.2,
+      "cer": 53.0,
+      "n": 360
+    },
+    "507": {
+      "wer": 169.4,
+      "cer": 31.4,
+      "n": 358
+    }
+  },
+  "per_gender": {
+    "female": {
+      "wer": 145.9,
+      "cer": 38.8,
+      "n": 1352
+    },
+    "male": {
+      "wer": 128.9,
+      "cer": 28.9,
+      "n": 1418
+    }
+  },
+  "by_text_in_training": {
+    "seen": {
+      "wer": 133.9,
+      "cer": 32.5,
+      "n": 2259
+    },
+    "unseen": {
+      "wer": 151.6,
+      "cer": 38.9,
+      "n": 511
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 121.7,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L40S",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}

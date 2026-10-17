@@ -120,9 +120,9 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
   <section>
     <h2>Where we are now</h2>
     <div class="now-box">
-      <p><b>Stage 3 has started well.</b> Today's first model was great on short prompts (3% letter errors) but fell apart on long, natural sentences: it glued words together (30% letter errors, 95% word errors). Adding 13 hours of natural speech (FLEURS) fixed that: <b>10% letter errors and 44% word errors on sentences it has never seen</b>, with no loss on the original test.</p>
-      <p>Results: <code>evidence/R-0007-stage3-fleurs-results.html</code>. Best model so far: <code>models/R-0007/</code> in our cloud storage. All machines are off.</p>
-      <p class="sub">Next idea: the bigger <code>whisper-medium</code> model on the same data, after a short test to measure its speed and cost.</p>
+      <p><b>Stage 3 is going well.</b> Adding 13 hours of natural speech (FLEURS) fixed long sentences: 30% → 10% letter errors. Then the bigger <code>whisper-medium</code> model, trained on exactly the same data, improved every score again: <b>8.0% letter errors and 38% word errors on long sentences it has never seen</b>, and 2.3% letter errors on the NCHLT exam.</p>
+      <p>Results: <code>evidence/R-0012-stage3-medium-results.html</code>. Best model so far: <code>models/R-0012/</code> in our cloud storage. All machines are off.</p>
+      <p class="sub">Your choice next: stage 4 (your own mixed isiXhosa and English recordings, which targets the biggest remaining weakness) or stage 5 (publish R-0012).</p>
     </div>
   </section>
 
@@ -148,6 +148,10 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <div class="ev bad"><span class="when">17 Oct · 12:40</span><h3>Reality check: long sentences (R-0005)</h3><p>On FLEURS, 1,034 long natural sentences it had never seen, the stage 2 model scored 30% letter errors and 95% word errors. It glued words together, because it had only ever heard 3-word prompts.</p></div>
       <div class="ev ok"><span class="when">17 Oct · 12:45–14:46</span><h3>Training with natural speech added (R-0007)</h3><p>Same recipe, one change: 13 hours of FLEURS added to the 51 hours of NCHLT.</p></div>
       <div class="ev ok"><span class="when">17 Oct · 14:46</span><h3>Long sentences fixed: 30% → 10% letters wrong</h3><p>Word errors on new sentences fell from 95% to 44%, and the model now writes the right number of words. NCHLT stayed at 2.9%. English words inside isiXhosa are now the main weakness, which is what stage 4 targets.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 15:00</span><h3>You chose the bigger model</h3><p><code>whisper-medium</code>: three times the size of the model so far. Same data, same recipe, so any change in score comes from size alone.</p></div>
+      <div class="ev bad"><span class="when">17 Oct · 15:20–16:40</span><h3>Three short tests to make it fit (R-0008, R-0009, R-0010)</h3><p>The bigger model didn't fit on our usual GPU except in a very slow mode (P-0007), so you chose a bigger GPU with twice the memory. Even that ran out of memory at first (P-0008). The third test tried both remaining set-ups and found one that fits: 8 clips at a time, 4 times per step. About $1 for all three.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 17:22–19:42</span><h3>Training the bigger model (R-0011, R-0012)</h3><p>Amazon had no free machine of that type at first (P-0009); a retry got one a few minutes later. Plain <code>whisper-medium</code> scored 46% letter errors on FLEURS before any training. Then 4,000 training steps, ahead of the small model at every check.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 19:42</span><h3>Better everywhere: 10.2% → 8.0% on long sentences</h3><p>Word errors on new sentences fell from 44% to 38%; NCHLT letter errors from 2.9% to 2.3%. 698 of 1,034 long sentences got better, 233 got worse. Training ran faster than the test suggested, so it cost about $4.30 instead of $7.</p></div>
     </div>
   </section>
 
@@ -166,6 +170,10 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
           <tr><td class="n">R-0005</td><td>The same model on FLEURS: 1,034 long natural sentences, all new to it.</td><td class="n big">29.8%</td><td class="n">94.9%</td></tr>
           <tr><td class="n">R-0007</td><td>Trained on NCHLT + FLEURS. FLEURS exam.</td><td class="n big">10.2%</td><td class="n">44.4%</td></tr>
           <tr><td class="n">R-0007</td><td>… and on the NCHLT exam (no loss).</td><td class="n big">2.9%</td><td class="n">16.8%</td></tr>
+          <tr><td class="n">R-0011</td><td>Plain <code>whisper-medium</code> told "this is Swahili". No training. FLEURS exam.</td><td class="n big">45.9%</td><td class="n">142.3%</td></tr>
+          <tr><td class="n">R-0012</td><td><b>whisper-medium</b> trained on the same data as R-0007. FLEURS exam.</td><td class="n big">8.0%</td><td class="n">37.8%</td></tr>
+          <tr><td class="n">R-0012</td><td>… and on the NCHLT exam.</td><td class="n big">2.3%</td><td class="n">12.7%</td></tr>
+          <tr><td class="n">R-0012</td><td>… only the NCHLT sentences never seen in training.</td><td class="n big">5.0%</td><td class="n">28.7%</td></tr>
         </tbody>
       </table>
     </div>
@@ -194,7 +202,8 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <dt>Seen vs unseen</dt><dd>82% of test clips use sentences that other people also read in the training data. We report a separate score on the unseen sentences, because that's the honest measure of real understanding.</dd>
       <dt>Checkpoint</dt><dd>A saved copy of the model partway through training, so a crash doesn't lose everything and we can keep the best one.</dd>
       <dt>Overfitting</dt><dd>When the model memorises the training speakers instead of learning the language. Shows up as the dev score getting worse while training continues.</dd>
-      <dt>GPU</dt><dd>The kind of chip that makes AI training fast. We rent one by the hour from Amazon (about $0.80/hour).</dd>
+      <dt>GPU</dt><dd>The kind of chip that makes AI training fast. We rent one by the hour from Amazon: about $0.80/hour for the L4 (24 GB memory), $1.86/hour for the bigger L40S (48 GB) that <code>whisper-medium</code> needs.</dd>
+      <dt>whisper-small / whisper-medium</dt><dd>Two sizes of the same model: 244 million and 769 million adjustable numbers. Bigger usually learns more, but needs more GPU memory and time.</dd>
     </dl>
   </section>
 
@@ -207,25 +216,29 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <div class="card"><span class="id">P-0004</span><h3>Windows hid a character in file names</h3><p>An invisible line-ending character made files look missing. Fixed in the script.</p><p class="lesson">Windows and Linux tools disagree about invisible characters.</p></div>
       <div class="card"><span class="id">P-0005</span><h3>A missing software library</h3><p>The rehearsal caught it before the expensive run. A 2-minute safety test now runs first.</p><p class="lesson">The cheapest place to find a bug is the smallest run.</p></div>
       <div class="card"><span class="id">P-0006</span><h3>Training progress stuck in a buffer</h3><p>A text filter held the progress lines back, so we couldn't see the step counter. We watched the saved checkpoints instead; fixed for next time.</p><p class="lesson">Check that progress is visible in the first minute.</p></div>
+      <div class="card"><span class="id">P-0007</span><h3>The bigger model didn't fit our GPU</h3><p>whisper-medium only fit the 24 GB GPU in a slow mode (~10 hours). We moved to a 48 GB GPU.</p><p class="lesson">Model memory grows with size before any data is added.</p></div>
+      <div class="card"><span class="id">P-0008</span><h3>Out of memory even on 48 GB</h3><p>The test tried only one set-up, so one "no" ended it. The next test tried every option and kept the one that fit.</p><p class="lesson">A test that asks "which set-up?" should try them all.</p></div>
+      <div class="card"><span class="id">P-0009</span><h3>No machine free at Amazon</h3><p>All big GPUs of that type were taken for a few minutes. We retried the same type rather than switching to one that would change the cost.</p><p class="lesson">Retry before changing the plan.</p></div>
+      <div class="card"><span class="id">P-0010</span><h3>A comparison mixed up two runs</h3><p>The comparison tool showed 2 runs instead of 4 because their folders had the same name. Caught and fixed before any number was written down.</p><p class="lesson">If a report has fewer rows than expected, stop and check.</p></div>
     </div>
   </section>
 
   <section>
     <h2>Money</h2>
     <div class="money">
-      <div><span>Spent so far</span><b>~$4.50</b><p>Data, stage 1, rehearsals, and two 2.3–2.5-hour training runs (~$1.85 and ~$1.97).</p></div>
+      <div><span>Spent so far</span><b>~$9.85</b><p>Data, stage 1, rehearsals, two small-model runs (~$1.85, ~$1.97), three memory tests (~$1) and the medium run (~$4.34).</p></div>
       <div><span>Machines running</span><b>none</b><p>Everything switched itself off. Storage costs about $0.25 a month.</p></div>
-      <div><span>Project budget</span><b>$15–30</b><p>Out of about $133 of AWS credits. Storage adds about $0.22 a month.</p></div>
+      <div><span>Project budget</span><b>$15–30</b><p>Out of about $133 of AWS credits. The monthly GPU safety brake ($20) will sit near $17 for October once billing catches up.</p></div>
     </div>
   </section>
 
   <section>
     <h2>What comes next</h2>
-    <p>More stage 3, one improvement at a time, measured on both exams (NCHLT and FLEURS). Next: the bigger <code>whisper-medium</code> model, with FLEURS clips added to the dev check. After that: more FLEURS weight, a real isiXhosa tag, audio noise and speed changes, and a comparison with Meta's MMS model. Then stage 4: your own mixed isiXhosa and English recordings.</p>
+    <p>Your choice. <b>Stage 4</b>: record your own mixed isiXhosa and English sentences, which targets the biggest remaining weakness (English words and names inside isiXhosa). <b>Stage 5</b>: publish R-0012 on Hugging Face with an honest model card and a free demo. Or more stage 3: a real isiXhosa tag, more FLEURS weight, or a comparison with Meta's MMS model.</p>
     <p class="sub">Still open for you: listen to a few clips in <code>data/listen/R-0001/</code> and tell me if the problem sounds like spelling or word boundaries. A Hugging Face account is only needed at stage 5.</p>
   </section>
 
-  <footer>Every number here comes from a run in runs/R-xxxx/ and results.md · decisions D-0001…D-0008 in decisions.md · problems P-0001…P-0006 in problems.md · data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0) and Google FLEURS.</footer>
+  <footer>Every number here comes from a run in runs/R-xxxx/ and results.md · decisions D-0001…D-0013 in decisions.md · problems P-0001…P-0010 in problems.md · data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0) and Google FLEURS.</footer>
 </div>
 </body>
 </html>

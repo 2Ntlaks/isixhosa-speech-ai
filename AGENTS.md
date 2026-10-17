@@ -84,3 +84,4 @@ founder's IP, and the instance still self-terminates under its time cap. Never c
 - 2026-10-16: stage 1 done in the cloud (D-0006): R-0001 baseline WER 196.6 %, CER 75.1 %. Waiting on the founder's listening notes; next is stage 2 (first fine-tune). Fix P-0002 (SSM) first.
 - 2026-10-17: stage 2 done: R-0004 (whisper-small, 4000 steps, <|sw|> tag) test CER 2.98 % / WER 16.63 %; unseen sentences CER 6.2 % / WER 36.6 %. Model in S3 models/R-0004/. Next: stage 3 experiments (see JOURNAL).
 - 2026-10-17: stage 3 exp 1 done: R-0007 (whisper-small, NCHLT+FLEURS) is the best model: FLEURS test CER 10.16 / WER 44.38 (R-0004: 29.81 / 94.86), NCHLT test CER 2.91 / WER 16.80. Model in S3 models/R-0007/.
+- 2026-10-17: stage 3 exp 2 done: R-0012 (whisper-medium, NCHLT+FLEURS) is the best model: FLEURS test CER 8.03 / WER 37.83, NCHLT test CER 2.33 / WER 12.71 (unseen 5.0 / 28.7). Model in S3 models/R-0012/ (3 GB). October GPU brake near $17 of $20.

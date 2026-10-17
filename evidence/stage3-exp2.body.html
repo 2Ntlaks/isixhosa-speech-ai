@@ -1,0 +1,103 @@
+<body>
+<div class="wrap">
+  <div class="kicker">Runs R-0011 · R-0012 · Stage 3, experiment 2 · 17 October 2026</div>
+  <h1>A bigger model is better <em>everywhere</em></h1>
+  <p class="lede">We trained whisper-medium, three times the size of whisper-small, on exactly the same 64 hours of speech as R-0007, with exactly the same recipe. Only the model size changed. On the hard exam (long, natural sentences it has never seen), letter errors fell from 10.2% to 8.0% and word errors from 44% to 38%. On the NCHLT exam, letter errors fell from 2.9% to 2.3%. It cost about $4.30, less than estimated.</p>
+
+  <div class="nums">
+    <div class="num"><span class="k">FLEURS letters wrong</span><b>8.0<small>%</small></b><p>Was 10.2% with whisper-small (R-0007), 45.9% for stock medium.</p></div>
+    <div class="num"><span class="k">FLEURS words wrong</span><b>37.8<small>%</small></b><p>Was 44.4%. Every sentence here is new to the model.</p></div>
+    <div class="num"><span class="k">NCHLT letters wrong</span><b>2.3<small>%</small></b><p>Was 2.9%. 71% of clips now come out perfectly (was 64%).</p></div>
+  </div>
+
+  <section>
+    <h2>Two exams, four models</h2>
+    <p><b>NCHLT test</b>: short read prompts, 8 new speakers, most sentences also practised in training. <b>FLEURS test</b>: 1,034 long natural sentences, none of them in any training data. FLEURS is the honest exam.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Model</th><th>Trained on</th><th>NCHLT CER</th><th>NCHLT WER</th><th>FLEURS CER</th><th>FLEURS WER</th></tr></thead>
+        <tbody>
+          <tr><td>Stock whisper-small + Swahili tag<br><span class="sub">R-0003 · R-0006</span></td><td>nothing</td><td class="n">45.7%</td><td class="n">164.5%</td><td class="n">65.5%</td><td class="n">185.3%</td></tr>
+          <tr><td>Stock whisper-medium + Swahili tag<br><span class="sub">R-0011</span></td><td>nothing</td><td class="n">33.7%</td><td class="n">137.2%</td><td class="n">45.9%</td><td class="n">142.3%</td></tr>
+          <tr><td>whisper-small<br><span class="sub">R-0007</span></td><td>NCHLT 51 h + FLEURS 13 h</td><td class="n">2.91%</td><td class="n">16.8%</td><td class="n">10.2%</td><td class="n">44.4%</td></tr>
+          <tr><td><b>whisper-medium</b><br><span class="sub">R-0012</span></td><td>the same 64 h</td><td class="n hi">2.33%</td><td class="n hi">12.7%</td><td class="n hi">8.03%</td><td class="n hi">37.8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">On the NCHLT sentences never seen in training (the fairer half of that exam), medium also wins: letter errors 5.8% → 5.0%, word errors 34.9% → 28.7%.</p>
+  </section>
+
+  <section>
+    <h2>Not just on average</h2>
+    <p>Comparing the two trained models sentence by sentence on the FLEURS exam:</p>
+    <div class="chart" role="list" aria-label="FLEURS test clips: whisper-medium compared with whisper-small">
+      <div class="bar" role="listitem" tabindex="0" data-tip="698 of 1,034 sentences have fewer letter errors with medium"><span class="lab"><b>Medium better</b><small>fewer letter errors</small></span><div class="track"><div class="fill" style="width:67.5%"></div></div><span class="val">698</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="103 sentences come out exactly the same"><span class="lab">The same<small>identical score</small></span><div class="track"><div class="fill" style="width:10%;background:var(--ink)"></div></div><span class="val">103</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="233 sentences are worse with medium"><span class="lab">Medium worse<small>more letter errors</small></span><div class="track"><div class="fill" style="width:22.5%"></div></div><span class="val">233</span></div>
+      <div class="axis"><div></div><div><span>0</span><span>FLEURS test sentences</span><span>1,034</span></div><div></div></div>
+    </div>
+    <p>Bad sentences became rarer: only 26 sentences have 20% or more letters wrong (was 62), and 345 have under 5% (was 213). On a typical sentence, 6.8% of letters are wrong (was 8.7%).</p>
+  </section>
+
+  <section>
+    <h2>The same sentences, two ways</h2>
+    <p>The same five FLEURS test clips as on the R-0007 page (a fixed pick, not chosen). Letter error rate in brackets. Medium wins three, small wins two: an honest picture of "better on average".</p>
+    <div class="scroll">
+      <table class="samples">
+        <thead><tr><th>True text</th><th>whisper-small (R-0007)</th><th>whisper-medium (R-0012)</th></tr></thead>
+        <tbody>
+          <tr><td>emveni kokwehla kwesiganeko u ibson wathunyelwa kwisibhedlela kodwa wasweleka ngokukhawuleza emva koko</td><td>emveni kokwehla kwesiganeko u y wathunyelwa kwisibhedlele kodwa wasweleka ngokukhawuleza emva koko <span class="sub">(5.9%)</span></td><td>emveni kokwehla kwesikaneko uipson wathunyelwa kwisibhedlele kodwa wasweleka ngokukhawuleza emva koko <span class="sub">(3.9%)</span></td></tr>
+          <tr><td>amabantu basenokungayicingeli into yokuba ukunyamezela nokuqonda nako kuyafuneka kubahambi ababuyela emakhaya</td><td>amabantu basenokungayicingeli into yokuba unkunyamezela nokuqonda ngako kuyafuneka kubahambi ababuyela emakhaya <span class="sub">(1.8%)</span></td><td>amabantu basenokungayicingele into yokuba unkunyamezela nokuqonda nakho kuyafuneka kubahambi ababuyela emakhaya <span class="sub">(2.8%)</span></td></tr>
+          <tr><td>shukumisa lemigubo yomileyo kunye uze ke ngezandla ezicocekileyo uyikhame ibe ligaqa</td><td>shukumisa neengugubo yomileyo kunye uzeke ngezandla ezicocileyo uyikhama ibe ligagqa <span class="sub">(11.9%)</span></td><td>shukumisa neyengobo yomileyo kunye uzeke ngezandla ezicocileyo uyi khamo ibe ligaqe <span class="sub">(13.1%)</span></td></tr>
+          <tr><td>esona sakhiwo sephiramidi sase-giza siso sodwa esisamileyo kwizimanga ezisixhenxe</td><td>esona sakhiwo seperemitis asegiza sisosodwa esisamileyo kwizimanga esixhenxe <span class="sub">(12.3%)</span></td><td>esona sakhiwa seephiramidi sasegiza siso sodwa esisamileyo kwizimanga sixhenxe <span class="sub">(7.4%)</span></td></tr>
+          <tr><td>ngokwe-nuclear agency yasejapan i-radioactive caesium ne iodine ifumanekile kule planti</td><td>ngokwenyukliya i agentsi yasejapan iradiu ektif kasim ne iod ifumaneka kule planti <span class="sub">(29.9%)</span></td><td>ngokwenyukliya ajensi yase japan iradeo active kassium ne iodin ifumaneka kule planti <span class="sub">(21.8%)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">The last row is still the weak spot: English words inside isiXhosa (<i>nuclear agency</i>, <i>radioactive caesium</i>). Medium gets closer (<i>iradeo active</i>, <i>iodin</i>), but it still writes them the way they sound in isiXhosa. Stage 4, your mixed isiXhosa and English recordings, targets exactly this.</p>
+  </section>
+
+  <section>
+    <h2>What is still wrong</h2>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">6.8%</td><td>Letter errors on a typical (median) FLEURS sentence. 26 sentences are at 20% or worse.</td></tr>
+          <tr><td class="n">1.4%</td><td>Only 14 of 1,034 long sentences come out perfectly. In a 16-word sentence, one slip is enough to miss.</td></tr>
+          <tr><td class="n">8.6%</td><td>Letter errors on the 200 sentences whose reference has digits (7.9% without). Small was at 12.8% here: medium copes better with how FLEURS writes numbers.</td></tr>
+          <tr><td class="n">English</td><td>Names and borrowed English words are still the biggest misses.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>How training went</h2>
+    <figure><img src="loss.png" alt="Left: training loss for R-0007 (small) and R-0012 (medium); medium is lower throughout and ends near 0.07. Right: dev letter error rate by step; R-0012 medium is lowest at every check and ends at 2.66% on the NCHLT dev set, against 3.74% for R-0007 and 3.53% for R-0004. A dashed line shows R-0012 on 200 FLEURS dev clips, falling from 13.4% to 7.8%."><figcaption>Medium was ahead at every check, from the very first one. The dashed line is the new FLEURS dev check (information only), which R-0007's lesson asked for.</figcaption></figure>
+    <div class="note"><p><b>Faster and cheaper than planned:</b> the smoke test measured 2.76 seconds per step, but that number included start-up time spread over only 30 steps. The real speed was 1.52 seconds per step, so the run took 2.3 hours instead of 3.7, and cost about $4.30 instead of $7.</p></div>
+  </section>
+
+  <section>
+    <h2>What's next</h2>
+    <p>R-0012 is our best model. It is saved in your cloud storage at <code>models/R-0012/</code> (3 GB). The $20 monthly GPU brake will sit near $17 for October once billing catches up, so there is room for about one more small run this month without raising it.</p>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">1</td><td><b>Stage 4: your own voice.</b> Record mixed isiXhosa and English sentences; build a held-out test set from them. This targets the biggest remaining weakness: English words inside isiXhosa.</td></tr>
+          <tr><td class="n">2</td><td><b>Stage 5: ship.</b> Publish R-0012 on Hugging Face with an honest model card, plus a free demo page and a write-up. Needs your Hugging Face account.</td></tr>
+          <tr><td class="n">3</td><td><b>More stage 3.</b> A real isiXhosa tag instead of borrowing Swahili's, more weight on FLEURS, or a comparison with Meta's MMS.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <div>R-0012: openai/whisper-medium · tag &lt;|sw|&gt; · 4,000 steps × 32 clips (8 × 4 gradient accumulation) · lr 1e-5, warmup 500, linear decay · bf16 · best checkpoint step 4000 (NCHLT dev CER 2.66%)</div>
+    <div>Train 45,703 clips, 64.2 h (NCHLT 42,269 + FLEURS 3,434; FLEURS text normalised as scored, D-0010) · dev: same 6 NCHLT speakers as R-0004 and R-0007, plus 200 FLEURS dev clips (information only)</div>
+    <div>FLEURS test: 1,034 clips ≤ 30 s (7 longer left out), all male speakers, max 225 output tokens · NCHLT test: 2,770 clips, max 96 tokens</div>
+    <div>Machine NVIDIA L40S 48 GB (g6e.xlarge, on-demand) · 2.33 h incl. R-0011 · about $4.34 · peak GPU memory 33.4 GB · commit 3049bd7</div>
+    <div>Data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute, North-West University, via SADiLaR, CC BY 3.0) · Google FLEURS (CC BY 4.0).</div>
+  </footer>
+</div>
+</body>
+</html>

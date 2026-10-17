@@ -1,0 +1,13 @@
+2770 clips, 3.11 h, 8 speakers
+You have passed task=transcribe, but also have set `forced_decoder_ids` to [[1, None], [2, 50359]] which creates a conflict. `forced_decoder_ids` will be ignored in favor of task=transcribe.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+  32/2770 clips, 1 s
+  352/2770 clips, 12 s
+  672/2770 clips, 25 s
+  992/2770 clips, 40 s
+  1312/2770 clips, 55 s
+  1632/2770 clips, 70 s
+  1952/2770 clips, 83 s
+  2272/2770 clips, 98 s
+  2592/2770 clips, 114 s
+{"wer": 137.21, "cer": 33.74, "exact_match_pct": 1.44, "detected_languages": {"sw": 2770}, "seconds": 121.7}

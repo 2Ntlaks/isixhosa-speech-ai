@@ -17,3 +17,7 @@ Scores are on the fixed held-out test set named in the row. Never delete a row. 
 | R-0008 | 2026-10-17 | 3 | whisper-medium smoke test (L4) | - | - | - | - | 0.25 | 0.20 | only fits with gradient checkpointing (17.4 GB, ~9 s/step); last check failed (P-0007) |
 | R-0009 | 2026-10-17 | 3 | whisper-medium smoke test (L40S 48 GB) | - | - | - | - | 0.16 | 0.30 | FAILED: out of memory at batch 16 x 2 without checkpointing (P-0008) |
 | R-0010 | 2026-10-17 | 3 | whisper-medium smoke test (L40S) | - | - | - | - | 0.27 | 0.50 | batch 8 x 4 fits (32.8 GB), 2.76 s/step; checkpoint 8.6 GB; two-dev-set eval works |
+| R-0011 | 2026-10-17 | 3 | whisper-medium (stock), sw tag forced | none (no training) | NCHLT xho test, 2770 clips | 137.21 | 33.74 | 0.25 | 0.45 | fair medium baseline (small: 164.46 / 45.70); seen CER 32.5 / unseen 38.9 |
+| R-0011 | 2026-10-17 | 3 | (same model) | (same) | FLEURS xh test, 1034 clips | 142.32 | 45.86 | - | - | small: 185.34 / 65.45 |
+| R-0012 | 2026-10-17 | 3 | whisper-medium fine-tuned, 4000 steps, sw tag | NCHLT train 51.2 h + FLEURS train 13.0 h (same as R-0007) | FLEURS xh test, 1034 clips | **37.83** | **8.03** | 2.08 | 3.89 | one change vs R-0007 (model size); L40S, batch 8 x 4; best checkpoint step 4000 (dev CER 2.66) |
+| R-0012 | 2026-10-17 | 3 | (same model) | (same) | NCHLT xho test, 2770 clips | **12.71** | **2.33** | - | - | vs R-0007 16.80 / 2.91; unseen sentences WER 28.7 / CER 5.0 (R-0007 34.9 / 5.8) |

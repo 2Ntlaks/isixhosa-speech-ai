@@ -1,0 +1,47 @@
+{
+  "model": "openai/whisper-medium",
+  "language": "sw",
+  "test_set": "test.tsv",
+  "clips": 1034,
+  "left_out_over_max_seconds": 7,
+  "max_new_tokens": 225,
+  "audio_hours": 3.716,
+  "wer": 142.32,
+  "cer": 45.86,
+  "exact_match_pct": 0.0,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 1034
+  },
+  "per_speaker": {
+    "fleurs": {
+      "wer": 142.3,
+      "cer": 45.9,
+      "n": 1034
+    }
+  },
+  "per_gender": {
+    "male": {
+      "wer": 142.3,
+      "cer": 45.9,
+      "n": 1034
+    }
+  },
+  "by_text_in_training": {
+    "unseen": {
+      "wer": 142.3,
+      "cer": 45.9,
+      "n": 1034
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 149.1,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L40S",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}
