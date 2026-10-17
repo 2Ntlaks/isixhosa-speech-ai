@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Whisper isiXhosa R-0004</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column like the stage 1 page; three-run comparison first, then why, then the evidence. */
+:root {
+  --paper: #f4efe4; --paper2: #ebe4d4; --ink: #1d1b16; --dim: #6c6455; --rule: #d6ccb6;
+  --ochre: #b8641c; --bar: #b8641c; --green: #1f5c45; --red: #a63a2a;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "DM Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+    --ochre: #e0954c; --bar: #c0742e; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --paper: #16140f; --paper2: #1f1c16; --ink: #ece4d2; --dim: #a0957f; --rule: #3a342a;
+  --ochre: #e0954c; --bar: #c0742e; --green: #6fbf98; --red: #e07a66; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 18.5px/1.6 var(--serif); }
+.wrap { max-width: 900px; margin: 0 auto; padding-block: 36px 60px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+code { font-family: var(--mono); font-size: .82em; background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+h1 { font-size: clamp(36px, 6.4vw, 62px); line-height: 1.03; font-weight: 600; margin: 12px 0 16px; text-wrap: balance; }
+h1 em { color: var(--ochre); }
+h2 { font-size: 30px; font-weight: 600; margin: 0; text-wrap: balance; }
+.lede { font-size: 21px; max-width: 62ch; margin: 0; }
+section { padding-top: 48px; display: grid; gap: 12px; }
+section > p { margin: 0; max-width: 66ch; }
+.sub { color: var(--dim); }
+figure { margin: 0; } figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: #fdfdfc; }
+figcaption { font-family: var(--mono); font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+.nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 30px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.num { padding: 16px 18px 18px 0; display: grid; gap: 4px; align-content: start; }
+.num + .num { padding-left: 18px; border-left: 1px solid var(--rule); }
+.num b { font-size: 46px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.num b small { font-size: 22px; color: var(--dim); font-weight: 400; }
+.num .k { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ochre); }
+.num p { margin: 0; font-size: 15.5px; color: var(--dim); }
+
+.chart { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 220px minmax(0, 1fr) 90px; gap: 12px; align-items: center; padding: 3px 4px; border-radius: 3px; position: relative; outline: none; }
+.bar:hover, .bar:focus-visible { background: var(--paper2); }
+.bar:focus-visible { box-shadow: 0 0 0 2px var(--ochre); }
+.bar .lab { font-size: 16px; line-height: 1.3; }
+.bar .lab small { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+.track { height: 16px; }
+.fill { height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; min-width: 3px; }
+.val { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.bar[data-tip]:hover::after, .bar[data-tip]:focus-visible::after { content: attr(data-tip); position: absolute; left: 230px; top: calc(100% + 2px); z-index: 2;
+  max-width: min(420px, 80vw); background: var(--ink); color: var(--paper); font: 13px/1.45 var(--mono); padding: 8px 10px; border-radius: 4px; }
+.axis { display: grid; grid-template-columns: 220px minmax(0, 1fr) 90px; gap: 12px; font-family: var(--mono); font-size: 11px; color: var(--dim); padding: 0 4px; }
+.axis div:nth-child(2) { display: flex; justify-content: space-between; border-top: 1px solid var(--rule); padding-top: 4px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); font-weight: 500;
+  padding: 8px 10px 8px 0; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.hi { font-weight: 600; }
+.scroll { overflow-x: auto; }
+.samples td { min-width: 150px; overflow-wrap: anywhere; }
+.samples td.id { min-width: 0; font-family: var(--mono); font-size: 12.5px; color: var(--dim); white-space: nowrap; }
+.samples td.ok { color: var(--green); font-weight: 600; }
+.note { border-left: 3px solid var(--ochre); padding: 4px 0 4px 16px; max-width: 66ch; }
+.note p { margin: 0; }
+.ask { border: 1px solid var(--ochre); background: var(--paper2); padding: 18px 22px; display: grid; gap: 8px; }
+.ask ol { margin: 0; padding-left: 22px; display: grid; gap: 4px; } .ask p { margin: 0; }
+footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 14px; font-family: var(--mono); font-size: 12.5px; color: var(--dim); display: grid; gap: 4px; }
+@media (max-width: 680px) {
+  body { font-size: 17.5px; }
+  .nums { grid-template-columns: 1fr; }
+  .num + .num { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .bar, .axis { grid-template-columns: 120px minmax(0, 1fr) 70px; gap: 8px; }
+  .bar .lab small { display: none; }
+  .bar[data-tip]:hover::after, .bar[data-tip]:focus-visible::after { left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Runs R-0003 + R-0004 · Stage 2 · 17 October 2026</div>
+  <h1>Whisper can now <em>write isiXhosa</em></h1>
+  <p class="lede">We trained <code>whisper-small</code> for 2 hours on 51 hours of isiXhosa speech from 195 people. Then we tested it on 2,770 clips from 8 people it had never heard. It now gets about 97 letters in 100 right, and two out of three clips come out exactly right. On sentences it never practised, it is good but clearly weaker, and that is the number to quote.</p>
+
+  <div class="nums">
+    <div class="num"><span class="k">Letters wrong (CER)</span><b>3.0<small>%</small></b><p>Was 45.7% with the language tag alone, 75.1% for stock Whisper.</p></div>
+    <div class="num"><span class="k">Words wrong (WER)</span><b>16.6<small>%</small></b><p>Was 164.5%. One wrong letter still fails the whole long word.</p></div>
+    <div class="num"><span class="k">Clips exactly right</span><b>64.5<small>%</small></b><p>1,787 of 2,770 clips, up from 24.</p></div>
+  </div>
+
+  <section>
+    <h2>Three runs, same 2,770 clips</h2>
+    <p>Each run changed one thing. That lets us say how much of the improvement came from which change.</p>
+    <div class="chart" role="list" aria-label="Letter error rate per run">
+      <div class="bar" role="listitem" tabindex="0" data-tip="R-0001 · stock whisper-small, picks the language itself · CER 75.09% · WER 196.56%"><span class="lab">R-0001 · stock<small>guesses the language</small></span><div class="track"><div class="fill" style="width:75.09%"></div></div><span class="val">75.1%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="R-0003 · stock whisper-small, told 'Swahili' · CER 45.70% · WER 164.46%"><span class="lab">R-0003 · tag only<small>told "Swahili", no training</small></span><div class="track"><div class="fill" style="width:45.7%"></div></div><span class="val">45.7%</span></div>
+      <div class="bar" role="listitem" tabindex="0" data-tip="R-0004 · trained 4,000 steps on NCHLT · CER 2.98% · WER 16.63%"><span class="lab">R-0004 · trained<small>2 h on 51 h of isiXhosa</small></span><div class="track"><div class="fill" style="width:2.98%"></div></div><span class="val">3.0%</span></div>
+      <div class="axis"><div></div><div><span>0%</span><span>letters wrong</span><span>100%</span></div><div></div></div>
+    </div>
+    <p><b>The language tag fixed the chaos:</b> no more guessing 52 languages or writing in Arabic script. That took letter errors from 75% to 46%. <b>Training taught it isiXhosa,</b> from 46% down to 3%. The tag was a 30-point shortcut; training did the other 43 points.</p>
+  </section>
+
+  <section>
+    <h2>The honest number: sentences it never practised</h2>
+    <p>NCHLT reuses its prompts: 82% of the test clips are sentences that other people also read in the training data. The model has never heard these speakers, but it has seen most of these sentences. So we score the two groups separately.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Test clips</th><th>Clips</th><th>R-0003 CER</th><th>R-0004 CER</th><th>R-0004 WER</th><th>Exactly right</th></tr></thead>
+        <tbody>
+          <tr><td>Sentence also in training (read by others)</td><td class="n">2,259</td><td class="n">42.7%</td><td class="n hi">2.2%</td><td class="n">12.1%</td><td class="n">72.7%</td></tr>
+          <tr><td><b>Sentence never in training</b></td><td class="n">511</td><td class="n">58.0%</td><td class="n hi">6.2%</td><td class="n hi">36.6%</td><td class="n">28.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><p>On new sentences the model gets about 94 letters in 100 right, but only 2 in 3 words and fewer than 1 clip in 3 exactly right. Part of the gap was there before training (58% vs 43% CER), so these sentences are simply harder. But some of the gap is the model remembering practised sentences. When we quote one number, it is <b>6.2% CER / 36.6% WER on unseen sentences</b>.</p></div>
+  </section>
+
+  <section>
+    <h2>It learned isiXhosa spelling</h2>
+    <p>For each letter pattern: of the places where the true text has it, how often did the model write it in that clip?</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Pattern</th><th>Example</th><th>Stock, tag only (R-0003)</th><th>Trained (R-0004)</th></tr></thead>
+        <tbody>
+          <tr><td><b>kh</b></td><td><i>ekhayeni</i></td><td class="n">1.2%</td><td class="n hi">96.7%</td></tr>
+          <tr><td><b>th</b></td><td><i>emthatha</i></td><td class="n">0.9%</td><td class="n hi">98.8%</td></tr>
+          <tr><td><b>hl</b></td><td><i>-hl-</i></td><td class="n">5.8%</td><td class="n hi">98.3%</td></tr>
+          <tr><td><b>dl</b></td><td><i>-dl-</i></td><td class="n">4.5%</td><td class="n hi">97.5%</td></tr>
+          <tr><td><b>x</b> (click)</td><td></td><td class="n">0.4%</td><td class="n hi">94.0%</td></tr>
+          <tr><td><b>q</b> (click)</td><td><i>ndiqinisekile</i></td><td class="n">0.9%</td><td class="n hi">94.5%</td></tr>
+          <tr><td><b>c</b> (click)</td><td><i>kwinkcazo</i></td><td class="n">11.8%</td><td class="n hi">98.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">The clicks <i>x</i> and <i>q</i> are still the weakest (about 1 in 17 missed). They are the hardest sounds, and the ones you can judge best by ear.</p>
+  </section>
+
+  <section>
+    <h2>The same clips, three ways</h2>
+    <p>The 20 clips from the stage 1 page (picked by a fixed seed, not chosen), now transcribed by all three runs. The audio is on your laptop in <code>data/listen/R-0001/</code>.</p>
+    <div class="scroll">
+      <table class="samples">
+        <thead><tr><th>Clip</th><th>True text (NCHLT)</th><th>Stock (R-0001)</th><th>Tag only (R-0003)</th><th>Trained (R-0004)</th></tr></thead>
+        <tbody>
+          <tr><td class="id">500m_0092</td><td>esalika ekhayeni lakhe</td><td>Esa lika ekayeni lakia.</td><td>Esa lika ekayeni lakia.</td><td class="ok">esalika ekhayeni lakhe</td></tr>
+          <tr><td class="id">501m_0376</td><td>yaba ngumhla omkhulu</td><td>yabangu ṬṢā'uṃ kūl</td><td>Ya bang kumisa umkul</td><td class="ok">yaba ngumhla omkhulu</td></tr>
+          <tr><td class="id">502f_0092</td><td>nzulu umnumzana u</td><td>Zulu um num sana.</td><td>Njulu umnumzana uhu</td><td>nzulu umn<b>o</b>mzana u</td></tr>
+          <tr><td class="id">503f_0226</td><td>iingwevu zasempoza zadibanisana</td><td>Inwefuza sem pausa sa tibani san.</td><td>Inwefuza sem pausa sa tibani san.</td><td class="ok">iingwevu zasempoza zadibanisana</td></tr>
+          <tr><td class="id">504f_0113</td><td>ukuba igama likadingindawo</td><td>Ukovaika malikandi gidao</td><td>Ukovaika malikandi gidao</td><td class="ok">ukuba igama likadingindawo</td></tr>
+          <tr><td class="id">505m_0394</td><td>uliphalisayo ihashe ngumkhulawa</td><td>We are going to be going to the palace.</td><td>Unipalisa yu eaashimbu gumkalo</td><td>uliphalisayo ihashe ngumkh<b>alwa</b></td></tr>
+          <tr><td class="id">506f_0353</td><td>yemiphunga eyosulelayo banokuyifumana</td><td>ḍᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃ…</td><td>ya mi punga esu le layu bano kwefumana</td><td>yemiphunga e<b>s</b>ulelayo banok<b>w</b>ifumana</td></tr>
+          <tr><td class="id">507m_0403</td><td>sompu esindulula imbaleki</td><td>Som poesin do lulaim ba leke</td><td>Sum puesen dulula ima leki</td><td>sompu esindulula i<b>i</b>mbaleki</td></tr>
+          <tr><td class="id">500m_0491</td><td>obuqhelekileyo kwinkcazo [s] yakho</td><td>ḍᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃᵃ…</td><td>Obu khele kileyo kwenazo ya ako.</td><td>obuqhelekileyo kwin<b>g</b>cazo yakho</td></tr>
+          <tr><td class="id">501m_0253</td><td>nomfo wakuqumbu owayetolika</td><td>Nwomfu waku kumbo, owa yetolika.</td><td>Nwomfu waku kumbo, owa yetolika.</td><td class="ok">nomfo wakuqumbu owayetolika</td></tr>
+          <tr><td class="id">502f_0271</td><td>emthatha</td><td>Em tata.</td><td>Imtaata</td><td class="ok">emthatha</td></tr>
+          <tr><td class="id">503f_0089</td><td>wazi loo nto</td><td>was alone.</td><td>was zelond</td><td class="ok">wazi loo nto</td></tr>
+          <tr><td class="id">504f_0507</td><td>inene ndithi kuwe</td><td>ន្្្្្្្្្</td><td>Inana niti kule</td><td class="ok">inene ndithi kuwe</td></tr>
+          <tr><td class="id">505m_0018</td><td>nabeendawo</td><td>Nabindow</td><td>Nabindaw</td><td class="ok">nabeendawo</td></tr>
+          <tr><td class="id">506f_0296</td><td>ngezulu ndiqinisekile uyalazi</td><td>جزول لقنسة جيلة ويلازي</td><td>gizulu li kini segile wiyalazi</td><td class="ok">ngezulu ndiqinisekile uyalazi</td></tr>
+          <tr><td class="id">507m_0379</td><td>nketho zazisiweyo okuthethi</td><td>kwae tozazisweyo oku tete</td><td>kwae tozazisweyo oku tete</td><td class="ok">nketho zazisiweyo okuthethi</td></tr>
+          <tr><td class="id">500m_0446</td><td>yamachunu</td><td>I amatruono.</td><td>Yamatru no.</td><td class="ok">yamachunu</td></tr>
+          <tr><td class="id">501m_0003</td><td>karhulumente</td><td>Cajolumente</td><td>Kahulumente</td><td class="ok">karhulumente</td></tr>
+          <tr><td class="id">502f_0523</td><td>uthi yishi endiza</td><td>which is a teaser.</td><td>Uchiishi Ediza</td><td>uthi yishi e<b>d</b>iza</td></tr>
+          <tr><td class="id">503f_0239</td><td>monti</td><td>मुड</td><td>Munt</td><td class="ok">monti</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Green: exactly right (14 of 20). Bold: the letters it still got wrong. Most remaining mistakes are a single vowel or consonant.</p>
+  </section>
+
+  <section>
+    <h2>What its mistakes look like now</h2>
+    <p>983 of the 2,770 clips still have at least one error. Of those:</p>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">720</td><td>are one small slip (under 10% of letters), like <i>umnumzana → umnomzana</i> or <i>kwinkcazo → kwingcazo</i>.</td></tr>
+          <tr><td class="n">34</td><td>are only word boundaries: every letter right, but split or joined in the wrong place.</td></tr>
+          <tr><td class="n">229</td><td>are bigger misses. The worst are often unusual prompts that mix in English (<i>kwe draw nganye</i>, <i>art ubethe zesize</i>), or rare long words.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>By speaker, letter errors range from 0.6% (speaker 503) to 6.9% (speaker 505), and women and men score about the same (3.2% vs 2.8%). Speaker 505 was also among the hardest for stock Whisper, so it's worth a listen.</p>
+  </section>
+
+  <section>
+    <h2>How training went</h2>
+    <figure><img src="loss.png" alt="Left: training loss falls fast in the first 500 steps then slowly, with a step down at the start of pass 2 and pass 3; dev loss slides from 0.47 to 0.20. Right: dev letter error rate 7.0, 6.3, 4.5, 4.1, 3.7, 3.6, 3.6, 3.5 percent at steps 500 to 4000."><figcaption>Training loss drops in a step each time the model starts another pass over the same clips (dashed lines): it recognises clips it has heard before. The dev score flattens from step 3,000.</figcaption></figure>
+    <div class="note"><p>This is the early edge of <b>overfitting</b>: the model gets much better on clips it has heard twice, but only a little better on new voices. Three passes is about the limit for this data. More training wouldn't help much; <b>more varied data</b> would. That is the first idea for stage 3.</p></div>
+  </section>
+
+  <section>
+    <h2>What this means</h2>
+    <p><b>Good:</b> on clean, read isiXhosa from new speakers, the model writes correct isiXhosa, clicks and all, most of the time. For a 244-million-parameter model, 2 hours of training and about $2, that is a strong result.</p>
+    <p><b>Not yet proven:</b> NCHLT is short prompts read into a phone. Conversation, noise, long recordings and mixed English are all harder, and we haven't tested any of them yet. The unseen-sentence score (6.2% / 36.6%) is the closest we have to "new isiXhosa", and it shows room to grow.</p>
+    <div class="ask">
+      <p><b>Your part.</b> The same 20 clips are in <code>data/listen/R-0001/</code>. Listen to the 6 it got wrong (bold letters above) and tell me:</p>
+      <ol>
+        <li>Is the model mishearing, or does the speaker actually say it that way (for example <i>ngumkhalwa</i> vs <i>ngumkhulawa</i>)?</li>
+        <li>Are any NCHLT reference texts themselves wrong or unusual?</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>Stage 3: one change per run</h2>
+    <p>Each one is measured on the same test, with the unseen-sentence score as the headline. My suggested order:</p>
+    <div class="scroll">
+      <table>
+        <tbody>
+          <tr><td class="n">1</td><td><b>Add FLEURS</b> (full natural sentences, new speakers). Targets the unseen-sentence gap and overfitting. ~$2.</td></tr>
+          <tr><td class="n">2</td><td><b>Bigger model</b> (<code>whisper-medium</code>, 3× the size). Usually more accurate, ~2–3× the time. ~$5.</td></tr>
+          <tr><td class="n">3</td><td><b>A real isiXhosa tag</b> instead of borrowing Swahili's. Cleaner for the model card.</td></tr>
+          <tr><td class="n">4</td><td><b>Audio augmentation</b> (noise, speed changes) for messier real-world recordings.</td></tr>
+          <tr><td class="n">5</td><td><b>Compare with Meta's MMS</b>, an outside model that already supports isiXhosa, as a reality check.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <div>R-0004: openai/whisper-small · tag &lt;|sw|&gt; · 4,000 steps × 32 clips (~3 passes) · lr 1e-5, warmup 500, linear decay · bf16 · best checkpoint = step 4000 (dev CER 3.53%)</div>
+    <div>Train 42,269 clips, 51.2 h, 195 speakers · dev 6 speakers (600 clips scored) · test 2,770 clips, 3.11 h, speakers 500–507 · scoring v1</div>
+    <div>Machine NVIDIA L4 (g6.xlarge, on-demand) · 2.3 h incl. R-0003 · about $1.85 · code commit 51cd8ba · model in S3 models/R-0004/</div>
+    <div>Every number: runs/R-0003, runs/R-0004 (metrics.json, comparison.json, loss.png), results.md.</div>
+    <div>Data: NCHLT isiXhosa Speech Corpus, CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0.</div>
+  </footer>
+</div>
+</body>
+</html>

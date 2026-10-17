@@ -105,30 +105,24 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
 </head>
 <body>
 <div class="wrap">
-  <div class="kicker">isiXhosa Speech AI · progress so far · updated 17 October 2026, morning</div>
+  <div class="kicker">isiXhosa Speech AI · progress so far · updated 17 October 2026, midday</div>
   <h1>Teaching an AI to hear <em>isiXhosa</em></h1>
   <p class="lede">Whisper is a free speech-to-text model from OpenAI that understands 99 languages, but not isiXhosa. We are teaching it isiXhosa using 56 hours of recorded speech, on a computer rented from Amazon by the hour. You make the decisions; Claude Code agents write and run everything. This page is the story so far, in plain words.</p>
 
   <div class="stages" aria-label="The five stages">
     <div class="st done"><span>Done</span><b>1 · Watch it fail</b></div>
-    <div class="st now"><span>Running now</span><b>2 · First training</b></div>
-    <div class="st"><span>Next</span><b>3 · Make it better</b></div>
+    <div class="st done"><span>Done</span><b>2 · First training</b></div>
+    <div class="st now"><span>Next</span><b>3 · Make it better</b></div>
     <div class="st"><span>Later</span><b>4 · Your voice, mixed with English</b></div>
     <div class="st"><span>Last</span><b>5 · Share it</b></div>
   </div>
 
   <section>
-    <h2>What is happening right now</h2>
+    <h2>Where we are now</h2>
     <div class="now-box">
-      <p>One rented GPU computer in the USA (an NVIDIA L4) is working through this list. It started at 09:31 your time and switches itself off when done, after 4 hours at most.</p>
-      <ol>
-        <li>Set up and a 2-minute safety test, to make sure nothing is broken before the long part.</li>
-        <li>Copy the 46,651 isiXhosa audio clips from our storage onto the computer.</li>
-        <li class="on">R-0003: test plain Whisper again, but tell it "this is Swahili" so it stops guessing languages. This measures how much of the improvement comes from that alone.</li>
-        <li class="on">R-0004: the real training. Whisper listens to 51 hours of isiXhosa from 195 speakers, about 3 times over (~1.8 hours).</li>
-        <li>Final exam: 2,770 clips from 8 speakers it has never heard.</li>
-      </ol>
-      <p class="sub">Expected finish: about 11:40 your time. Expected cost: about $1.85.</p>
+      <p><b>Stage 2 is done, and it worked.</b> After 2 hours of training on 51 hours of isiXhosa, Whisper gets about 97 of every 100 letters right on 8 speakers it had never heard, and two out of three clips exactly right. On sentences it never practised it is weaker (about 94 letters in 100, 2 in 3 words), and that is the honest number we quote.</p>
+      <p>Full results, with the same 20 clips shown three ways: <code>evidence/R-0004-stage2-results.html</code>. The trained model is saved in our cloud storage (<code>models/R-0004/</code>). All machines are off.</p>
+      <p class="sub">Next: stage 3, one improvement at a time. First idea: add the FLEURS data (natural full sentences) to fix the weakness on new sentences.</p>
     </div>
   </section>
 
@@ -147,7 +141,9 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <div class="ev ok"><span class="when">17 Oct · 08:30</span><h3>Your choices for training</h3><p>Borrow Swahili's "language label" for isiXhosa (Whisper has none), and use regular, never-interrupted GPU computers.</p></div>
       <div class="ev bad"><span class="when">17 Oct · 08:53</span><h3>Test run failed: a missing piece of software (R-0002, try 1)</h3><p>The small rehearsal run stopped at the first training step because one library was not installed. Cost about $0.11. Fixed, and a 2-minute safety test now runs first, so mistakes like this get caught early and cheaply.</p></div>
       <div class="ev ok"><span class="when">17 Oct · 09:12</span><h3>Test run worked end to end (R-0002, try 2)</h3><p>Trained 40 tiny steps, stopped, restarted from the saved copy, scored itself. Measured speed: 1.65 seconds per step, which is how we priced the real run. Even 40 steps cut letter errors on one speaker from 60% to 17%.</p></div>
-      <div class="ev"><span class="when">17 Oct · 09:31</span><h3>The real training started (R-0003 + R-0004)</h3><p>Running now. See the box above.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 09:46</span><h3>The language tag alone: 75% → 46% (R-0003)</h3><p>Plain Whisper, just told "this is Swahili", stopped guessing languages and writing in the wrong alphabet. But it still spelled isiXhosa like Swahili: almost never <i>kh</i>, <i>th</i> or the clicks.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 09:48–11:48</span><h3>Training: 4,000 steps, about 3 passes over the data (R-0004)</h3><p>A check every 500 steps on 6 held-out speakers: 7.0% → 6.3% → 4.5% → 4.1% → 3.7% → 3.6% → 3.6% → 3.5% wrong letters. It levelled off after step 3,000, an early sign of memorising. The progress lines got stuck in a buffer (P-0006), so we watched the saved checkpoints instead.</p></div>
+      <div class="ev ok"><span class="when">17 Oct · 11:50</span><h3>Final exam: 3.0% letters wrong on 8 new speakers</h3><p>64.5% of clips exactly right. Sentences it had practised: 2.2%. Sentences it never saw: 6.2%. Clicks and <i>kh</i>, <i>th</i>, <i>hl</i>, <i>dl</i> are now written correctly 94–99% of the time.</p></div>
     </div>
   </section>
 
@@ -160,8 +156,9 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
         <tbody>
           <tr><td class="n">R-0001</td><td>Plain Whisper, guessing the language itself. All 2,770 test clips.</td><td class="n big">75.1%</td><td class="n">196.6%</td></tr>
           <tr><td class="n">R-0002</td><td>Rehearsal only: 40 tiny training steps, one speaker, 300 clips. Not a real result.</td><td class="n">16.8%</td><td class="n">77.5%</td></tr>
-          <tr><td class="n">R-0003</td><td>Plain Whisper told "this is Swahili". No training.</td><td class="pending">running</td><td class="pending">running</td></tr>
-          <tr><td class="n">R-0004</td><td>Whisper trained on 51 hours of isiXhosa.</td><td class="pending">~11:40</td><td class="pending">~11:40</td></tr>
+          <tr><td class="n">R-0003</td><td>Plain Whisper told "this is Swahili". No training.</td><td class="n big">45.7%</td><td class="n">164.5%</td></tr>
+          <tr><td class="n">R-0004</td><td>Whisper trained on 51 hours of isiXhosa. All 2,770 test clips.</td><td class="n big">3.0%</td><td class="n">16.6%</td></tr>
+          <tr><td class="n">R-0004</td><td>… only the 511 clips whose sentence never appeared in training (the honest number).</td><td class="n big">6.2%</td><td class="n">36.6%</td></tr>
         </tbody>
       </table>
     </div>
@@ -171,6 +168,7 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <div><b>What was said:</b> esalika ekhayeni lakhe</div>
       <div><b>Plain Whisper:</b> Esa lika ekayeni lakia.</div>
       <div><b>After 40 training steps:</b> esalika ekhaenilake</div>
+      <div><b>After full training (R-0004):</b> esalika ekhayeni lakhe ✓</div>
     </div>
   </section>
 
@@ -200,25 +198,26 @@ footer { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 12px;
       <div class="card"><span class="id">P-0003</span><h3>No discounted GPUs available</h3><p>Amazon's cheap "spot" computers were all taken, so we used a regular one.</p><p class="lesson">Cheap capacity isn't guaranteed.</p></div>
       <div class="card"><span class="id">P-0004</span><h3>Windows hid a character in file names</h3><p>An invisible line-ending character made files look missing. Fixed in the script.</p><p class="lesson">Windows and Linux tools disagree about invisible characters.</p></div>
       <div class="card"><span class="id">P-0005</span><h3>A missing software library</h3><p>The rehearsal caught it before the expensive run. A 2-minute safety test now runs first.</p><p class="lesson">The cheapest place to find a bug is the smallest run.</p></div>
+      <div class="card"><span class="id">P-0006</span><h3>Training progress stuck in a buffer</h3><p>A text filter held the progress lines back, so we couldn't see the step counter. We watched the saved checkpoints instead; fixed for next time.</p><p class="lesson">Check that progress is visible in the first minute.</p></div>
     </div>
   </section>
 
   <section>
     <h2>Money</h2>
     <div class="money">
-      <div><span>Spent so far</span><b>~$0.64</b><p>Data download, stage 1, two rehearsal runs.</p></div>
-      <div><span>Running now</span><b>~$1.85</b><p>The real training, hard limit 4 hours (~$3.20 at most).</p></div>
+      <div><span>Spent so far</span><b>~$2.50</b><p>Data download, stage 1, two rehearsals, and the 2.3-hour training run (~$1.85).</p></div>
+      <div><span>Machines running</span><b>none</b><p>Everything switched itself off. Storage costs about $0.25 a month.</p></div>
       <div><span>Project budget</span><b>$15–30</b><p>Out of about $133 of AWS credits. Storage adds about $0.22 a month.</p></div>
     </div>
   </section>
 
   <section>
     <h2>What comes next</h2>
-    <p>When training finishes, you get a results page comparing plain Whisper, Whisper told "Swahili", and trained Whisper, plus 20 clips to judge by ear. Then stage 3: one improvement at a time (cleaner text, more data from FLEURS, a bigger model, a real isiXhosa language tag), each measured against the same test speakers.</p>
+    <p>Stage 3: one improvement at a time, each measured on the same 8 test speakers with the unseen-sentence score as the headline. Suggested order: add FLEURS data, try the bigger <code>whisper-medium</code>, give isiXhosa its own language tag, add audio noise and speed changes, and compare against Meta's MMS model.</p>
     <p class="sub">Still open for you: listen to a few clips in <code>data/listen/R-0001/</code> and tell me if the problem sounds like spelling or word boundaries. A Hugging Face account is only needed at stage 5.</p>
   </section>
 
-  <footer>Every number here comes from a run in runs/R-xxxx/ and results.md · decisions D-0001…D-0008 in decisions.md · problems P-0001…P-0005 in problems.md · data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0) and Google FLEURS.</footer>
+  <footer>Every number here comes from a run in runs/R-xxxx/ and results.md · decisions D-0001…D-0008 in decisions.md · problems P-0001…P-0006 in problems.md · data: NCHLT isiXhosa Speech Corpus (CSIR Meraka Institute and North-West University, via SADiLaR, CC BY 3.0) and Google FLEURS.</footer>
 </div>
 </body>
 </html>
