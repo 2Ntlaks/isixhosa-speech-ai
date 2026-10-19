@@ -172,3 +172,5 @@ Format:
   announcement drafts link to it.
 - Cost: $0 (Hugging Face free tier; laptop).
 - Next: founder tries the demo on his phone, edits and posts the LinkedIn/blog drafts (release/announce/).
+- 2026-10-19: founder confirmed the live demo works on his own device ("it works"), which covers the one path the agent
+  could not test (recording from a real microphone).
