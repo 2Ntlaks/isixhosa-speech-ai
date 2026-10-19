@@ -189,3 +189,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Recommendation: A. Decision: **A** (founder, 2026-10-19).
 - Conditions: convert R-0007 to ONNX, measure accuracy against the original before publishing (new run), test the page
   in a real browser. Medium stays available as a download for people with their own machine.
+
+## D-0021 · 2026-10-19 · Announcement video (agent's choices; founder: "choose best one, I trust you... go wild")
+- Made with Remotion (release/video/), ~40 s, two shapes: vertical 1080x1920 (phones, LinkedIn) and wide 1920x1080.
+- Voices: three Google FLEURS xh_za test clips (CC BY 4.0, credited on screen), not the Thetha recordings: those mix
+  the founder's and a friend's voice and the friend never confirmed consent (TODO). Every transcript shown is a real
+  output from a run record (R-0006, R-0011, R-0012), checked by release/video/prepare.py.
+- Sound: no music track (licences); a quiet low drone, key ticks and whooshes synthesised in prepare.py.
+- Rendered on the laptop, $0. Outputs (MP4) and audio are kept out of git.
