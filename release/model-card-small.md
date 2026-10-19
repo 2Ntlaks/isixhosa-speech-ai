@@ -50,6 +50,8 @@ OpenAI's **whisper-small** fine-tuned to transcribe **isiXhosa** (run **R-0007**
 
 **Try it in your browser:** {SPACE_URL} (this model, running on your own device; nothing is uploaded)
 
+**Read how it was made:** [I taught an AI to understand isiXhosa](https://ntlaks.dev/writing/teaching-whisper-isixhosa/), an interactive write-up with the real recordings, training curves and every stage of the project.
+
 | Test set | CER % | WER % |
 |---|---|---|
 | **FLEURS xh_za test** (1 034 clips, unseen sentences) | **10.16** | **44.38** |

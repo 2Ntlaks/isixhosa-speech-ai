@@ -50,6 +50,8 @@ run **R-0012** of an open learning project. Every experiment, failed ones includ
 
 **Try it:** {SPACE_URL} (runs the smaller [whisper-small-isixhosa](https://huggingface.co/{HF_USER}/whisper-small-isixhosa) in your browser)
 
+**Read how it was made:** [I taught an AI to understand isiXhosa](https://ntlaks.dev/writing/teaching-whisper-isixhosa/), an interactive write-up with the real recordings, training curves and every stage of the project.
+
 ## Scores
 
 Lower is better. CER = share of letters wrong, WER = share of words wrong. isiXhosa words are long (one wrong letter

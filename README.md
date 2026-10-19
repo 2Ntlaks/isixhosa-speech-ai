@@ -10,6 +10,7 @@
   <img alt="licence: MIT" src="https://img.shields.io/badge/licence-MIT-142a47">
   <br>
   <a href="https://ntlakanipho-thetha.static.hf.space/index.html"><img alt="Try the demo" src="https://img.shields.io/badge/%F0%9F%8E%99%EF%B8%8F%20try%20the%20demo-Thetha-f4715f"></a>
+  <a href="https://ntlaks.dev/writing/teaching-whisper-isixhosa/"><img alt="Read the story" src="https://img.shields.io/badge/read-the%20story-142a47"></a>
   <a href="https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa"><img alt="Model on Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20model-whisper--medium--isixhosa-142a47"></a>
 </p>
 
@@ -24,6 +25,9 @@ end to end, from raw corpora to a model you can talk to, not just to ship a chec
 > [!TIP]
 > **Try it:** speak isiXhosa into **[Thetha](https://ntlakanipho-thetha.static.hf.space/index.html)** on your phone or computer. The small model runs inside your
 > browser (about 300 MB, downloaded once), so nothing you record leaves your device.
+>
+> **Read the story:** [I taught an AI to understand isiXhosa](https://ntlaks.dev/writing/teaching-whisper-isixhosa/), an interactive write-up where you can hear the
+> recordings and watch one sentence fix itself stage by stage.
 >
 > **Use it:** [whisper-medium-isixhosa](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) (more accurate) or [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa) (faster) on Hugging Face.
 
