@@ -81,8 +81,7 @@ with tempfile.TemporaryDirectory() as tmp:
     for f in ("live.py", "live.html"):
         shutil.copy(os.path.join(ROOT, "src", f), os.path.join(tmp, "src", f))
     for f in ("Dockerfile", "start.py", "README.md"):  # Linux line endings: a CRLF Dockerfile breaks "\" continuations
-        with open(os.path.join(tmp, f), "w", encoding="utf-8", newline="
-") as out:
+        with open(os.path.join(tmp, f), "w", encoding="utf-8", newline="\n") as out:
             out.write(fill(open(os.path.join(REL, "space", f), encoding="utf-8").read()))
     api.upload_folder(repo_id=sid, repo_type="space", folder_path=tmp, commit_message="Thetha demo (public mode)")
 print(f"done: {space_url} (first build takes a few minutes)")
