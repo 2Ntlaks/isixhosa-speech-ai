@@ -141,3 +141,6 @@ Format:
 - Left on the laptop (gitignored): data/ (models incl. int8 copies, Soapies, NCHLT test audio, Thetha recordings in
   data/my_voice/live/ incl. a friend's clips), .venv. Thetha still works locally.
 - Project total spend ~ $9.90.
+- Backup: founder asked for a repo; created **private** GitHub repo https://github.com/2Ntlaks/isixhosa-speech-ai and
+  pushed the full history (173 files; no audio, models, keys or tokens). Before it could ever be made public: remove the
+  AWS account number (6 run files) and the Soapies transcripts quoted in runs/R-0014/ (research-only licence, D-0016).
