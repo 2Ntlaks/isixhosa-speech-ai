@@ -110,150 +110,133 @@ def cover(out):
     s.save(os.path.join(out, "cover.excalidraw"))
 
 
+
+
+# The post's drawings are tall (900 wide) so the handwriting stays readable on a phone: a 358 px phone column
+# shows them at 0.4x, so 32 px text lands near 13 px. Side-by-side ideas are stacked instead.
+W = 900
+
+
 def voice_to_text(out):
-    s = Scene(1400, 820, 12)
-    s.text(700, 30, "How a computer turns your voice into text", 40, align="center")
-    xs = [40, 380, 720, 1060]
-    titles = ["1. sound", "2. numbers", "3. sound picture", "4. the model writes"]
-    notes = ["air pressure, wobbling", "16 000 of them every second", "which pitches, over time", "one piece at a time"]
-    for i, x in enumerate(xs):
-        s.box(x, 110, 300, 330)
-        s.text(x + 150, 125, titles[i], 28, align="center")
-        s.text(x + 150, 455, notes[i], 22, MUTED, align="center")
-        if i < 3:
-            s.arrow([(x + 305, 275), (x + 335, 275)], CORAL)
-    pts = [(70 + k * 4.2, 290 + math.sin(k * 0.55) * (12 + 48 * abs(math.sin(k * 0.09)))) for k in range(58)]
-    s.line(pts, NAVY, sw=2.5)
-    s.text(530, 190, "0.02\n-0.11\n0.37\n-0.29\n0.08\n…", 28, NAVY, align="center")
+    s = Scene(W, 1300, 12)
+    s.text(W / 2, 24, "How a computer turns\nyour voice into text", 42, align="center")
+    cells = [(40, 170, "1. sound", "air pressure, wobbling"), (470, 170, "2. numbers", "16 000 every second"),
+             (40, 610, "3. sound picture", "which pitches, over time"), (470, 610, "4. the model writes", "one piece at a time")]
+    for x, y, t, n in cells:
+        s.box(x, y, 390, 360)
+        s.text(x + 195, y + 18, t, 34, align="center")
+        s.text(x + 195, y + 372, n, 28, MUTED, align="center")
+    s.arrow([(436, 350), (466, 350)], CORAL, sw=3)
+    s.arrow([(436, 790), (466, 790)], CORAL, sw=3)
+    pts = [(70 + k * 5.6, 375 + math.sin(k * 0.55) * (14 + 60 * abs(math.sin(k * 0.09)))) for k in range(60)]
+    s.line(pts, NAVY, sw=3)
+    s.text(665, 230, "0.02\n-0.11\n0.37\n-0.29\n…", 36, NAVY, align="center")
     rr = random.Random(5)
-    for cx in range(14):
-        for cy in range(9):
+    for cx in range(12):
+        for cy in range(10):
             v = abs(math.sin(cx * 0.7) * math.cos(cy * 0.5)) * rr.random()
             col = NAVY if v > 0.5 else "#5b7aa6" if v > 0.25 else BLUE_BG
-            s.box(745 + cx * 18, 195 + cy * 22, 16, 20, stroke="transparent", bg=col, rounded=False, roughness=0, sw=1)
+            s.box(75 + cx * 27, 680 + cy * 26, 24, 23, stroke="transparent", bg=col, rounded=False, roughness=0, sw=1)
     for j, w in enumerate(["esi", "sibini", "sino…"]):
-        s.box(1090, 185 + j * 72, 240, 56, bg=GREEN_BG if j < 2 else WHITE, stroke=GREEN if j < 2 else NAVY, dashed=j == 2)
-        s.text(1210, 196 + j * 72, w, 28, align="center")
-    s.box(140, 560, 1120, 190, bg=WHITE, stroke=MUTED, dashed=True)
-    s.text(700, 580, "Step 4 is a guess, based on what it heard and what it already wrote.", 28, align="center")
-    s.text(700, 640, "If it has never heard isiXhosa, its best guess is a language it does know (Swahili),", 26, MUTED, align="center")
-    s.text(700, 690, "or it gets stuck repeating itself: kwa kwa kwa kwa", 26, RED, align="center")
+        s.box(510, 690 + j * 86, 310, 68, bg=GREEN_BG if j < 2 else WHITE, stroke=GREEN if j < 2 else NAVY, dashed=j == 2)
+        s.text(665, 703 + j * 86, w, 34, align="center")
+    s.box(40, 1060, 820, 200, bg=WHITE, stroke=MUTED, dashed=True)
+    s.text(W / 2, 1078, "Step 4 is a guess, based on what it heard\nand what it already wrote.", 30, align="center")
+    s.text(W / 2, 1170, "Never heard isiXhosa? It guesses Swahili,\nor gets stuck: kwa kwa kwa kwa", 30, RED, align="center")
     s.save(os.path.join(out, "voice-to-text.excalidraw"))
 
 
 def training_loop(out):
-    s = Scene(1400, 860, 13)
-    s.text(700, 30, "Teaching it a new language: one training step", 40, align="center")
-    pos = [(470, 120), (870, 340), (470, 560), (70, 340)]
-    t = ["1. listen", "2. guess", "3. compare", "4. nudge"]
-    sub = ["a clip and its true text", "the model writes what\nit thinks it heard", "count what's different\n(this is the \"loss\")",
-           "change 769 million numbers\na tiny bit to do better"]
-    for i, (x, y) in enumerate(pos):
-        s.box(x, y, 460, 170, bg=GREEN_BG if i == 3 else WHITE, stroke=GREEN if i == 3 else NAVY)
-        s.text(x + 230, y + 22, t[i], 32, GREEN if i == 3 else NAVY, align="center")
-        s.text(x + 230, y + 72, sub[i], 24, MUTED, align="center")
-    s.arrow([(935, 210), (1080, 210), (1100, 330)], CORAL, curved=True)
-    s.arrow([(1100, 515), (1080, 640), (935, 650)], CORAL, curved=True)
-    s.arrow([(465, 650), (320, 640), (300, 515)], CORAL, curved=True)
-    s.arrow([(300, 335), (320, 210), (465, 210)], CORAL, curved=True)
-    s.text(700, 395, "repeat 4 000 times", 30, align="center")
-    s.text(700, 445, "32 clips at a time", 26, MUTED, align="center")
-    s.text(700, 760, "before training: kwa kwa kwa kwa · after training: esi sibini sinokukhetha…", 24, MUTED, align="center")
-    s.text(700, 802, "(whisper-medium, the model behind the 8% score)", 20, MUTED, align="center")
+    s = Scene(W, 1080, 13)
+    s.text(W / 2, 24, "Teaching it a new language:\none training step", 42, align="center")
+    boxes = [(40, 170, "1. listen", "a clip and its\ntrue text", False), (480, 170, "2. guess", "it writes what it\nthinks it heard", False),
+             (480, 560, "3. compare", "count what's different\n(the \"loss\")", False), (40, 560, "4. nudge", "change 769 million\nnumbers a tiny bit", True)]
+    for x, y, t, sub, g in boxes:
+        s.box(x, y, 380, 230, bg=GREEN_BG if g else WHITE, stroke=GREEN if g else NAVY)
+        s.text(x + 190, y + 26, t, 38, GREEN if g else NAVY, align="center")
+        s.text(x + 190, y + 96, sub, 30, MUTED, align="center")
+    s.arrow([(425, 285), (475, 285)], CORAL, sw=3)
+    s.arrow([(670, 405), (670, 550)], CORAL, sw=3)
+    s.arrow([(475, 675), (425, 675)], CORAL, sw=3)
+    s.arrow([(230, 550), (230, 405)], CORAL, sw=3)
+    s.text(W / 2, 445, "repeat 4 000 times,\n32 clips at a time", 32, align="center")
+    s.text(W / 2, 840, "before training: kwa kwa kwa kwa", 30, RED, align="center")
+    s.text(W / 2, 890, "after training: esi sibini sinokukhetha…", 30, GREEN, align="center")
+    s.text(W / 2, 950, "(whisper-medium, the model behind the 8% score)", 24, MUTED, align="center")
     s.save(os.path.join(out, "training-loop.excalidraw"))
 
 
 def leaked_exam(out):
-    s = Scene(1400, 820, 14)
-    s.text(700, 30, "The trap: a test that has seen the answers", 40, align="center")
-    # left: the leaky test
-    s.box(40, 110, 620, 560, bg=WHITE, stroke=RED)
-    s.text(350, 130, "the test I first trusted", 30, RED, align="center")
-    s.ellipse(90, 200, 520, 300, bg=BLUE_BG)
-    s.text(350, 262, "study notes (training sentences)", 24, MUTED, align="center")
+    s = Scene(W, 1480, 14)
+    s.text(W / 2, 24, "The trap: a test that\nhas seen the answers", 42, align="center")
+    # top: the leaky test
+    s.box(40, 170, 820, 600, bg=WHITE, stroke=RED)
+    s.text(W / 2, 192, "the test I first trusted", 36, RED, align="center")
+    s.ellipse(80, 260, 600, 330, bg=BLUE_BG)
+    s.text(380, 290, "study notes\n(training sentences)", 28, MUTED, align="center")
     rr = random.Random(3)
     for k in range(11):
         inside = k < 9
-        x = 150 + (k % 6) * 72 + rr.randint(-8, 8) if inside else 535 + (k - 9) * 50
-        y = 300 + (k // 6) * 80 + rr.randint(-6, 6) if inside else 172 + (k - 9) * 14
-        s.box(x, y, 52, 60, bg=WHITE, stroke=NAVY, sw=2)
-        s.line([(x + 10, y + 18), (x + 42, y + 18)], MUTED, sw=1.5)
-        s.line([(x + 10, y + 34), (x + 36, y + 34)], MUTED, sw=1.5)
-    s.text(350, 520, "82% of the test clips were sentences\nit had already studied", 24, NAVY, align="center")
-    s.text(350, 600, "3% of letters wrong", 36, RED, align="center")
-    # right: the honest test
-    s.box(740, 110, 620, 560, bg=WHITE, stroke=GREEN)
-    s.text(1050, 130, "the honest test", 30, GREEN, align="center")
+        x = 160 + (k % 5) * 92 + rr.randint(-6, 6) if inside else 720 + (k - 9) * 40
+        y = 380 + (k // 5) * 96 + rr.randint(-5, 5) if inside else 300 + (k - 9) * 110
+        s.box(x, y, 64, 76, bg=WHITE, stroke=NAVY, sw=2)
+        s.line([(x + 12, y + 24), (x + 52, y + 24)], MUTED, sw=1.5)
+        s.line([(x + 12, y + 44), (x + 44, y + 44)], MUTED, sw=1.5)
+    s.text(W / 2, 612, "82% of the test sentences were\nones it had already studied", 30, NAVY, align="center")
+    s.text(W / 2, 700, "3% of letters wrong", 44, RED, align="center")
+    # bottom: the honest test
+    s.box(40, 810, 820, 560, bg=WHITE, stroke=GREEN)
+    s.text(W / 2, 832, "the honest test", 36, GREEN, align="center")
     for k in range(6):
-        x, y = 830 + (k % 3) * 150, 230 + (k // 3) * 120
-        s.box(x, y, 90, 100, bg=WHITE)
+        x, y = 160 + (k % 3) * 210, 900 + (k // 3) * 140
+        s.box(x, y, 120, 116, bg=WHITE)
         for j in range(3):
-            s.line([(x + 14, y + 25 + j * 22), (x + 76 - j * 10, y + 25 + j * 22)], MUTED, sw=1.5)
-    s.text(1050, 480, "brand new, longer sentences\nin a different style (Google FLEURS)", 24, NAVY, align="center")
-    s.text(1050, 600, "30% of letters wrong", 36, GREEN, align="center")
-    s.text(700, 720, "A score only means something if the answers weren't in the study notes.", 28, NAVY, align="center")
+            s.line([(x + 18, y + 30 + j * 26), (x + 100 - j * 14, y + 30 + j * 26)], MUTED, sw=1.5)
+    s.text(W / 2, 1180, "brand new, longer sentences in a\ndifferent style (Google FLEURS)", 30, NAVY, align="center")
+    s.text(W / 2, 1280, "30% of letters wrong", 44, GREEN, align="center")
+    s.text(W / 2, 1400, "A score only means something if the\nanswers weren't in the study notes.", 30, NAVY, align="center")
     s.save(os.path.join(out, "leaked-exam.excalidraw"))
 
 
-def progress(out):
-    s = Scene(1400, 820, 15)
-    s.text(700, 30, "Letters wrong on sentences it never heard", 40, align="center")
-    s.text(700, 88, "Google FLEURS isiXhosa test, 1 034 clips · lower is better", 24, MUTED, align="center")
-    bars = [("stock\nwhisper-small", 65.45), ("stock\nwhisper-medium", 45.86), ("small, taught\non NCHLT", 29.81),
-            ("small, + FLEURS\nsentences", 10.16), ("medium, + FLEURS\nsentences", 8.03)]
-    base, top, left = 640, 170, 130
-    y = lambda v: base - v / 70 * (base - top)
-    for t in (0, 20, 40, 60):
-        s.line([(left - 20, y(t)), (1340, y(t))], "#c9ced6", sw=1, dashed=t > 0)
-        s.text(left - 30, y(t) - 14, f"{t}%", 22, MUTED, align="right", w=60) if False else s.text(left - 95, y(t) - 15, f"{t}%", 22, MUTED)
-    for i, (lab, v) in enumerate(bars):
-        x, best = left + 30 + i * 240, i == 4
-        s.box(x, y(v), 150, base - y(v), stroke=CORAL if best else NAVY, bg="#fde3dc" if best else BLUE_BG, rounded=False)
-        s.text(x + 75, y(v) - 44, f"{v:.1f}%", 30, CORAL if best else NAVY, align="center")
-        s.text(x + 75, base + 18, lab, 22, NAVY, align="center")
-    s.line([(left - 20, base), (1340, base)], NAVY, sw=3)
-    s.save(os.path.join(out, "progress.excalidraw"))
-
-
 def where_it_runs(out):
-    s = Scene(1400, 800, 16)
-    s.text(700, 30, "Where the model runs", 40, align="center")
+    s = Scene(W, 1440, 16)
+    s.text(W / 2, 24, "Where the model runs", 42, align="center")
 
     def phone(x, y):
-        s.box(x, y, 150, 270, bg=WHITE, sw=3)
-        s.box(x + 15, y + 25, 120, 200, bg=BLUE_BG, sw=1.5)
-        s.ellipse(x + 63, y + 235, 24, 24, bg=WHITE, sw=1.5)
-    # left: a server
-    s.box(40, 110, 620, 560, bg=WHITE, stroke=RED)
-    s.text(350, 130, "on a server", 30, RED, align="center")
-    phone(90, 220)
-    s.box(430, 230, 180, 240, bg=BLUE_BG)
+        s.box(x, y, 160, 290, bg=WHITE, sw=3)
+        s.box(x + 16, y + 26, 128, 214, bg=BLUE_BG, sw=1.5)
+        s.ellipse(x + 67, y + 252, 26, 26, bg=WHITE, sw=1.5)
+    # top: a server
+    s.box(40, 110, 820, 600, bg=WHITE, stroke=RED)
+    s.text(W / 2, 132, "on a server", 36, RED, align="center")
+    phone(110, 220)
+    s.box(590, 230, 200, 270, bg=BLUE_BG)
     for k in range(4):
-        s.line([(455, 270 + k * 50), (585, 270 + k * 50)], NAVY, sw=2)
-    s.text(520, 480, "server", 24, MUTED, align="center")
-    s.arrow([(250, 300), (420, 300)], CORAL)
-    s.text(335, 255, "your voice", 22, NAVY, align="center")
-    s.arrow([(420, 400), (250, 400)], NAVY)
-    s.text(335, 410, "the text", 22, NAVY, align="center")
-    s.text(350, 550, "$9 a month to keep it switched on,\nand your voice leaves your phone", 26, RED, align="center")
-    # right: in the browser
-    s.box(740, 110, 620, 560, bg=WHITE, stroke=GREEN)
-    s.text(1050, 130, "in your browser (what Thetha does)", 28, GREEN, align="center")
-    phone(975, 200)
-    s.ellipse(1012, 260, 76, 76, bg=CORAL, stroke=NAVY)
-    s.ellipse(1037, 285, 26, 26, bg=NAVY)
-    s.text(1050, 345, "model", 20, NAVY, align="center")
-    s.arrow([(1260, 300), (1140, 330)], NAVY, dashed=True)
-    s.text(1265, 230, "downloads\n~300 MB, once", 22, MUTED, align="center")
-    s.text(1050, 520, "free, and your voice never\nleaves your phone", 26, GREEN, align="center")
-    s.tick(1255, 512)
-    s.text(700, 720, "The trade: a one-time download and a few seconds of waiting per recording.", 26, MUTED, align="center")
+        s.line([(615, 275 + k * 56), (765, 275 + k * 56)], NAVY, sw=2)
+    s.text(690, 510, "server", 28, MUTED, align="center")
+    s.arrow([(290, 310), (575, 310)], CORAL, sw=3)
+    s.text(432, 262, "your voice", 28, NAVY, align="center")
+    s.arrow([(575, 420), (290, 420)], NAVY, sw=3)
+    s.text(432, 432, "the text", 28, NAVY, align="center")
+    s.text(W / 2, 580, "$9 a month to keep it switched on,\nand your voice leaves your phone", 32, RED, align="center")
+    # bottom: in the browser
+    s.box(40, 750, 820, 600, bg=WHITE, stroke=GREEN)
+    s.text(W / 2, 772, "in your browser (what Thetha does)", 34, GREEN, align="center")
+    phone(370, 850)
+    s.ellipse(408, 910, 84, 84, bg=CORAL, stroke=NAVY)
+    s.ellipse(436, 938, 28, 28, bg=NAVY)
+    s.text(450, 1000, "model", 24, NAVY, align="center")
+    s.arrow([(720, 930), (545, 960)], NAVY, dashed=True, sw=3)
+    s.text(720, 860, "downloads\n~300 MB, once", 28, MUTED, align="center")
+    s.text(W / 2, 1200, "free, and your voice never\nleaves your phone", 32, GREEN, align="center")
+    s.tick(720, 1205)
+    s.text(W / 2, 1380, "The trade: a one-time download and a few\nseconds of waiting per recording.", 28, MUTED, align="center")
     s.save(os.path.join(out, "where-it-runs.excalidraw"))
 
 
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
-    for fn in (cover, voice_to_text, training_loop, leaked_exam, progress, where_it_runs):
+    for fn in (voice_to_text, training_loop, leaked_exam, where_it_runs):
         fn(out)
     print("written to", out)
