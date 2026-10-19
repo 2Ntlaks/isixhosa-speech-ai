@@ -144,3 +144,19 @@ Format:
 - Backup: founder asked for a repo; created **private** GitHub repo https://github.com/2Ntlaks/isixhosa-speech-ai and
   pushed the full history (173 files; no audio, models, keys or tokens). Before it could ever be made public: remove the
   AWS account number (6 run files) and the Soapies transcripts quoted in runs/R-0014/ (research-only licence, D-0016).
+
+## 2026-10-19 afternoon — Open-sourcing (D-0019)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account3)
+- Did: README redesigned (banner, before/after examples, progress chart, pipeline drawing) and MIT licence added.
+  Cleaned the repo for publication: AWS account number -> <acct>, a friend's name removed, R-0014 Soapies transcripts
+  untracked (kept locally, gitignored), Soapies sentence examples cut to single words. Rewrote history in a copy with
+  git-filter-repo (verified: 0 hits for account number, name, quotes, transcript files in all 40 commits; final tree
+  identical). Private repo renamed 2Ntlaks/isixhosa-speech-ai-archive; full backup bundle in data/backup/. Public repo:
+  https://github.com/2Ntlaks/isixhosa-speech-ai (topics added). Local folder now follows the public history
+  (remote "archive" = private).
+- Release kit: public mode for Thetha (src/live.py --public: nothing stored; tested on the laptop: correct transcript,
+  /correct and /corrections.tsv refused, 0 new files), model cards (CC BY 4.0), Hugging Face Space files (Docker, free
+  CPU), release/publish.py (dry run passes; ~5 GB to upload), CITATION.cff, LinkedIn and blog drafts.
+- Cost: $0.
+- Next: founder creates a Hugging Face account and logs in (`hf auth login`); agent runs release/publish.py, checks the
+  Space build, then fills the Hugging Face links into README and the drafts.
