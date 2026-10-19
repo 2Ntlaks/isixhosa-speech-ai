@@ -9,7 +9,7 @@
   <img alt="cloud cost: about $10" src="https://img.shields.io/badge/cloud%20cost-~%2410-059669">
   <img alt="licence: MIT" src="https://img.shields.io/badge/licence-MIT-142a47">
   <br>
-  <a href="https://ntlakanipho-thetha.static.hf.space"><img alt="Try the demo" src="https://img.shields.io/badge/%F0%9F%8E%99%EF%B8%8F%20try%20the%20demo-Thetha-f4715f"></a>
+  <a href="https://ntlakanipho-thetha.static.hf.space/index.html"><img alt="Try the demo" src="https://img.shields.io/badge/%F0%9F%8E%99%EF%B8%8F%20try%20the%20demo-Thetha-f4715f"></a>
   <a href="https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa"><img alt="Model on Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20model-whisper--medium--isixhosa-142a47"></a>
 </p>
 
@@ -22,7 +22,7 @@ It is a learning project by **Ntlakanipho Mgaguli** (Computer Engineering, CPUT)
 end to end, from raw corpora to a model you can talk to, not just to ship a checkpoint.
 
 > [!TIP]
-> **Try it:** speak isiXhosa into **[Thetha](https://ntlakanipho-thetha.static.hf.space)** on your phone or computer. The small model runs inside your
+> **Try it:** speak isiXhosa into **[Thetha](https://ntlakanipho-thetha.static.hf.space/index.html)** on your phone or computer. The small model runs inside your
 > browser (about 300 MB, downloaded once), so nothing you record leaves your device.
 >
 > **Use it:** [whisper-medium-isixhosa](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) (more accurate) or [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa) (faster) on Hugging Face.
@@ -61,7 +61,7 @@ The same FLEURS test sentences, which none of the models saw in training:
 | **2 · First fine-tune** | whisper-small on 51 hours of NCHLT read speech, about $1.85 of GPU. It learned the corpus's short prompts so well that it glued words together on longer sentences. | NCHLT CER 46 → 3 % ([R-0004](runs/R-0004)) |
 | **3 · Improve** | Adding 13 hours of varied FLEURS sentences fixed the word-gluing. Moving from small to medium helped on every test set. An 8-bit copy runs on a laptop at the same accuracy. | FLEURS CER 8 % ([R-0012](runs/R-0012), [R-0013](runs/R-0013)) |
 | **4 · Mixed speech** | Tested on real isiXhosa–English TV dialogue. The model hears English words but spells them the isiXhosa way: "stubborn" comes out as "istabhunga". Fix designed, not run. | CER 38 % ([R-0014](runs/R-0014)) |
-| **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017)). | [demo](https://ntlakanipho-thetha.static.hf.space) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
+| **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017)). | [demo](https://ntlakanipho-thetha.static.hf.space/index.html) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
 
 ## Use the model
 

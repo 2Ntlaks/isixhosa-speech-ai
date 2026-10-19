@@ -37,7 +37,7 @@ else:
         if not a.dry_run:
             sys.exit("not logged in: run `hf auth login` first")
         user = "<user>"
-space_url = "https://ntlakanipho-thetha.static.hf.space"
+space_url = "https://ntlakanipho-thetha.static.hf.space/index.html"
 fill = lambda s: s.replace("{HF_USER}", user).replace("{SPACE_URL}", space_url)
 
 

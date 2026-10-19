@@ -16,7 +16,7 @@ Where it landed:
 Everything is open: the code, every experiment (including the ones that failed), the models, and a demo you can talk to
 on your phone. Nothing you record is stored.
 
-🎙️ Try it: https://ntlakanipho-thetha.static.hf.space
+🎙️ Try it: https://ntlakanipho-thetha.static.hf.space/index.html
 🤗 Model: https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa
 💻 Code and the full lab notebook: https://github.com/2Ntlaks/isixhosa-speech-ai
 
