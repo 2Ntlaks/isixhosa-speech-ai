@@ -1,287 +1,372 @@
-// "Thetha" announcement film. Every transcript on screen comes from a run record (prepare.py -> data.json).
-// Frame-driven animation only (interpolate/spring), so every render is identical.
+// "Thetha" launch film, cut 2: kinetic type on a 100 BPM grid (1 beat = 18 frames), score from sound.py.
+// Every transcript on screen is a real run output (prepare.py -> data.json). Frame-driven animation only.
 import React from "react";
 import {
-  AbsoluteFill, Audio, Easing, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig,
+  AbsoluteFill, Audio, Easing, Sequence, interpolate, random, spring, staticFile, useCurrentFrame, useVideoConfig,
 } from "remotion";
 import { loadFont as loadSerif } from "@remotion/google-fonts/InstrumentSerif";
 import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
+import { loadFont as loadGrot } from "@remotion/google-fonts/BricolageGrotesque";
 import data from "./data.json";
 
 const serif = loadSerif("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily;
 loadSerif("italic", { weights: ["400"], subsets: ["latin"] });
 const mono = loadMono("normal", { weights: ["400", "600"], subsets: ["latin"] }).fontFamily;
+const grot = loadGrot("normal", { weights: ["800"], subsets: ["latin"] }).fontFamily;
 
-const C = { bg: "#100e0b", ink: "#f2e9d8", soft: "#a39883", faint: "#5e564a", line: "#2a241c",
-  ember: "#e2732b", glow: "#ffb067", ok: "#6fd0a6", err: "#ff8a7a" };
-const FPS = 30;
+const C = { bg: "#0c0a08", ink: "#f2e9d8", soft: "#a39883", faint: "#5e564a", line: "#2a241c",
+  ember: "#e2732b", glow: "#ffb067", ok: "#6fd0a6", err: "#ff6b57" };
+const FPS = 30, BT = 18;  // frames per beat at 100 BPM
+const b = (beats: number) => Math.round(beats * BT);
 type Clip = (typeof data.clips)["loop"];
 const clips = data.clips as Record<"loop" | "train" | "east", Clip>;
 
-// scene lengths in frames (40 s at 30 fps)
-const S = { hook: 120, loop: 225, fixed: 225, split: 195, numbers: 165, phone: 135, end: 135 };
-const starts = (() => { let t = 0; const o: Record<string, number> = {};
-  for (const [k, v] of Object.entries(S)) { o[k] = t; t += v; } return o; })();
-export const TOTAL = Object.values(S).reduce((a, b) => a + b, 0);
+// sections, in beats (must match sound.py)
+const SEC = { open: [0, 4], reel: [4, 10], flood: [10, 17], taught: [17, 20], intro: [20, 24], reveal: [24, 28],
+  decode: [28, 40], karaoke: [40, 48], numbers: [48, 56], phone: [56, 63], outro: [63, 72] } as const;
+export const TOTAL = b(72);
+// where voices play (absolute frames): the score ducks under them
+const VOICES = [[b(10) + 6, b(17)], [b(28.5), b(40)], [b(40.5), b(48)], [b(56) + 6, b(63)]];
 
-/* helpers */
-const useLayout = () => {
-  const { width, height } = useVideoConfig();
-  const tall = height > width;
-  return { tall, u: Math.min(width, height) / 1080, width, height };  // u: one "unit" scales with the short side
-};
-const fadeInOut = (f: number, len: number, inF = 12, outF = 10) =>
-  interpolate(f, [0, inF, len - outF, len], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-const typed = (text: string, f: number, from: number, to: number) => {
-  const p = interpolate(f, [from, to], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  return text.slice(0, Math.round(p * text.length));
-};
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+const useL = () => { const { width, height } = useVideoConfig(); const tall = height > width;
+  return { tall, u: Math.min(width, height) / 1080, width, height }; };
+const pop = (f: number, at: number, damping = 12) => spring({ frame: f - at, fps: FPS, config: { damping, mass: 0.6 } });
+const Center: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) =>
+  <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", ...style }}>{children}</AbsoluteFill>;
+const Sfx: React.FC<{ at: number; v?: number; src?: string }> = ({ at, v = 0.25, src = "tick.wav" }) =>
+  <Sequence from={at} durationInFrames={8} layout="none"><Audio src={staticFile(src)} volume={v} /></Sequence>;
 
-/* atmosphere: the Thetha glow, slowly breathing, with film grain */
-const Backdrop: React.FC = () => {
-  const f = useCurrentFrame();
-  const { width, height } = useVideoConfig();
-  const drift = Math.sin(f / 70) * 4;
+/* atmosphere: ember glow that breathes with the beat, film grain, vignette */
+const Backdrop: React.FC<{ heat: number }> = ({ heat }) => {
+  const f = useCurrentFrame(), { width, height } = useVideoConfig();
+  const pulse = 1 + 0.04 * Math.exp(-((f % BT) / 5));
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      <AbsoluteFill style={{ background: `radial-gradient(${width * 0.9}px ${height * 0.5}px at 50% ${30 + drift}%, #2c1d10 0%, transparent 70%)` }} />
-      <AbsoluteFill style={{ opacity: 0.07, mixBlendMode: "screen" }}>
-        <svg width="100%" height="100%">
-          <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 12} /></filter>
-          <rect width="100%" height="100%" filter="url(#g)" />
-        </svg>
+      <AbsoluteFill style={{ opacity: heat, background: `radial-gradient(${width * 0.95 * pulse}px ${height * 0.6 * pulse}px at 50% 42%, #3a2210 0%, transparent 70%)` }} />
+      <AbsoluteFill style={{ opacity: 0.08, mixBlendMode: "screen" }}>
+        <svg width="100%" height="100%"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed={f % 9} /></filter>
+          <rect width="100%" height="100%" filter="url(#g)" /></svg>
       </AbsoluteFill>
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, transparent 55%, #000000aa 100%)" }} />
     </AbsoluteFill>
   );
 };
 
-/* the Thetha orb with its ring of bars; level drives the bars (0 = breathing) */
-const Orb: React.FC<{ size: number; level?: number[] }> = ({ size, level }) => {
-  const f = useCurrentFrame();
-  const BARS = 84, c = size / 2, r0 = size * 0.235;
+/* Thetha's orb; level per bar (0..1), or a gentle breath */
+const Orb: React.FC<{ size: number; level?: (i: number) => number; burst?: number }> = ({ size, level, burst = 0 }) => {
+  const f = useCurrentFrame(), N = 84, c = size / 2, r0 = size * 0.235;
   return (
     <div style={{ position: "relative", width: size, height: size }}>
-      <svg width={size} height={size} style={{ position: "absolute", inset: 0 }}>
-        {Array.from({ length: BARS }, (_, i) => {
-          const v = level ? level[i % level.length] : 0.06 + 0.04 * Math.sin(f / 27 + i * 0.3);
-          const a = (i / BARS) * Math.PI * 2 - Math.PI / 2, len = 6 + v * size * 0.2;
-          return <line key={i} x1={c + Math.cos(a) * r0} y1={c + Math.sin(a) * r0} x2={c + Math.cos(a) * (r0 + len)}
-            y2={c + Math.sin(a) * (r0 + len)} stroke={`rgba(255,${150 + v * 60 | 0},${80 + v * 40 | 0},${0.25 + v * 0.75})`}
-            strokeWidth={size / 125} strokeLinecap="round" />;
+      <svg width={size} height={size} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+        {burst > 0 && burst < 1 && <circle cx={c} cy={c} r={r0 + burst * size * 0.9} fill="none" stroke={C.glow}
+          strokeWidth={size * 0.02 * (1 - burst)} opacity={1 - burst} />}
+        {Array.from({ length: N }, (_, i) => {
+          const v = level ? level(i) : 0.06 + 0.04 * Math.sin(f / 27 + i * 0.3);
+          const a = (i / N) * Math.PI * 2 - Math.PI / 2, len = 6 + v * size * 0.2;
+          return <line key={i} x1={c + Math.cos(a) * r0} y1={c + Math.sin(a) * r0} x2={c + Math.cos(a) * (r0 + len)} y2={c + Math.sin(a) * (r0 + len)}
+            stroke={`rgba(255,${150 + v * 60 | 0},${80 + v * 40 | 0},${0.25 + v * 0.75})`} strokeWidth={size / 125} strokeLinecap="round" />;
         })}
       </svg>
-      <div style={{ position: "absolute", left: "50%", top: "50%", width: size * 0.39, height: size * 0.39, marginLeft: -size * 0.195,
-        marginTop: -size * 0.195, borderRadius: "50%", background: `radial-gradient(circle at 36% 30%, ${C.glow}, ${C.ember} 58%, #a84a15)`,
-        boxShadow: `0 ${size * 0.07}px ${size * 0.2}px -${size * 0.06}px #e2732bcc` }}>
-        <div style={{ position: "absolute", left: "50%", top: "50%", width: size * 0.113, height: size * 0.113,
-          transform: "translate(-50%,-50%)", borderRadius: "50%", background: "#1a0e05" }} />
+      <div style={{ position: "absolute", left: "50%", top: "50%", width: size * 0.39, height: size * 0.39, transform: "translate(-50%,-50%)",
+        borderRadius: "50%", background: `radial-gradient(circle at 36% 30%, ${C.glow}, ${C.ember} 58%, #a84a15)`,
+        boxShadow: `0 ${size * 0.07}px ${size * 0.22}px -${size * 0.05}px #e2732bdd` }}>
+        <div style={{ position: "absolute", left: "50%", top: "50%", width: size * 0.113, height: size * 0.113, transform: "translate(-50%,-50%)",
+          borderRadius: "50%", background: "#1a0e05" }} />
       </div>
     </div>
   );
 };
 
-/* the clip's loudness as bars; the part already heard glows */
-const Wave: React.FC<{ clip: Clip; at: number; w: number; h: number }> = ({ clip, at, w, h }) => {
-  const n = 96, bars = clip.bars, step = bars.length / n;
+const Mono: React.FC<{ children: React.ReactNode; u: number; color?: string; size?: number; style?: React.CSSProperties }> =
+  ({ children, u, color = C.soft, size = 30, style }) =>
+    <div style={{ fontFamily: mono, fontSize: size * u, letterSpacing: "0.16em", textTransform: "uppercase", color, ...style }}>{children}</div>;
+
+/* ---------- A · cold open: the three click letters ---------- */
+const Open: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL();
+  const out = interpolate(f, [b(3.7), b(4)], [1, 0], clamp);
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: w / n * 0.35, width: w, height: h }}>
-      {Array.from({ length: n }, (_, i) => {
-        const v = Math.max(...bars.slice(Math.floor(i * step), Math.floor((i + 1) * step) + 1));
-        const heard = (i + 0.5) / n <= at / clip.seconds;
-        return <div key={i} style={{ flex: 1, height: Math.max(h * 0.04, v * h), borderRadius: 99,
-          background: heard ? C.glow : C.faint, opacity: heard ? 1 : 0.45 }} />;
+    <Center style={{ opacity: out }}>
+      <div style={{ display: "flex", gap: (tall ? 40 : 90) * u, alignItems: "baseline" }}>
+        {["c", "q", "x"].map((l, i) => { const p = pop(f, b(i + 1), 9);
+          return <div key={l} style={{ fontFamily: grot, fontSize: (tall ? 330 : 380) * u, lineHeight: 1, color: i === 2 ? C.glow : C.ink,
+            opacity: f >= b(i + 1) ? 1 : 0, transform: `scale(${1.8 - 0.8 * p}) rotate(${(1 - p) * (i - 1) * 12}deg)`,
+            filter: `blur(${(1 - p) * 14}px)` }}>{l}</div>; })}
+      </div>
+      <Mono u={u} style={{ marginTop: 40 * u, opacity: interpolate(f, [b(3), b(3.4)], [0, 1], clamp) }}>the clicks of isiXhosa</Mono>
+    </Center>
+  );
+};
+
+/* ---------- B · Whisper's languages spin and land on the one it lacks ---------- */
+const LANGS = ["English", "Kiswahili", "Español", "日本語", "Yorùbá", "Français", "العربية", "chiShona", "Deutsch", "हिन्दी",
+  "Afrikaans", "Русский", "Hausa", "中文", "Português", "Soomaali", "한국어", "Lingála", "Türkçe", "አማርኛ", "Italiano",
+  "Malagasy", "Ελληνικά", "Tiếng Việt", "Nederlands", "Polski", "isiXhosa"];
+const reelPos = (f: number) => interpolate(f, [4, b(4.6)], [0, LANGS.length - 1], { ...clamp, easing: Easing.out(Easing.cubic) });
+const Reel: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL(), len = b(6);
+  const p = reelPos(f), i = Math.floor(p), frac = p - i, landed = p >= LANGS.length - 1, speed = p - reelPos(f - 1);
+  const after = f - b(4.7), shake = landed && after > 0 && after < 14 ? Math.sin(after * 2.6) * (14 - after) * 1.6 * u : 0;
+  const strike = interpolate(after, [6, 16], [0, 1], clamp), lineH = (tall ? 170 : 160) * u;
+  const ticks: number[] = []; for (let k = 1; k < 80; k++) { if (Math.floor(reelPos(k)) !== Math.floor(reelPos(k - 1))) ticks.push(k); }
+  return (
+    <Center style={{ opacity: interpolate(f, [0, 6, len - 6, len], [0, 1, 1, 0], clamp), gap: 30 * u }}>
+      {ticks.map(k => <Sfx key={k} at={k} v={0.22} />)}
+      <Sfx at={b(4.7)} v={0.7} src="glitch.wav" />
+      <div style={{ fontFamily: serif, color: C.ink, fontSize: (tall ? 78 : 80) * u, opacity: pop(f, 2, 200) }}>
+        Whisper speaks <i style={{ color: C.glow }}>99</i> languages.</div>
+      <div style={{ position: "relative", height: lineH * 4.2, width: "100%", overflow: "hidden",
+        maskImage: "linear-gradient(transparent, #000 35%, #000 65%, transparent)", WebkitMaskImage: "linear-gradient(transparent, #000 35%, #000 65%, transparent)" }}>
+        {[-2, -1, 0, 1, 2].map(k => { const name = LANGS[i + k]; if (!name) return null;
+          const y = (k - frac) * lineH, me = k === 0 && landed;
+          return <div key={i + k} style={{ position: "absolute", left: 0, right: 0, top: "50%", textAlign: "center",
+            transform: `translate(${me ? shake : 0}px, ${y - lineH / 2}px)`, height: lineH, lineHeight: `${lineH}px`,
+            fontFamily: grot, fontSize: (tall ? 140 : 150) * u, color: me ? C.err : k === 0 ? C.ink : C.soft, opacity: Math.max(0, 1 - Math.abs(y) / (lineH * 2.6)),
+            filter: `blur(${Math.min(6, speed * 9)}px)` }}>
+            <span style={{ position: "relative" }}>{name}
+              {me && <span style={{ position: "absolute", left: -10 * u, top: "52%", height: 10 * u, width: `calc(${strike * 100}% + ${20 * u * strike}px)`,
+                background: C.err, borderRadius: 99 }} />}</span></div>; })}
+      </div>
+      <div style={{ fontFamily: serif, fontStyle: "italic", color: C.err, fontSize: (tall ? 70 : 72) * u, opacity: interpolate(after, [12, 20], [0, 1], clamp) }}>
+        …not this one.</div>
+    </Center>
+  );
+};
+
+/* ---------- C · what stock Whisper does with isiXhosa: the loop takes over the screen ---------- */
+const Flood: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u, width, height } = useL(), clip = clips.loop, len = b(7);
+  const real = clip.stock.replace(/(kwa )+kw?a?.*$/i, "").trim();
+  const t0 = 6 + clip.speech_start * FPS;
+  const shown = real.slice(0, Math.round(interpolate(f, [t0, t0 + 45], [0, real.length], clamp)));
+  const n = Math.floor(interpolate(f, [t0 + 50, len - 12], [0, 140], { ...clamp, easing: Easing.in(Easing.cubic) }));
+  const shake = n > 60 ? (random(`s${f}`) - 0.5) * n * 0.3 * u : 0;
+  return (
+    <AbsoluteFill style={{ opacity: f > len - 5 ? 0 : interpolate(f, [0, 6], [0, 1], clamp), transform: `translate(${shake}px, ${shake * 0.6}px)` }}>
+      <Sequence from={6} layout="none"><Audio src={staticFile("loop.wav")} /></Sequence>
+      {Array.from({ length: 11 }, (_, k) => <Sfx key={k} at={Math.round(interpolate(k, [0, 10], [t0 + 60, len - 10]))} v={0.18} src="glitch.wav" />)}
+      {Array.from({ length: n }, (_, k) => {
+        const x = random(`x${k}`) * width, y = random(`y${k}`) * height, s = (0.4 + random(`z${k}`) * 1.6) * (tall ? 90 : 80) * u;
+        return <div key={k} style={{ position: "absolute", left: x - s, top: y - s / 2, fontFamily: grot, fontSize: s, color: random(`c${k}`) > 0.6 ? C.err : "#5e564acc",
+          transform: `rotate(${(random(`r${k}`) - 0.5) * 30}deg)` }}>kwa</div>;
       })}
-    </div>
-  );
-};
-
-const Label: React.FC<{ children: React.ReactNode; color?: string; u: number }> = ({ children, color = C.soft, u }) => (
-  <div style={{ fontFamily: mono, fontSize: 30 * u, letterSpacing: "0.18em", textTransform: "uppercase", color }}>{children}</div>
-);
-
-/* ---------- scenes ---------- */
-
-const Hook: React.FC = () => {
-  const f = useCurrentFrame(), { tall, u } = useLayout();
-  const l1 = spring({ frame: f - 8, fps: FPS, config: { damping: 200 } });
-  const l2 = spring({ frame: f - 48, fps: FPS, config: { damping: 200 } });
-  return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: fadeInOut(f, S.hook, 8, 12),
-      flexDirection: tall ? "column" : "row", gap: 60 * u, padding: 80 * u }}>
-      <Orb size={(tall ? 420 : 360) * u} />
-      <div style={{ fontFamily: serif, color: C.ink, fontSize: (tall ? 92 : 84) * u, lineHeight: 1.05, textAlign: tall ? "center" : "left", maxWidth: tall ? 900 * u : 1000 * u }}>
-        <div style={{ opacity: l1, transform: `translateY(${(1 - l1) * 30}px)` }}>Whisper speaks 99 languages.</div>
-        <div style={{ opacity: l2, transform: `translateY(${(1 - l2) * 30}px)`, marginTop: 18 * u, fontStyle: "italic" }}>
-          <span style={{ color: C.glow }}>isiXhosa</span> isn't one of them.</div>
-      </div>
+      <Center style={{ padding: 80 * u }}>
+       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30 * u, background: "#0c0a08e6", borderRadius: 28 * u,
+         padding: `${40 * u}px ${50 * u}px`, boxShadow: `0 0 ${80 * u}px ${40 * u}px #0c0a08cc` }}>
+        <Mono u={u} color={C.err}>stock Whisper hears isiXhosa</Mono>
+        <div style={{ fontFamily: grot, fontSize: (tall ? 130 : 120) * u, lineHeight: 1, color: C.ink, textAlign: "center",
+          textShadow: "0 0 40px #000, 0 0 80px #000" }}>{shown}{shown.length < real.length ? "▍" : ""}</div>
+        <div style={{ fontFamily: mono, fontSize: 30 * u, color: C.soft, background: "#0c0a08cc", padding: `${8 * u}px ${18 * u}px`,
+          opacity: interpolate(n, [20, 40], [0, 1], clamp) }}>…then it gets stuck: kwa kwa kwa kwa</div>
+       </div>
+      </Center>
     </AbsoluteFill>
   );
 };
 
-const Transcribe: React.FC<{ name: keyof typeof clips; mode: "stock" | "fixed"; len: number }> = ({ name, mode, len }) => {
-  const clip = clips[name];
-  const f = useCurrentFrame(), { tall, u, width } = useLayout();
-  const lead = 12, t = (f - lead) / FPS;  // audio starts after a short beat
-  const from = lead + clip.speech_start * FPS, to = lead + clip.speech_end * FPS;
-  let text = mode === "fixed" ? typed(clip.r0012, f, from, to) : "";
-  let flood = 0;
-  if (mode === "stock") {  // the real output, then the loop keeps going, faster and faster
-    const real = clip.stock.replace(/(kwa )+kw?a?.*$/i, "").trim();
-    text = typed(real, f, from, from + (to - from) * 0.55);
-    flood = Math.floor(interpolate(f, [from + (to - from) * 0.55, len - 18], [0, 70], { extrapolateLeft: "clamp", extrapolateRight: "clamp",
-      easing: Easing.in(Easing.quad) }));
-    if (flood) text += " " + Array(flood).fill("kwa").join(" ");
-  }
-  const done = mode === "fixed" && f > to + 6;
-  const ok = spring({ frame: f - to - 6, fps: FPS, config: { damping: 14 } });
-  const shake = mode === "stock" && flood > 40 ? Math.sin(f * 2.1) * (flood - 40) * 0.25 * u : 0;
-  const fs = (tall ? 96 : 70) * u * (mode === "stock" ? interpolate(flood, [0, 70], [1, 0.62], { extrapolateRight: "clamp" }) : 1);
+/* ---------- D · "So I taught it." one word per half-beat ---------- */
+const Taught: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL();
+  const words = ["So", "I", "taught", "it."];
+  const k = Math.min(3, Math.floor(f / b(0.5))), p = pop(f, k * b(0.5), 10);
   return (
-    <AbsoluteFill style={{ opacity: fadeInOut(f, len), padding: (tall ? 90 : 110) * u, justifyContent: "center", gap: 46 * u }}>
-      <Sequence from={lead} layout="none"><Audio src={staticFile(name + ".wav")} /></Sequence>
-      <Label u={u} color={mode === "stock" ? C.err : C.ok}>
-        {mode === "stock" ? `${clip.stock_name} hears isiXhosa` : "after fine-tuning · R-0012"}
-      </Label>
-      <Wave clip={clip} at={Math.max(0, t)} w={width - 2 * (tall ? 90 : 110) * u} h={(tall ? 230 : 120) * u} />
-      <div style={{ fontFamily: serif, fontSize: fs, lineHeight: 1.12, color: mode === "stock" ? C.err : C.ink, minHeight: 300 * u,
-        transform: `translateX(${shake}px)`, overflowWrap: "anywhere", textShadow: mode === "fixed" ? `0 0 ${40 * u}px #e2732b33` : "none" }}>
-        {text}<span style={{ color: C.ember, opacity: Math.floor(f / 8) % 2 && !done ? 1 : 0 }}>|</span>
+    <Center>
+      <div style={{ fontFamily: grot, fontSize: (tall ? (k === 2 ? 260 : 380) : 360) * u, lineHeight: 1, color: k === 2 ? C.glow : C.ink,
+        transform: `scale(${1.35 - 0.35 * p})`, opacity: interpolate(f, [b(3) - 4, b(3)], [1, 0], clamp) }}>{words[k]}</div>
+    </Center>
+  );
+};
+
+/* ---------- E · INTRODUCING ---------- */
+const Intro: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL(), word = "INTRODUCING";
+  const track = interpolate(f, [0, b(4)], [0.9, 0.3], { ...clamp, easing: Easing.out(Easing.quad) });
+  return (
+    <Center style={{ transform: `scale(${interpolate(f, [0, b(4)], [1, 1.12], clamp)})` }}>
+      <div style={{ display: "flex", fontFamily: grot, fontSize: (tall ? 56 : 96) * u, color: C.ink, letterSpacing: `${track}em`, marginRight: `-${track}em` }}>
+        {word.split("").map((ch, i) => { const o = interpolate(f, [i * 3, i * 3 + 8], [0, 1], clamp);
+          return <span key={i} style={{ opacity: o, transform: `translateY(${(1 - o) * 40 * u}px)`, display: "inline-block" }}>{ch}</span>; })}
       </div>
-      <div style={{ fontFamily: mono, fontSize: (tall ? 32 : 28) * u, lineHeight: 1.4, color: done ? C.ok : C.faint, opacity: mode === "stock" ? interpolate(flood, [30, 45], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : ok,
-        transform: `scale(${mode === "fixed" ? 0.9 + ok * 0.1 : 1})`, transformOrigin: "left" }}>
-        {mode === "stock" ? "…stuck in a loop. it never heard isiXhosa." : "✓ exactly what was said · a sentence it never heard in training"}
-      </div>
+      <div style={{ width: interpolate(f, [b(1), b(4)], [0, (tall ? 700 : 1100) * u], clamp), height: 3 * u, background: C.ember, marginTop: 40 * u,
+        boxShadow: `0 0 ${30 * u}px ${C.ember}` }} />
+    </Center>
+  );
+};
+
+/* ---------- F · the reveal ---------- */
+const Reveal: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL();
+  const orb = pop(f, 2, 11), word = pop(f, 10, 14);
+  return (
+    <AbsoluteFill>
+      <Center style={{ flexDirection: tall ? "column" : "row", gap: (tall ? 10 : 60) * u }}>
+        <div style={{ transform: `scale(${orb})` }}><Orb size={(tall ? 520 : 480) * u} burst={interpolate(f, [2, 40], [0, 1], clamp)} /></div>
+        <div style={{ textAlign: tall ? "center" : "left" }}>
+          <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: (tall ? 260 : 280) * u, lineHeight: 0.95, color: C.ink,
+            transform: `translateY(${(1 - word) * 60 * u}px)`, opacity: word }}>Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
+          <Mono u={u} size={30} style={{ marginTop: 20 * u, opacity: interpolate(f, [24, 36], [0, 1], clamp) }}>isiXhosa for “speak”</Mono>
+        </div>
+      </Center>
+      <AbsoluteFill style={{ background: "#fff3e0", opacity: interpolate(f, [0, 10], [1, 0], clamp), mixBlendMode: "screen" }} />
     </AbsoluteFill>
   );
 };
 
-const Split: React.FC = () => {
-  const f = useCurrentFrame(), { tall, u, width } = useLayout(), clip = clips.train, len = S.split;
-  const lead = 10, from = lead + clip.speech_start * FPS, to = lead + clip.speech_end * FPS;
-  const pad = (tall ? 90 : 110) * u;
-  const row = (label: string, color: string, text: string, strike: boolean) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 18 * u }}>
-      <Label u={u} color={color}>{label}</Label>
-      <div style={{ fontFamily: serif, fontSize: (tall ? 80 : 58) * u, lineHeight: 1.12, color: strike ? C.faint : C.ink, minHeight: (tall ? 220 : 140) * u,
-        textDecoration: strike && f > to + 4 ? `line-through ${C.err}` : "none", textDecorationThickness: 3 * u }}>{text}</div>
-    </div>
-  );
+/* ---------- G · you speak, Thetha writes: scrambled letters resolve in time with the voice ---------- */
+const ABC = "abcdefghijklmnopqrstuvwxyz";
+const scramble = (w: string, f: number, k: number) => w.split("").map((_, i) => ABC[Math.floor(random(`${k}-${i}-${Math.floor(f / 2)}`) * 26)]).join("");
+const Decode: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u, width } = useL(), clip = clips.loop, len = b(12), lead = b(0.5);
+  const words = clip.r0012.split(" ");
+  const s0 = lead + clip.speech_start * FPS, s1 = lead + clip.speech_end * FPS;
+  const at = (k: number) => s0 + ((k + 1) / words.length) * (s1 - s0);        // word k resolves
+  const appear = (k: number) => s0 + (k / words.length) * (s1 - s0) - 8;      // and starts scrambling a little before
+  const done = f > s1 + 8, ok = pop(f, s1 + 10, 13);
+  const heard = Math.max(0, (f - lead) / FPS) / clip.seconds, bars = clip.bars;
   return (
-    <AbsoluteFill style={{ opacity: fadeInOut(f, len), padding: pad, justifyContent: "center", gap: 50 * u }}>
-      <Sequence from={lead} layout="none"><Audio src={staticFile("train.wav")} /></Sequence>
-      <Wave clip={clip} at={Math.max(0, (f - lead) / FPS)} w={width - 2 * pad} h={(tall ? 190 : 90) * u} />
-      {row("stock whisper-medium", C.err, typed(clip.stock, f, from, to), true)}
-      {row("R-0012", C.ok, typed(clip.r0012, f, from, to), false)}
+    <AbsoluteFill style={{ opacity: interpolate(f, [0, 8, len - 8, len], [0, 1, 1, 0], clamp) }}>
+      <Sequence from={lead} layout="none"><Audio src={staticFile("loop.wav")} /></Sequence>
+      {words.map((_, k) => <Sfx key={k} at={Math.round(at(k))} v={0.3} />)}
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: 0.35 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 * u, width: width * 0.92, height: (tall ? 900 : 600) * u }}>
+          {Array.from({ length: 120 }, (_, i) => { const v = bars[Math.floor((i / 120) * bars.length)] || 0, on = i / 120 <= heard;
+            return <div key={i} style={{ flex: 1, height: `${Math.max(2, v * 100)}%`, borderRadius: 99, background: on ? C.ember : C.line }} />; })}
+        </div>
+      </AbsoluteFill>
+      <Center style={{ padding: (tall ? 80 : 140) * u, gap: 36 * u, alignItems: "flex-start" }}>
+        <Mono u={u} color={C.glow}>you speak · Thetha writes</Mono>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: `${10 * u}px ${30 * u}px`, fontFamily: serif, fontSize: (tall ? 118 : 128) * u, lineHeight: 1.05 }}>
+          {words.map((w, k) => { if (f < appear(k)) return null; const res = f >= at(k), p = pop(f, at(k), 12);
+            return <span key={k} style={{ color: res ? C.ink : "#e2732b88", transform: `scale(${res ? 1.12 - 0.12 * p : 1})`, display: "inline-block",
+              textShadow: res ? `0 0 ${40 * u * (1 - p)}px ${C.glow}` : "none" }}>{res ? w : scramble(w, f, k)}</span>; })}
+        </div>
+        <div style={{ fontFamily: mono, fontSize: 30 * u, color: C.ok, opacity: done ? ok : 0, transform: `translateY(${(1 - ok) * 20 * u}px)` }}>
+          ✓ word for word · a sentence it never heard in training</div>
+      </Center>
     </AbsoluteFill>
   );
 };
 
+/* ---------- H · lyric-style: one word at a time, huge ---------- */
+const Karaoke: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL(), clip = clips.east, len = b(8), lead = b(0.5);
+  const words = clip.r0012.split(" ");
+  const s0 = lead + clip.speech_start * FPS, s1 = lead + clip.speech_end * FPS;
+  const k = Math.max(-1, Math.min(words.length - 1, Math.floor(((f - s0) / (s1 - s0)) * words.length)));
+  const p = pop(f, s0 + (k / words.length) * (s1 - s0), 11), after = f > s1 + 4;
+  return (
+    <AbsoluteFill style={{ opacity: interpolate(f, [0, 6, len - 6, len], [0, 1, 1, 0], clamp) }}>
+      <Sequence from={lead} layout="none"><Audio src={staticFile("east.wav")} /></Sequence>
+      <Center style={{ padding: 70 * u }}>
+        {!after && k >= 0 && <div style={{ fontFamily: grot, fontSize: (tall ? Math.min(220, 1700 / words[k].length) : 230) * u, lineHeight: 1, color: C.ink,
+          transform: `scale(${1.25 - 0.25 * p}) translateY(${(1 - p) * 30}px)`, textAlign: "center" }}>{words[k]}</div>}
+        {after && <div style={{ fontFamily: serif, fontSize: (tall ? 104 : 96) * u, lineHeight: 1.08, color: C.ink, textAlign: "center",
+          opacity: pop(f, s1 + 4, 200), maxWidth: (tall ? 940 : 1500) * u }}>{clip.r0012}</div>}
+        <Mono u={u} color={C.faint} style={{ position: "absolute", bottom: (tall ? 260 : 120) * u, opacity: after ? 1 : 0.6 }}>
+          {after ? "✓ exact · Google FLEURS test sentence" : "listening"}</Mono>
+      </Center>
+    </AbsoluteFill>
+  );
+};
+
+/* ---------- I · the numbers, on the beat ---------- */
 const Numbers: React.FC = () => {
-  const f = useCurrentFrame(), { tall, u } = useLayout(), len = S.numbers, n = data.numbers;
-  const p = interpolate(f, [10, 75], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
-  const v = n.stock_small_fleurs_cer + (n.r0012_fleurs_cer - n.stock_small_fleurs_cer) * p;
-  const chips = [`${n.hours_of_speech} h of open speech`, `~$${n.cost_usd} of cloud GPU`, "every experiment public"];
+  const f = useCurrentFrame(), { tall, u } = useL(), n = data.numbers;
+  const swap = f >= b(2), p = pop(f, swap ? b(2) : 0, 10);
+  const chips = [`${n.hours_of_speech} hours of open speech`, `~$${n.cost_usd} of cloud GPU`, "every experiment public"];
   return (
-    <AbsoluteFill style={{ opacity: fadeInOut(f, len), alignItems: "center", justifyContent: "center", gap: 34 * u, padding: 80 * u }}>
-      <Label u={u}>letters wrong on sentences it never heard</Label>
-      <div style={{ fontFamily: serif, fontSize: (tall ? 330 : 300) * u, lineHeight: 0.9, color: p > 0.98 ? C.glow : C.ink, fontVariantNumeric: "tabular-nums" }}>
-        {v.toFixed(1)}<span style={{ fontSize: (tall ? 150 : 130) * u }}>%</span></div>
-      <div style={{ width: (tall ? 820 : 1100) * u, height: 14 * u, borderRadius: 99, background: C.line, overflow: "hidden" }}>
-        <div style={{ width: `${v}%`, height: "100%", borderRadius: 99, background: `linear-gradient(90deg, ${C.glow}, ${C.ember})` }} />
+    <Center style={{ gap: 20 * u, opacity: interpolate(f, [b(8) - 6, b(8)], [1, 0], clamp) }}>
+      <Mono u={u}>letters wrong on sentences it never heard</Mono>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 30 * u }}>
+        <Mono u={u} color={swap ? C.ok : C.err} size={34}>{swap ? "after" : "before"}</Mono>
+        <div style={{ fontFamily: grot, fontSize: (tall ? 400 : 380) * u, lineHeight: 1, color: swap ? C.glow : C.err,
+          transform: `scale(${1.3 - 0.3 * p})`, fontVariantNumeric: "tabular-nums" }}>
+          {swap ? n.r0012_fleurs_cer.toFixed(0) : n.stock_small_fleurs_cer.toFixed(0)}<span style={{ fontSize: (tall ? 180 : 170) * u }}>%</span></div>
       </div>
-      <div style={{ fontFamily: mono, fontSize: 28 * u, color: C.faint, textAlign: "center" }}>stock whisper-small 65.5 % → R-0012 8.0 % · FLEURS test, 1 034 clips</div>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 18 * u, marginTop: 30 * u, maxWidth: (tall ? 900 : 1500) * u }}>
-        {chips.map((c, i) => { const s = spring({ frame: f - 80 - i * 9, fps: FPS, config: { damping: 15 } });
-          return <div key={c} style={{ fontFamily: mono, fontSize: 30 * u, color: C.ink, border: `${2 * u}px solid #e2732b66`, background: "#e2732b18",
-            borderRadius: 99, padding: `${12 * u}px ${28 * u}px`, opacity: s, transform: `translateY(${(1 - s) * 20}px)` }}>{c}</div>; })}
+      <Mono u={u} color={C.faint} size={24} style={{ textTransform: "none", letterSpacing: "0.04em" }}>
+        stock whisper-small 65.5 % → R-0012 8.0 % · FLEURS test, 1 034 clips</Mono>
+      <div style={{ display: "flex", flexDirection: tall ? "column" : "row", alignItems: "center", gap: 18 * u, marginTop: 40 * u }}>
+        {chips.map((c, i) => { const q = pop(f, b(4 + i), 12);
+          return <div key={c} style={{ fontFamily: grot, fontSize: (tall ? 52 : 46) * u, color: C.ink, opacity: q, transform: `scale(${0.6 + 0.4 * q})`,
+            border: `${3 * u}px solid ${C.ember}`, borderRadius: 99, padding: `${10 * u}px ${34 * u}px`, background: "#e2732b1c" }}>{c}</div>; })}
       </div>
-    </AbsoluteFill>
+    </Center>
   );
 };
 
+/* ---------- J · the phone, tilting in ---------- */
 const Phone: React.FC = () => {
-  const f = useCurrentFrame(), { tall, u } = useLayout(), len = S.phone, clip = clips.east;
-  const ph = (tall ? 1150 : 820) * u, pw = ph * 0.49;
-  const lift = spring({ frame: f, fps: FPS, config: { damping: 200 } });
-  const level = Array.from({ length: 84 }, (_, i) => {
-    const k = Math.floor(((f - 8) / FPS) * 50);
-    const v = clip.bars[Math.max(0, Math.min(clip.bars.length - 1, k + (i % 6)))] || 0;
-    return f > 8 && f < 8 + clip.seconds * FPS ? v ** 1.4 : 0.06 + 0.04 * Math.sin(f / 27 + i * 0.3);
-  });
-  const text = typed(clip.r0012, f, 8 + clip.speech_start * FPS, 8 + clip.speech_end * FPS);
+  const f = useCurrentFrame(), { tall, u } = useL(), clip = clips.train, lead = 6, len = b(7);
+  const ph = (tall ? 1080 : 860) * u, pw = ph * 0.49, enter = pop(f, 0, 20);
+  const s0 = lead + clip.speech_start * FPS, s1 = lead + clip.speech_end * FPS;
+  const text = clip.r0012.slice(0, Math.round(interpolate(f, [s0, s1], [0, clip.r0012.length], clamp)));
+  const k = Math.floor(((f - lead) / FPS) * 50);
+  const level = (i: number) => (f > lead && f < lead + clip.seconds * FPS ? (clip.bars[Math.min(clip.bars.length - 1, k + (i % 7))] || 0) ** 1.3
+    : 0.06 + 0.05 * Math.exp(-((f % BT) / 4)));
   const caption = (
-    <div style={{ fontFamily: serif, color: C.ink, fontSize: (tall ? 70 : 76) * u, lineHeight: 1.08, maxWidth: (tall ? 900 : 700) * u, textAlign: tall ? "center" : "left" }}>
-      Runs in your browser.<div style={{ fontStyle: "italic", color: C.glow }}>Nothing you say leaves your phone.</div>
-      <div style={{ fontFamily: mono, fontSize: 24 * u, color: C.faint, marginTop: 24 * u, lineHeight: 1.5 }}>
-        ~{data.numbers.browser_mb} MB, downloaded once · free · no account</div>
+    <div style={{ textAlign: tall ? "center" : "left", maxWidth: (tall ? 940 : 760) * u }}>
+      <div style={{ fontFamily: grot, fontSize: (tall ? 84 : 92) * u, lineHeight: 1, color: C.ink, opacity: pop(f, 6, 200) }}>Runs in your browser.</div>
+      <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: (tall ? 76 : 80) * u, lineHeight: 1.05, color: C.glow, marginTop: 16 * u,
+        opacity: pop(f, b(1), 200) }}>Nothing you say leaves your phone.</div>
+      <Mono u={u} color={C.faint} size={24} style={{ marginTop: 26 * u, opacity: pop(f, b(2), 200) }}>
+        free · no account · ~{data.numbers.browser_mb} mb once</Mono>
     </div>
   );
   return (
-    <AbsoluteFill style={{ opacity: fadeInOut(f, len), alignItems: "center", justifyContent: "center", flexDirection: tall ? "column" : "row", gap: 70 * u }}>
-      <Sequence from={8} layout="none"><Audio src={staticFile("east.wav")} /></Sequence>
-      {!tall && caption}
-      <div style={{ width: pw, height: ph, borderRadius: pw * 0.13, border: `${6 * u}px solid #2a241c`, background: C.bg, position: "relative", overflow: "hidden",
-        boxShadow: `0 ${40 * u}px ${120 * u}px -${30 * u}px #000, 0 0 ${80 * u}px #e2732b22`, transform: `translateY(${(1 - lift) * 120 * u}px)` }}>
-        <AbsoluteFill style={{ background: "radial-gradient(120% 60% at 50% 30%, #2c1d10 0%, transparent 70%)" }} />
-        <div style={{ position: "absolute", top: ph * 0.04, left: pw * 0.08, fontFamily: serif, fontStyle: "italic", fontSize: pw * 0.085, color: C.ink }}>
-          Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
-        <div style={{ position: "absolute", top: ph * 0.2, left: "50%", transform: "translateX(-50%)" }}><Orb size={pw * 0.78} level={level} /></div>
-        <div style={{ position: "absolute", top: ph * 0.62, left: pw * 0.08, right: pw * 0.08, fontFamily: serif, fontSize: pw * 0.085, lineHeight: 1.12, color: C.ink }}>{text}</div>
-        <div style={{ position: "absolute", bottom: ph * 0.03, left: 0, right: 0, textAlign: "center", fontFamily: mono, fontSize: pw * 0.026, color: C.faint }}>
-          nothing you record leaves this device</div>
-      </div>
-      {tall && caption}
+    <AbsoluteFill style={{ opacity: interpolate(f, [len - 6, len], [1, 0], clamp) }}>
+      <Sequence from={lead} layout="none"><Audio src={staticFile("train.wav")} /></Sequence>
+      <Center style={{ flexDirection: tall ? "column" : "row", gap: 70 * u, perspective: 2200 }}>
+        {!tall && caption}
+        <div style={{ width: pw, height: ph, borderRadius: pw * 0.13, border: `${6 * u}px solid #2f2820`, background: C.bg, position: "relative", overflow: "hidden",
+          boxShadow: `0 ${50 * u}px ${140 * u}px -${30 * u}px #000, 0 0 ${120 * u}px #e2732b33`,
+          transform: `rotateY(${interpolate(enter, [0, 1], [-50, tall ? -8 : -16])}deg) rotateX(${interpolate(enter, [0, 1], [20, 6])}deg) translateY(${(1 - enter) * 300 * u}px)` }}>
+          <AbsoluteFill style={{ background: "radial-gradient(120% 60% at 50% 30%, #2c1d10 0%, transparent 70%)" }} />
+          <div style={{ position: "absolute", top: ph * 0.04, left: pw * 0.08, fontFamily: serif, fontStyle: "italic", fontSize: pw * 0.085, color: C.ink }}>
+            Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
+          <div style={{ position: "absolute", top: ph * 0.17, left: "50%", transform: "translateX(-50%)" }}><Orb size={pw * 0.8} level={level} /></div>
+          <div style={{ position: "absolute", top: ph * 0.6, left: pw * 0.08, right: pw * 0.08, fontFamily: serif, fontSize: pw * 0.088, lineHeight: 1.12, color: C.ink }}>{text}</div>
+        </div>
+        {tall && caption}
+      </Center>
     </AbsoluteFill>
   );
 };
 
-const End: React.FC = () => {
-  const f = useCurrentFrame(), { tall, u } = useLayout();
-  const s = spring({ frame: f - 4, fps: FPS, config: { damping: 18 } });
-  const line = (txt: string, d: number, size: number, color: string, font = mono) => {
-    const o = spring({ frame: f - d, fps: FPS, config: { damping: 200 } });
-    return <div style={{ fontFamily: font, fontSize: size * u, color, opacity: o, transform: `translateY(${(1 - o) * 16}px)`, textAlign: "center" }}>{txt}</div>;
-  };
+/* ---------- K · the end card ---------- */
+const Outro: React.FC = () => {
+  const f = useCurrentFrame(), { tall, u } = useL();
+  const s = pop(f, 0, 12), line = (d: number) => pop(f, d, 200);
+  const level = (i: number) => 0.08 + 0.3 * Math.exp(-((f % BT) / 5)) * (0.5 + 0.5 * Math.sin(i * 0.9 + f / 9));
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", gap: 26 * u, padding: 70 * u,
-      opacity: interpolate(f, [S.end - 14, S.end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>
-      <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: (tall ? 230 : 210) * u, color: C.ink, transform: `scale(${0.9 + s * 0.1})`, opacity: s }}>
+    <Center style={{ gap: 20 * u, padding: 60 * u, opacity: interpolate(f, [b(9) - 14, b(9)], [1, 0], clamp) }}>
+      <div style={{ transform: `scale(${s})` }}><Orb size={(tall ? 360 : 280) * u} level={level} /></div>
+      <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: (tall ? 240 : 220) * u, lineHeight: 0.95, color: C.ink, opacity: s }}>
         Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
-      {line("speak isiXhosa · see it written", 14, 34, C.soft)}
-      {line("ntlakanipho-thetha.static.hf.space", 26, tall ? 40 : 44, C.glow)}
-      {line("open source · github.com/2Ntlaks/isixhosa-speech-ai", 38, 28, C.soft)}
-      <div style={{ height: 40 * u }} />
-      {line("built by Ntlakanipho Mgaguli", 50, 26, C.faint)}
-      {line("speech in this film: Google FLEURS (CC BY 4.0)", 58, tall ? 24 : 22, C.faint)}
-      {line("trained on NCHLT (SADiLaR) and Google FLEURS", 62, tall ? 24 : 22, C.faint)}
-    </AbsoluteFill>
+      <div style={{ fontFamily: grot, fontSize: (tall ? 58 : 52) * u, color: C.ink, opacity: line(8), textAlign: "center" }}>
+        Speak isiXhosa. <span style={{ color: C.glow }}>See it written.</span></div>
+      <div style={{ fontFamily: mono, fontSize: (tall ? 34 : 38) * u, color: C.bg, background: C.glow, padding: `${12 * u}px ${26 * u}px`, borderRadius: 12 * u,
+        marginTop: 20 * u, opacity: line(16), transform: `scale(${0.9 + 0.1 * line(16)})` }}>ntlakanipho-thetha.static.hf.space</div>
+      <div style={{ fontFamily: mono, fontSize: 26 * u, color: C.soft, opacity: line(24), textAlign: "center" }}>
+        open source · github.com/2Ntlaks/isixhosa-speech-ai</div>
+      <div style={{ fontFamily: mono, fontSize: 22 * u, color: C.faint, opacity: line(34), marginTop: 30 * u, textAlign: "center", lineHeight: 1.6 }}>
+        built by Ntlakanipho Mgaguli<br />voices: Google FLEURS (CC BY 4.0) · trained on NCHLT (SADiLaR) + FLEURS</div>
+    </Center>
   );
 };
 
 /* ---------- the film ---------- */
-const Ticks: React.FC<{ from: number; to: number; every: number }> = ({ from, to, every }) => (
-  <>{Array.from({ length: Math.max(0, Math.floor((to - from) / every)) }, (_, i) =>
-    <Sequence key={i} from={Math.round(from + i * every)} durationInFrames={4}><Audio src={staticFile("tick.wav")} volume={0.18} /></Sequence>)}</>
-);
+const SCENES: [keyof typeof SEC, React.FC][] = [["open", Open], ["reel", Reel], ["flood", Flood], ["taught", Taught], ["intro", Intro],
+  ["reveal", Reveal], ["decode", Decode], ["karaoke", Karaoke], ["numbers", Numbers], ["phone", Phone], ["outro", Outro]];
 
 export const Video: React.FC = () => {
-  const L = clips.loop, T = clips.train, E = clips.east;
+  const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      <Backdrop />
-      <Audio src={staticFile("bed.wav")} volume={(f) => interpolate(f, [0, 30, TOTAL - 60, TOTAL], [0, 0.55, 0.55, 0], { extrapolateRight: "clamp" })} />
-      {Object.entries(starts).slice(1).map(([k, s]) => (
-        <Sequence key={k} from={s - 8} durationInFrames={30}><Audio src={staticFile("whoosh.wav")} volume={0.35} /></Sequence>))}
-      <Sequence from={starts.hook} durationInFrames={S.hook}><Hook /></Sequence>
-      <Sequence from={starts.loop} durationInFrames={S.loop}><Transcribe name="loop" mode="stock" len={S.loop} /></Sequence>
-      <Sequence from={starts.fixed} durationInFrames={S.fixed}><Transcribe name="loop" mode="fixed" len={S.fixed} /></Sequence>
-      <Ticks from={starts.fixed + 12 + L.speech_start * FPS} to={starts.fixed + 12 + L.speech_end * FPS} every={5} />
-      <Sequence from={starts.split} durationInFrames={S.split}><Split /></Sequence>
-      <Ticks from={starts.split + 10 + T.speech_start * FPS} to={starts.split + 10 + T.speech_end * FPS} every={6} />
-      <Sequence from={starts.numbers} durationInFrames={S.numbers}><Numbers /></Sequence>
-      <Sequence from={starts.phone} durationInFrames={S.phone}><Phone /></Sequence>
-      <Ticks from={starts.phone + 8 + E.speech_start * FPS} to={starts.phone + 8 + E.speech_end * FPS} every={6} />
-      <Sequence from={starts.end} durationInFrames={S.end}><End /></Sequence>
+      <Backdrop heat={f < b(24) ? 0.35 : 1} />
+      <Audio src={staticFile("music.wav")} volume={(fr) => (VOICES.some(([a, z]) => fr >= a && fr < z) ? 0.32 : 0.9)} />
+      {SCENES.map(([k, S]) => (
+        <Sequence key={k} from={b(SEC[k][0])} durationInFrames={b(SEC[k][1] - SEC[k][0])}><S /></Sequence>))}
     </AbsoluteFill>
   );
 };

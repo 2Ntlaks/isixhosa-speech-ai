@@ -197,3 +197,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   output from a run record (R-0006, R-0011, R-0012), checked by release/video/prepare.py.
 - Sound: no music track (licences); a quiet low drone, key ticks and whooshes synthesised in prepare.py.
 - Rendered on the laptop, $0. Outputs (MP4) and audio are kept out of git.
+
+## D-0022 · 2026-10-19 · Announcement video, cut 2 (founder: "I don't really like it... try again", wants eye-catching)
+- Cut 1 (D-0021) was calm and explanatory. Cut 2 is a launch trailer on a 100 BPM beat grid: cold open on the click
+  letters c · q · x; a reel of Whisper's languages (real Whisper languages, native names) landing on isiXhosa, struck
+  out; stock Whisper's real "kwa kwa kwa" loop flooding the screen; "So I taught it." / INTRODUCING / Thetha reveal
+  ("isiXhosa for speak"); scrambled letters resolving into R-0012's exact transcript in time with the voice; a lyric-
+  style word-by-word clip; 65 % -> 8 %; a phone tilting in; end card.
+- Score synthesised in release/video/sound.py (kick, hats, bass, pad, riser, impact, click-like transients), no samples.
+- Same rules as D-0021: FLEURS voices only, every transcript from a run record.
