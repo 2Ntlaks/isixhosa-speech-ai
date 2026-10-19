@@ -206,3 +206,10 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   style word-by-word clip; 65 % -> 8 %; a phone tilting in; end card.
 - Score synthesised in release/video/sound.py (kick, hats, bass, pad, riser, impact, click-like transients), no samples.
 - Same rules as D-0021: FLEURS voices only, every transcript from a run record.
+
+## D-0023 · 2026-10-19 · Founder's own voice in a public TikTok video
+- Founder chose data/my_voice/live/20261017-204419-076808.wav (4.4 s, start of the "Iqaqa…" tongue twister) and
+  confirmed: "yes it's my voice". His own transcript: "Iqaqa liziqikaqika" / "Iqaqa lizi qikaqika".
+- The demo model (R-0007, also what Thetha wrote live on 17 Oct) wrote "iqaqa lizizi qikaqika": "iqaqa" and
+  "qikaqika" exact, one extra "zi". R-0012 wrote "iqaqa liziqiqaqiqa". The video shows the demo model's real output
+  next to his words, framed as "so close". The friend's clips stay unused.

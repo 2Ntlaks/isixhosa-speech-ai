@@ -138,3 +138,25 @@ for b_ in (20, 21.5, 23):
 out = np.tanh(out * 1.1) * 0.85
 sf.write(os.path.join(HERE, "public", "music_tiktok.wav"), out.astype("float32"), SR, subtype="PCM_16")
 print(f"music_tiktok.wav {len(out) / SR:.1f} s")
+
+# ---- Tongue-twister TikTok (src/Twister.tsx): 22 beats ----
+out = np.zeros(int(SR * BEAT * 22) + SR)
+for b_ in range(0, 4):
+    add(kick(120, 40, 0.3), b_, 0.6)
+    add(hat(0.03), b_ + 0.5, 0.35)
+for b_ in (1, 2, 3):
+    add(tongue_click(), b_ + 0.75, 0.5)
+for b_ in range(4, 10, 2):
+    add(kick(100, 38, 0.3), b_, 0.3)                  # quiet heartbeat under the voice
+add(impact, 10, 0.8)                                   # the result appears
+for b_ in range(13, 22):
+    add(kick(), b_, 0.75)
+    add(hat(), b_ + 0.5, 0.6)
+for bar, b_ in enumerate(range(13, 22, 4)):
+    bt = tt(BEAT * 4)
+    add((np.sin(2 * np.pi * roots[bar % 4] * bt) + 0.4 * np.sin(4 * np.pi * roots[bar % 4] * bt)) * np.minimum(1, bt / 0.02) * np.exp(-bt / 1.6), b_, 0.35)
+    add(tone(chords[bar % 4], BEAT * 4, 0.035, attack=0.4, release=0.6), b_)
+add(impact * 0.5, 17)
+out = np.tanh(out * 1.1) * 0.85
+sf.write(os.path.join(HERE, "public", "music_twister.wav"), out.astype("float32"), SR, subtype="PCM_16")
+print(f"music_twister.wav {len(out) / SR:.1f} s")

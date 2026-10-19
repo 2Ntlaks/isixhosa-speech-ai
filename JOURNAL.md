@@ -190,3 +190,8 @@ Format:
   "kwa kwa kwa" loop), "so I trained my own.", same voice resolving into R-0012's exact transcript, three stat punches,
   phone + "link in bio". All text inside TikTok's UI-free zone. Two files: with the synthesised beat, and voices only
   (for a trending sound added in the app). release/video/out/thetha-tiktok*.mp4, ~17 MB each.
+- Tongue-twister TikTok (src/Twister.tsx, D-0023): the founder's own "Iqaqa…" clip, the demo model's real output
+  "iqaqa lizizi qikaqika" next to his words "iqaqa lizi qikaqika" ("so close, one extra zi"), then "your turn, link in
+  bio". 13.2 s. Fixed on the way: the voice was ~5x too quiet (normalised by one sharp spike, not by the speech) and
+  had 1.2 s of dead air; now trimmed and levelled by speech loudness with a soft limiter. Files:
+  release/video/out/thetha-tongue-twister.mp4 and -voice-only.mp4 (~10 MB). The recording itself stays out of git.
