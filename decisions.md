@@ -153,3 +153,14 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   never re-hosted, never in a Hugging Face repo or Space, never used for training. Cite van der Westhuizen & Niesler
   (LREC 2018) wherever a Soapies score appears. NCHLT English: credit CSIR Meraka / North-West University like NCHLT.
   The founder's own recordings stay optional, as a final check later.
+
+## D-0017 · 2026-10-19 · Stage 4 training recipe (agent default under D-0016, founder may override)
+- Finding (R-0014): on real code-switched speech R-0012 gets CER 38.4 / WER 79.6; only 32 % of English words and 15 %
+  of isiXhosa words come out right. It writes English words with isiXhosa spelling; fast acted TV speech also hurts.
+- Choice: two runs on one node, continuing from R-0012 (cheaper than retraining; stage 4 specialises the stage 3 model),
+  2000 steps, lr 5e-6: R-0015 adds 10 h NCHLT English (<|en|> tag); R-0016 adds 8000 stitched isiXhosa+English clips
+  on top (one change). Checkpoint chosen on Soapies dev (dev use, allowed by D-0016). Scored on Soapies test (headline),
+  NCHLT and FLEURS test (must not get much worse).
+- Why two runs: the founder wants to learn what works; the pair shows separately what English alone and stitching add.
+- Spend: ~$5-6, after the 1 November brake reset. The founder delegated the next steps ("move on to next thing, I
+  trust your judgment", 2026-10-19) but has not yet seen this recipe; the launch waits for his OK on the spend.

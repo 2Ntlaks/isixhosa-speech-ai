@@ -157,3 +157,16 @@ Format:
 - Fix: not used; the full window stays. Speed came from the int8 engine instead (R-0013).
 - Cost: nothing; ~5 minutes.
 - Lesson: speed tricks are experiments too: measure accuracy before shipping them.
+
+## P-0013 · 2026-10-19 · Two laptop jobs stopped: laptop ran low on memory again
+- Stage / run: R-0014 (stock whisper-medium on the Soapies test) and the CPU smoke test of the stage 4 training code
+- Symptom: Claude Code stopped both background jobs ("stopped because the system is running low on memory"). Stock
+  medium had scored 100 of 391 clips (very slow: ~16 s per clip); the smoke test had built its data (2206 clips incl.
+  83 English and 40 stitched) but never reported a training step. Free memory had dropped to ~0.85 GB of 15 GB.
+- Cause: the agent ran two heavy jobs at once: a medium model scoring clips (~1.7 GB) and a training test whose data
+  loader starts 4 extra Python processes (~0.4 GB each), which also scores 536 Soapies dev clips at every evaluation,
+  next to the founder's browser and other apps. Both also competed for the same 8 CPU cores.
+- Fix: none needed in code; nothing lost (R-0007 and R-0012 results were already saved). Re-run one job at a time,
+  smoke test with fewer dev clips / no extra loader processes. Not restarted automatically (waits for the founder).
+- Cost: $0; ~25 minutes of laptop time.
+- Lesson: on the laptop, one heavy job at a time; check free memory first (P-0011 again).

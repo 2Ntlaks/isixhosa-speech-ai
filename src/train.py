@@ -7,6 +7,13 @@
 - A few training speakers are held out as a dev set to pick the best checkpoint; the 8 test speakers are never touched here.
 - Checkpoints go to <out>/checkpoints/; if one exists the run resumes from it (survives a restarted machine).
 - The best checkpoint (lowest dev CER) is saved to <out>/final with its processor, ready for src/baseline.py.
+Stage 4 (code-switching, D-0016/D-0017), all optional:
+- --english-xml: NCHLT English training clips (--english-hours of them), learned with Whisper's own <|en|> tag.
+- --stitch N: N clips made by joining a real NCHLT isiXhosa clip and a real NCHLT English clip (x+e, e+x or x+e+x,
+  with a short silence between). Transcripts are the corpora's own; learned with the isiXhosa tag. Teaches the model
+  to keep English words in English spelling inside isiXhosa speech.
+- --soapies-root: score the Soapies code-switched dev set at each evaluation and pick the best checkpoint on it
+  (research-only data: dev/test use only, never trained on).
 """
 import argparse
 import json
@@ -16,14 +23,18 @@ import re
 import sys
 from dataclasses import dataclass
 
+from math import gcd
+
 import numpy as np
 import soundfile as sf
 import torch
+from scipy.signal import resample_poly
 from transformers import (Seq2SeqTrainer, Seq2SeqTrainingArguments, WhisperForConditionalGeneration,
                           WhisperProcessor)
 
 sys.path.insert(0, os.path.dirname(__file__))
 import fleurs  # noqa: E402
+import soapies  # noqa: E402
 from nchlt import load_split  # noqa: E402
 from scoring import normalise, score  # noqa: E402
 
@@ -33,22 +44,75 @@ def target_text(text):
     return re.sub(r"\s+", " ", re.sub(r"\[[^\]]*\]", " ", text)).strip()
 
 
+def read16k(path):
+    audio, sr = sf.read(path, dtype="float32")
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1)
+    if sr != 16000:  # NCHLT and FLEURS are 16 kHz; Soapies is 32 kHz
+        g = gcd(sr, 16000)
+        audio = resample_poly(audio, 16000 // g, sr // g).astype("float32")
+    return audio
+
+
 class Clips(torch.utils.data.Dataset):
-    def __init__(self, clips, proc):
+    """A clip is one file ("path") or several joined with silence ("parts" + "gaps"). "lang" picks the language tag."""
+
+    def __init__(self, clips, proc, language):
         self.clips, self.proc = clips, proc
+        tok = proc.tokenizer
+        self.prefix = {lang: tok.convert_tokens_to_ids(["<|startoftranscript|>", f"<|{lang}|>", "<|transcribe|>",
+                                                        "<|notimestamps|>"])
+                       for lang in {language, "en"}}
+        self.language = language
 
     def __len__(self):
         return len(self.clips)
 
     def __getitem__(self, i):
         c = self.clips[i]
-        audio, sr = sf.read(c["path"], dtype="float32")
-        if audio.ndim > 1:
-            audio = audio.mean(axis=1)
-        assert sr == 16000, f"{c['path']}: {sr} Hz"  # NCHLT is 16 kHz; resampling would go here if not
+        if "parts" in c:
+            pieces = []
+            for k, p in enumerate(c["parts"]):
+                if k:
+                    pieces.append(np.zeros(int(16000 * c["gaps"][k - 1]), dtype="float32"))
+                pieces.append(read16k(p))
+            audio = np.concatenate(pieces)
+        else:
+            audio = read16k(c["path"])
         feats = self.proc.feature_extractor(audio, sampling_rate=16000).input_features[0]
-        labels = self.proc.tokenizer(target_text(c["text"])).input_ids
+        tok = self.proc.tokenizer
+        labels = (self.prefix[c.get("lang", self.language)] + tok(target_text(c["text"]), add_special_tokens=False).input_ids
+                  + [tok.eos_token_id])
         return {"input_features": feats, "labels": labels}
+
+
+def take_hours(clips, hours, seed):
+    """A seeded random subset of clips adding up to about `hours` of audio."""
+    pool = random.Random(seed).sample(clips, len(clips))
+    out, total = [], 0.0
+    for c in pool:
+        if total >= hours * 3600:
+            break
+        out.append(c)
+        total += c["duration"]
+    return out
+
+
+def stitch(xho, eng, n, seed, max_seconds):
+    """n clips joining real isiXhosa and English clips: x+e, e+x or x+e+x, 0.1-0.4 s of silence between parts."""
+    rng = random.Random(seed)
+    out = []
+    while len(out) < n:
+        pattern = rng.choice(["xe", "ex", "xex"])
+        parts = [rng.choice(xho if p == "x" else eng) for p in pattern]
+        gaps = [round(rng.uniform(0.1, 0.4), 2) for _ in parts[1:]]
+        duration = sum(p["duration"] for p in parts) + sum(gaps)
+        if duration > max_seconds:
+            continue
+        out.append({"id": f"stitch_{len(out):05d}", "speaker": "stitch", "parts": [p["path"] for p in parts],
+                    "part_ids": [p["id"] for p in parts], "gaps": gaps, "duration": duration,
+                    "text": " ".join(target_text(p["text"]) for p in parts), "pattern": pattern})
+    return out
 
 
 @dataclass
@@ -116,6 +180,11 @@ def main():
                     help="recompute activations instead of storing them: less GPU memory, ~30%% slower")
     ap.add_argument("--only-existing", action="store_true",
                     help="use only clips whose audio is on disk (preflight with a few speakers downloaded)")
+    ap.add_argument("--english-xml", help="NCHLT English training XML (stage 4): English clips with the <|en|> tag")
+    ap.add_argument("--english-hours", type=float, default=10.0, help="how much of NCHLT English to train on")
+    ap.add_argument("--stitch", type=int, default=0, help="number of joined isiXhosa+English clips (needs --english-xml)")
+    ap.add_argument("--soapies-root", help="folder with Soapies engxho (balanced_engxho.xml, ids/, extracted/): its dev"
+                    " set is scored at each evaluation and picks the best checkpoint (never trained on, D-0016)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -134,6 +203,30 @@ def main():
         if a.only_existing:
             extra = [c for c in extra if os.path.exists(c["path"])]
         train = train + extra
+    english, stitched = [], []
+    if a.english_xml:  # also added after the dev split; dev and test stay NCHLT isiXhosa
+        eng = [c for c in load_split(a.english_xml, a.root) if c["duration"] <= a.max_seconds and target_text(c["text"])]
+        if a.only_existing:
+            eng = [c for c in eng if os.path.exists(c["path"])]
+        english = [dict(c, lang="en") for c in take_hours(eng, a.english_hours, a.seed)]
+        if a.stitch:
+            xho = [c for c in train if c["speaker"] != "fleurs"]  # NCHLT isiXhosa training clips only
+            stitched = stitch(xho, eng, a.stitch, a.seed, a.max_seconds)
+            with open(os.path.join(a.out, "stitched.jsonl"), "w", encoding="utf-8") as f:
+                for c in stitched:
+                    f.write(json.dumps({k: c[k] for k in ("id", "part_ids", "gaps", "pattern", "text")},
+                                       ensure_ascii=False) + "\n")
+        train = train + english + stitched
+    soapies_dev = []
+    if a.soapies_root:
+        R = a.soapies_root
+        soapies_dev = soapies.load_split(os.path.join(R, "balanced_engxho.xml"),
+                                         os.path.join(R, "ids", "cs_engxho_balanced", "transcriptions",
+                                                      "engxho_dev_set_utterance_ids.txt"),
+                                         os.path.join(R, "extracted"))
+        for c in soapies_dev:  # score on the exact form we score test on
+            c["text"] = normalise(c["text"])
+        soapies_dev = [c for c in soapies_dev if c["path"] and c["text"]]
     fleurs_dev = []
     if a.fleurs_dev_tsv:
         fd = fleurs.load_split(a.fleurs_dev_tsv, a.fleurs_dev_audio)
@@ -145,7 +238,10 @@ def main():
             "train_speakers": len({c["speaker"] for c in train}), "dev_speakers": dev_speakers,
             "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips),
             "fleurs_train_clips": len(extra), "fleurs_dropped_over_max_seconds": fleurs_dropped, "fleurs_train_hours": round(sum(c["duration"] for c in extra) / 3600, 2),
-            "fleurs_dev_clips_scored": len(fleurs_dev), "model": a.model, "batch_size": a.batch_size,
+            "fleurs_dev_clips_scored": len(fleurs_dev),
+            "english_train_clips": len(english), "english_train_hours": round(sum(c["duration"] for c in english) / 3600, 2),
+            "stitched_clips": len(stitched), "stitched_hours": round(sum(c["duration"] for c in stitched) / 3600, 2),
+            "soapies_dev_clips_scored": len(soapies_dev), "model": a.model, "batch_size": a.batch_size,
             "grad_accum": a.grad_accum, "gradient_checkpointing": a.gradient_checkpointing}
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
@@ -170,17 +266,24 @@ def main():
         s = score(refs, hyps)
         return {"wer": round(s["wer"], 2), "cer": round(s["cer"], 2)}
 
+    evals = {"nchlt": Clips(dev, proc, a.language)}
+    if fleurs_dev:
+        evals["fleurs"] = Clips(fleurs_dev, proc, a.language)
+    if soapies_dev:
+        evals["soapies"] = Clips(soapies_dev, proc, a.language)
+    best = "soapies_cer" if soapies_dev else "nchlt_cer" if fleurs_dev else "cer"
     ckpts = os.path.join(a.out, "checkpoints")
     args = Seq2SeqTrainingArguments(
         output_dir=ckpts, per_device_train_batch_size=a.batch_size, gradient_accumulation_steps=a.grad_accum,
         per_device_eval_batch_size=32, learning_rate=a.lr, warmup_steps=a.warmup, max_steps=a.max_steps,
         lr_scheduler_type="linear", bf16=torch.cuda.is_available(), eval_strategy="steps", eval_steps=a.eval_every,
         save_strategy="steps", save_steps=a.eval_every, save_total_limit=2, load_best_model_at_end=True,
-        metric_for_best_model="nchlt_cer" if fleurs_dev else "cer", greater_is_better=False,
+        metric_for_best_model=best, greater_is_better=False,
         gradient_checkpointing=a.gradient_checkpointing, predict_with_generate=True, generation_max_length=a.generation_max_length,
         logging_steps=25, report_to="none", dataloader_num_workers=4, remove_unused_columns=False,
         label_names=["labels"], seed=a.seed)
-    trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc), eval_dataset={"nchlt": Clips(dev, proc), "fleurs": Clips(fleurs_dev, proc)} if fleurs_dev else Clips(dev, proc),
+    trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc, a.language),
+                             eval_dataset=evals if len(evals) > 1 else evals["nchlt"],
                              data_collator=Collator(proc, model.config.decoder_start_token_id),
                              compute_metrics=compute_metrics, processing_class=proc.feature_extractor)
     resume = last_checkpoint(ckpts)

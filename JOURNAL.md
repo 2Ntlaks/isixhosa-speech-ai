@@ -115,3 +115,20 @@ Format:
 - Open: a friend's consent for keeping their recordings (asked, no answer yet); DirectML (Radeon iGPU) test pending
   (.venv-dml installed); founder's listening-page verdicts.
 - Next: stage 4 plan (founder's own mixed isiXhosa + English recordings), or stage 5 (Hugging Face).
+
+## 2026-10-19 11:30 — Stage 4 without recordings: Soapies test set, R-0014, R-0015/R-0016 prepared
+- Agent/session: Claude Code (isiXhosa Speech AI session, account3)
+- Did: founder is too busy to record; asked for a zero-effort way. Found two SADiLaR datasets that download without a
+  login: the Soapies code-switched soap-opera corpus (English-isiXhosa set 3.1 h, research only) and NCHLT English
+  (56 h, CC BY 3.0). Founder chose **A: Soapies for testing only, published models trained on open data only (D-0016)**.
+  Added both to the cloud downloader (fetch-2, t3.small, MD5s match SADiLaR); in S3 under datasets/soapies_engxho/
+  and datasets/nchlt_eng/. Wrote src/soapies.py, src/eval_soapies.py; R-0014 scored our models on the Soapies test.
+  Extended src/train.py (English clips with <|en|>, stitched isiXhosa+English clips, Soapies dev for checkpoint choice,
+  32 kHz resampling) and wrote runs/R-0015/job.sh (R-0015 + R-0016 on one node), D-0017, docs/stage4.png.
+- Result: **R-0014: R-0012 on real mixed speech CER 38.43 / WER 79.59** (R-0007 42.13 / 87.97); English words right
+  32 %, isiXhosa 15 %. It spells English the isiXhosa way inside sentences, yet writes whole English phrases perfectly
+  (NCHLT isiXhosa contains 534 English-prompt clips). Problem P-0013: two laptop jobs stopped for low memory (stock
+  medium on Soapies at 100/391; training smoke test before step 1).
+- Cost: ~$0.05 (download node); laptop $0. Project total ~ $9.90.
+- Next: re-run stock medium on Soapies and the training smoke test, one at a time; launch R-0015/R-0016 after the
+  1 November brake reset with the founder's OK on ~$5-6.
