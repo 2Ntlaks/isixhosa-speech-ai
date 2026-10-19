@@ -20,7 +20,9 @@ custom_headers:
 Speak isiXhosa and see it written. [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa)
 runs **inside your browser** (about 300 MB, downloaded once), so **nothing you record leaves your device**.
 
-How it was made, with every experiment: https://github.com/2Ntlaks/isixhosa-speech-ai
+Read the story: https://ntlaks.dev/writing/teaching-whisper-isixhosa/
+
+Code and every experiment: https://github.com/2Ntlaks/isixhosa-speech-ai
 
 Built with [transformers.js](https://github.com/huggingface/transformers.js) 3.0.2 (Apache-2.0), served from this Space so
 it can use several CPU threads.
