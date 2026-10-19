@@ -79,7 +79,7 @@ export const Twister: React.FC<{ music: boolean }> = ({ music }) => {
           <div style={{ marginTop: 30, opacity: pop(f, b(19), 200) }}>
             <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 110, color: C.ink, lineHeight: 1 }}>
               Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
-            <div style={{ fontFamily: mono, fontSize: 30, letterSpacing: "0.14em", color: C.glow, marginTop: 12 }}>FREE · LINK IN BIO</div>
+            <div style={{ fontFamily: mono, fontSize: 30, letterSpacing: "0.14em", color: C.glow, marginTop: 12 }}>FREE · LINK IN COMMENTS</div>
           </div>
         </div>
       )}

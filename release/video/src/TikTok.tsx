@@ -113,7 +113,7 @@ const Product: React.FC = () => {
           <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 120, lineHeight: 1, color: C.ink, opacity: pop(f, 6, 200) }}>
             Thetha<span style={{ color: C.ember, fontStyle: "normal" }}>.</span></div>
           <div style={{ fontFamily: mono, fontSize: 30, letterSpacing: "0.14em", color: C.glow, marginTop: 14, opacity: pop(f, 14, 200) }}>
-            SPEAK ISIXHOSA · LINK IN BIO</div>
+            SPEAK ISIXHOSA · LINK IN COMMENTS</div>
         </div>
       </div>
     </AbsoluteFill>
