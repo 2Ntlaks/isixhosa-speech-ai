@@ -120,4 +120,5 @@ Built on [OpenAI Whisper](https://github.com/openai/whisper) (via Hugging Face T
 
 ## Licence
 
-No licence has been chosen for the code yet, so all rights are reserved. The datasets keep their own licences (above).
+The code and project documents are under the [MIT License](LICENSE). This does not cover the datasets or the dataset
+transcripts quoted in run outputs (`runs/*/predictions.jsonl`, `samples.md`), which keep their own licences (above).
