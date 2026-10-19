@@ -1,1 +1,5 @@
+# Files that run on Linux (cloud machines, the Hugging Face Space) must keep Unix line endings
 *.sh text eol=lf
+release/space/* text eol=lf
+src/live.py text eol=lf
+src/live.html text eol=lf
