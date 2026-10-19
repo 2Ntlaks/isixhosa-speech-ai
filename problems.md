@@ -170,3 +170,15 @@ Format:
   smoke test with fewer dev clips / no extra loader processes. Not restarted automatically (waits for the founder).
 - Cost: $0; ~25 minutes of laptop time.
 - Lesson: on the laptop, one heavy job at a time; check free memory first (P-0011 again).
+
+## P-0014 · 2026-10-19 · Hugging Face refused the demo Space: free Docker Spaces now need PRO
+- Stage / run: open-sourcing (D-0019), release/publish.py, step 3 (the Space)
+- Symptom: both model repos uploaded fine (3.84 GB, 1.22 GB, public); creating the Space failed with
+  "402 Client Error: Payment Required ... Static Spaces are free for everyone, but hosting Gradio and Docker Spaces on
+  free cpu-basic requires a PRO subscription."
+- Cause: the agent's knowledge of Hugging Face's free tier was out of date; it told the founder the demo would be free
+  without checking the current terms first.
+- Fix: model cards re-uploaded without the demo link (it pointed at a Space that did not exist). Demo options go to the
+  founder: PRO ($9/month), an in-browser static demo (free), or no online demo.
+- Cost: $0; ~5 minutes.
+- Lesson: check a service's current pricing before promising "free"; the Hub API's 402 text is the source of truth.
