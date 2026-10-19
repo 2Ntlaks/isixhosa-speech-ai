@@ -171,3 +171,13 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   R-0015/R-0016 prepared but never launched; no GPU money committed. Laptop checks from P-0013 not re-run.
 - Supersedes D-0017's launch plan. Leftover storage in S3 and on the laptop: see JOURNAL 2026-10-19 (stop); deleting it
   waits for the founder's word.
+
+## D-0019 · 2026-10-19 · Open-source the project
+- Founder: "can you think of a way I can publish this and make it opensource?", then "do it" to the agent's plan.
+- Plan: 1) public GitHub repo with cleaned history (private repo kept as isixhosa-speech-ai-archive); 2) R-0012 + its
+  int8 copy on Hugging Face with an honest model card, weights under CC BY 4.0 (code MIT); 3) free Hugging Face Space
+  running Thetha (medium default, small as an option; no recordings stored); 4) write-up + post drafts, CITATION.cff.
+- Cleaning rules for anything public: no AWS account number (replaced by <acct>); no third-person names (a friend's
+  recordings); no whole Soapies utterances (research-only): R-0014 model outputs and samples stay local and
+  gitignored; single-word examples (stubborn -> istabhunga) are kept, as a paper would quote them.
+- Founder effort: create a Hugging Face account and log in himself (`hf auth login`); never paste tokens in chat.

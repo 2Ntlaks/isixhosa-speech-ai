@@ -1,0 +1,128 @@
+<title>Stage 4 Kickoff</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow reading column, a field-notebook briefing; numbers sit in a ruled ledger, the plan sheet closes it. */
+:root {
+  --paper: #fbfaf7; --ink: #142a47; --muted: #5d6b7d; --rule: #d9dde3; --coral: #e2604d; --emerald: #04805a; --tint: #f1f3f6;
+  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "Literata", Georgia, serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1825; --ink: #e6ebf2; --muted: #9aa7b8; --rule: #2a3647; --coral: #f4826f; --emerald: #3cc79a; --tint: #172233; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0f1825; --ink: #e6ebf2; --muted: #9aa7b8; --rule: #2a3647; --coral: #f4826f; --emerald: #3cc79a; --tint: #172233; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font: 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 680px; margin: 0 auto; padding-block: 40px 64px; display: grid; gap: 34px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(30px, 7vw, 46px); font-weight: 800; }
+h2 { font-size: 22px; font-weight: 600; }
+.eyebrow { font: 600 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+p { margin: 0; }
+section { display: grid; gap: 12px; min-width: 0; }
+.lede { font-size: 19px; }
+.ask { border-left: 4px solid var(--coral); background: var(--tint); padding: 16px 18px; display: grid; gap: 8px; }
+.ask strong { font-family: var(--display); font-size: 18px; }
+.ask ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.ledger { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 15px; }
+th, td { text-align: right; padding: 9px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+tr.best td { font-weight: 600; }
+.note { font-size: 14px; color: var(--muted); }
+.pair { display: grid; gap: 2px; font-family: var(--mono); font-size: 14px; padding: 12px 0; border-bottom: 1px dashed var(--rule); overflow-wrap: anywhere; }
+.pair span:first-child { color: var(--muted); }
+.pair .heard { color: var(--coral); }
+.pair b { font-weight: 600; }
+figure { margin: 0; display: grid; gap: 8px; }
+figure img { width: 100%; border: 1px solid var(--rule); background: #fdfdfc; }
+figcaption { font-size: 14px; color: var(--muted); }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.ok { color: var(--emerald); font-weight: 600; }
+code { font-family: var(--mono); font-size: .88em; }
+</style>
+
+<main>
+  <header>
+    <p class="eyebrow">isiXhosa Speech AI · Monday 19 October 2026 · stage 4</p>
+    <h1>Mixed isiXhosa and English, without you recording</h1>
+  </header>
+
+  <p class="lede">Today I found a real test set of isiXhosa speech with English mixed in, measured our best model on it,
+    and prepared the training that should fix what it gets wrong. You don't need to record anything for now.</p>
+
+  <div class="ask">
+    <strong>Two things from you, when you have a minute</strong>
+    <ol>
+      <li>OK to spend about <b>$5–6</b> of GPU in November (after the monthly brake resets on 1 November) for the two
+        stage 4 training runs?</li>
+      <li>The laptop ran short of memory once today. When you're not using it heavily, say "re-run" and I finish two
+        small checks, one at a time.</li>
+    </ol>
+  </div>
+
+  <section>
+    <p class="eyebrow">The test set</p>
+    <h2>Soapies: 391 real clips from Generations and Rhythm City</h2>
+    <p>Stellenbosch University transcribed TV soap-opera speech where characters switch between isiXhosa and English,
+      often inside one sentence. Its licence is research only, so as you chose (A), we only score on it and never train
+      on it. The model we publish learns only from openly licensed data.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Result R-0014 · laptop · $0</p>
+    <h2>Mixed speech is much harder than read speech</h2>
+    <div class="ledger">
+      <table>
+        <thead><tr><th>Model</th><th>Letters wrong</th><th>Words wrong</th><th>English words right</th><th>isiXhosa words right</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>R-0012 (medium)</td><td>38 %</td><td>80 %</td><td>32 %</td><td>15 %</td></tr>
+          <tr><td>R-0007 (small)</td><td>42 %</td><td>88 %</td><td>17 %</td><td>12 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">For comparison, R-0012 gets 8 % of letters wrong on FLEURS and 2 % on NCHLT. The test has only 5
+      speakers, so treat these numbers as rough.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">What goes wrong</p>
+    <h2>It hears the English, then spells it like isiXhosa</h2>
+    <p class="note">English words from the test clips and what R-0012 wrote for them (single words only: the test set's licence is research only).</p>
+    <div>
+      <div class="pair"><span>said</span><b>stubborn</b><span class="heard">istabhunga</span></div>
+      <div class="pair"><span>said</span><b>biological</b><span class="heard">ngephological</span></div>
+      <div class="pair"><span>said</span><b>i party</b><span class="heard">ipathi</span></div>
+    </div>
+    <p>One surprise: our training data already has some English phrases read by isiXhosa speakers, and R-0012 writes
+      those perfectly. So it can write English. It fails when English sits <em>inside</em> fast, natural isiXhosa speech.
+      Fast acted dialogue with background sound also hurts the isiXhosa parts.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">The plan · November</p>
+    <h2>Two training runs, one change each</h2>
+    <ul class="plain">
+      <li><b>R-0015:</b> R-0012 plus 10 hours of South African English (NCHLT English, open licence).</li>
+      <li><b>R-0016:</b> the same, plus 8,000 "stitched" clips: a real isiXhosa clip and a real English clip joined into
+        one, so the model hears both languages in one go.</li>
+      <li>Pass mark: better on Soapies, and not much worse on NCHLT and FLEURS.</li>
+    </ul>
+    <figure>
+      <img src="__STAGE4_PNG__" alt="Hand-drawn plan sheet for stage 4: train on open data, pick checkpoints on Soapies dev, test on Soapies test; today R-0012 spells English like isiXhosa; November runs R-0015 and R-0016.">
+      <figcaption>docs/stage4.png</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">Housekeeping</p>
+    <ul class="plain">
+      <li class="ok">No AWS machines running. Today's cloud cost: about $0.05 (download only).</li>
+      <li>Recorded: D-0016, D-0017, R-0014 to R-0016, P-0013, JOURNAL, results table. All committed to git.</li>
+    </ul>
+  </section>
+</main>
