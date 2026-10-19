@@ -174,3 +174,12 @@ Format:
 - Next: founder tries the demo on his phone, edits and posts the LinkedIn/blog drafts (release/announce/).
 - 2026-10-19: founder confirmed the live demo works on his own device ("it works"), which covers the one path the agent
   could not test (recording from a real microphone).
+
+## 2026-10-19 late — Announcement video (D-0021)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account3)
+- Did: Remotion film, ~40 s, 7 scenes (hook; stock Whisper looping "kwa kwa kwa"; R-0012 writing the same clip
+  exactly; stock vs R-0012 side by side; 65.5 % -> 8.0 % counter; Thetha on a phone; end card with link and credits).
+  Voices from three FLEURS test clips (CC BY 4.0); all transcripts are real run outputs (R-0006, R-0011, R-0012).
+  Rendered release/video/out/thetha-vertical.mp4 (1080x1920) and thetha-wide.mp4 (1920x1080), 40 s, ~27 MB each,
+  h264 + aac. Checked: soundtrack peaks 0.64 (no clipping), voices in the right scenes, frames from the final files.
+- Cost: $0 (laptop). MP4s are not in git (size); they are in release/video/out/.
