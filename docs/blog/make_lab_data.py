@@ -41,7 +41,37 @@ def q(bits):
     return round(int(round(w / s)) * s, 9), int(round(w / s))
 
 
+# "The sentence that learned": one FLEURS test sentence through every stage, with each stage's real output
+import glob
+import os
+import sys as _sys
+_sys.path.insert(0, "src")
+import jiwer  # noqa: E402
+from scoring import normalise  # noqa: E402
+
+
+def preds(path):
+    return {o["id"]: o for o in map(json.loads, open(glob.glob(path, recursive=True)[0], encoding="utf-8"))}
+
+
+SID = "fleurs_17388926234373433928"
+stages = [  # (title, run whose output is shown, FLEURS test CER of that model (results.md), spent so far in $ (results.md), model)
+    ("Out of the box", "runs/R-0006/**/predictions.jsonl", "R-0006", 65.45, 0.13, "whisper-small, 244 million numbers"),
+    ("First lesson: 51 hours of NCHLT", "runs/R-0005/**/predictions.jsonl", "R-0005", 29.81, 2.28, "whisper-small, taught on NCHLT"),
+    ("More varied data: + FLEURS", "runs/R-0007/eval_fleurs/predictions.jsonl", "R-0007", 10.16, 4.25, "whisper-small, NCHLT + FLEURS"),
+    ("A bigger model", "runs/R-0012/eval_fleurs/predictions.jsonl", "R-0012", 8.03, 9.59, "whisper-medium, 769 million numbers"),
+]
+ref = None
+story = []
+for title, path, run, cer_test, spent, model in stages:
+    o = preds(path)[SID]
+    ref = normalise(o["text"])
+    hyp = normalise(o["hyp"])
+    story.append({"title": title, "run": run, "hyp": hyp, "cerSentence": round(100 * jiwer.cer(ref, hyp), 1),
+                  "cerTest": cer_test, "spent": spent, "model": model})
+
 data = {"clips": clips, "curves": {"loss": loss, "nchlt": nchlt, "fleurs": fleurs},
+        "story": {"ref": ref, "fleurs": SID, "stages": story},
         "leak": [{"key": "all", "label": "NCHLT test", "cer": 2.98, "run": "R-0004",
                   "why": "2 770 clips from 8 speakers the model never heard. But 82% of these clips repeat a sentence that was also in the training data, so the model partly remembered the answers."},
                  {"key": "unseen", "label": "NCHLT, new sentences only", "cer": 6.2, "run": "R-0004",
