@@ -15,6 +15,9 @@ API (what the page uses; any program can call it the same way):
   GET  /corrections.tsv -> every saved correction: id, model output, what was really said
 With keep=1 the recording is saved to data/my_voice/live/<id>.wav and every result and correction is appended to
 data/my_voice/live/log.jsonl (gitignored). Corrections are the founder's own transcripts: stage 4 material.
+
+--public (the online demo, D-0019): listens on all addresses, never stores audio or text (keep is ignored, /correct and
+/corrections.tsv are off), and GET /config tells the page to hide keep, save and download.
 """
 import argparse
 import datetime
@@ -44,6 +47,7 @@ MAX_BYTES = 100 * 1024 * 1024
 FFMPEG = shutil.which("ffmpeg")
 loaded, lock = {}, threading.Lock()
 offered = []  # set in main: the models this server serves, default first
+PUBLIC = False  # set in main (--public)
 
 
 def complete(name):
@@ -131,7 +135,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, open(PAGE, "rb").read(), "text/html; charset=utf-8")
         if path == "/models":
             return self.send(200, offered)
-        if path == "/corrections.tsv":
+        if path == "/config":
+            return self.send(200, {"public": PUBLIC})
+        if path == "/corrections.tsv" and not PUBLIC:
             flat = lambda s: " ".join(str(s).split())  # tabs/newlines inside text would break the columns
             rows = ["id\tmodel\tmodel_wrote\treally_said"] + ["\t".join(flat(x) for x in r) for r in corrections()]
             return self.send(200, ("\n".join(rows) + "\n").encode(), "text/tab-separated-values; charset=utf-8",
@@ -159,14 +165,14 @@ class Handler(BaseHTTPRequestHandler):
                 if also and also != name:
                     t2, s2 = transcribe(audio, also)
                     res["also"] = {"model": also, "text": t2, "compute_seconds": s2}
-                if q.get("keep", ["0"])[0] == "1":
+                if q.get("keep", ["0"])[0] == "1" and not PUBLIC:
                     os.makedirs(KEEP, exist_ok=True)
                     sf.write(os.path.join(KEEP, rid + ".wav"), audio, SR, subtype="PCM_16")
                     log({**res, "file": rid + ".wav"})
                 print(f"{name} {res['audio_seconds']} s audio -> {secs} s: {text}"
                       + (f"  | {also}: {res['also']['text']}" if "also" in res else ""), flush=True)
                 return self.send(200, res)
-            if url.path == "/correct":
+            if url.path == "/correct" and not PUBLIC:
                 j = json.loads(body)
                 log({"id": str(j["id"]), "said": str(j["said"]).strip(),
                      "corrected_at": datetime.datetime.now().isoformat(timespec="seconds")})
@@ -185,17 +191,22 @@ if __name__ == "__main__":
     ap.add_argument("--models", default="R-0012-int8,R-0007-int8",
                     help="comma-separated folder names in data/models/; the first is the default")
     ap.add_argument("--port", type=int, default=7860)
+    ap.add_argument("--models-dir", default=MODELS, help="folder holding the model folders (default data/models)")
+    ap.add_argument("--public", action="store_true", help="online demo: all addresses, nothing stored")
     ap.add_argument("--dtype", choices=["bfloat16", "float32"], default="bfloat16",
                     help="for transformers checkpoints: bfloat16 halves memory (medium ~1.9 GB instead of ~3.5 GB)")
     a = ap.parse_args()
     if not FFMPEG:
         sys.exit("ffmpeg not found on PATH (needed to read browser recordings)")
     dtype = getattr(torch, a.dtype)
+    MODELS, PUBLIC = a.models_dir, a.public
     offered[:] = [m for m in a.models.split(",") if complete(m)]
     if not offered:
-        sys.exit(f"none of {a.models} is in data/models/")
+        sys.exit(f"none of {a.models} is in {MODELS}")
     for m in offered:
         model(m)
         transcribe(np.zeros(SR, dtype=np.float32), m)  # warm-up, so the first real recording isn't slow
-    print(f"ready: open http://127.0.0.1:{a.port}  (models {', '.join(offered)}; CPU, {torch.get_num_threads()} threads)", flush=True)
-    ThreadingHTTPServer(("127.0.0.1", a.port), Handler).serve_forever()
+    host = "0.0.0.0" if PUBLIC else "127.0.0.1"
+    print(f"ready: open http://127.0.0.1:{a.port}  (models {', '.join(offered)}; CPU, {torch.get_num_threads()} threads"
+          + ("; public: nothing stored" if PUBLIC else "") + ")", flush=True)
+    ThreadingHTTPServer((host, a.port), Handler).serve_forever()

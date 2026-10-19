@@ -66,6 +66,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 .drop{position:fixed;inset:12px;border:2px dashed var(--ember);border-radius:22px;display:none;place-items:center;z-index:5;
   background:#100e0bd9;font:italic 400 44px "Instrument Serif",Georgia,serif;color:var(--glow)}
 body.dragging .drop{display:grid}
+.foot{position:fixed;inset:auto 0 0 0;padding:12px 16px;text-align:center;font-size:11px;color:var(--faint);letter-spacing:.03em;
+  background:linear-gradient(transparent,var(--bg) 55%)}
+.foot a{color:var(--soft)}
 @media (max-width:560px){.orb{width:240px;height:240px}.rec{width:100px;height:100px}main{padding-top:17vh}.top{padding:12px}}
 @media (prefers-reduced-motion:reduce){.say,.rec{animation:none;transition:none}}
 </style>
@@ -77,7 +80,7 @@ body.dragging .drop{display:grid}
     <span class="seg" id="models" role="group" aria-label="Model"></span>
     <button class="pill" id="cmp" aria-pressed="false" hidden title="Also run the other model and show both">compare</button>
     <button class="pill icon" id="up" title="Transcribe an audio file (or drop one anywhere)" aria-label="Transcribe an audio file">+</button>
-    <a class="pill icon" href="/corrections.tsv" download title="Download all saved corrections" aria-label="Download corrections">↓</a>
+    <a class="pill icon" id="dl" href="/corrections.tsv" download title="Download all saved corrections" aria-label="Download corrections">↓</a>
     <button class="pill keep" id="keep" aria-pressed="true" title="Keep recordings on this laptop (data/my_voice/live)">keep</button>
   </div>
 </div>
@@ -88,6 +91,8 @@ body.dragging .drop{display:grid}
   <div class="out" id="out"></div>
 </main>
 <div class="drop" aria-hidden="true">drop to transcribe</div>
+<div class="foot" id="foot" hidden>isiXhosa speech to text · nothing you record is stored ·
+  <a href="https://github.com/2Ntlaks/isixhosa-speech-ai" target="_blank" rel="noopener">how it was made</a></div>
 <script>
 const $ = id => document.getElementById(id);
 const NAMES = {"R-0012": "medium", "R-0012-int8": "medium", "R-0007": "small", "R-0007-int8": "small"};
@@ -106,6 +111,13 @@ if (prefs.keep === false) pressed($("keep"), false);
 $("keep").onclick = () => { prefs.keep = $("keep").getAttribute("aria-pressed") !== "true"; pressed($("keep"), prefs.keep); remember(); };
 $("cmp").onclick = () => { prefs.cmp = $("cmp").getAttribute("aria-pressed") !== "true"; pressed($("cmp"), prefs.cmp); remember(); };
 
+/* public demo (live.py --public): nothing is stored, so no keep, save or download */
+let PUBLIC = false;
+fetch("/config").then(r => r.json()).then(c => {
+  PUBLIC = !!c.public; if (!PUBLIC) return;
+  $("keep").hidden = true; $("dl").hidden = true; $("foot").hidden = false;
+  pressed($("keep"), false);
+}).catch(() => {});
 fetch("/models").then(r => r.json()).then(list => {
   models = list; if (!list.length) return status("no model loaded", true);
   modelName = list.includes(prefs.model) ? prefs.model : list[0];
@@ -233,6 +245,7 @@ function show(j, url, fileName) {
   const audio = new Audio(url);
   el.querySelector(".play").onclick = () => audio.paused ? audio.play() : (audio.pause(), audio.currentTime = 0);
   el.querySelector(".copy").onclick = async () => { try { await navigator.clipboard.writeText(p.textContent.trim()); flash("copied"); } catch (e) { flash("select and copy"); } };
+  if (PUBLIC) { p.removeAttribute("contenteditable"); p.style.cursor = "auto"; el.querySelector(".save").remove(); return; }
   const save = async () => {
     const r = await fetch("/correct", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id: j.id, said: p.textContent.trim()})});
     el.classList.remove("dirty"); if (r.ok) { p.classList.add("edited"); flash("saved"); }
