@@ -195,3 +195,17 @@ Format:
   bio". 13.2 s. Fixed on the way: the voice was ~5x too quiet (normalised by one sharp spike, not by the speech) and
   had 1.2 s of dead air; now trimmed and levelled by speech loudness with a soft limiter. Files:
   release/video/out/thetha-tongue-twister.mp4 and -voice-only.mp4 (~10 MB). The recording itself stays out of git.
+
+## 2026-10-19 night — Blog post for ntlaks.dev
+- Agent/session: Claude Code (isiXhosa Speech AI session, account3)
+- Did: wrote an interactive post in the ntlaks-writing repo, "I taught an AI to understand isiXhosa": an opening scene
+  (real FLEURS recording through stock Whisper and R-0012), "the sentence that learned" (one sentence through R-0006,
+  R-0005, R-0007, R-0012 with real outputs, letters wrong and money spent), live sound picture with microphone, real
+  R-0012 training curves, the leaked-test explorer, a shrinking slider with a real weight, Thetha embedded, and four
+  Excalidraw drawings redrawn tall for phones. Founder asked for more creativity twice and no "for the engineers"
+  asides; all removed. Fixed on the way: drawings unreadable on phones; the opening scene stuck on "listening" about 1
+  in 3 times (now clock-driven, 6/6). Founder said "push it": branch post/teaching-whisper-isixhosa, PR
+  https://github.com/2Ntlaks/ntlaks-writing/pull/5, Netlify preview passed and was tested at 1440 and 390 px.
+  Generators: docs/blog/drawings.py, render.mjs, make_lab_data.py.
+- Cost: $0.
+- Next: founder checks the preview on his phone (sound, microphone, chart dragging) and merges to publish.
