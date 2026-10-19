@@ -164,3 +164,10 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Why two runs: the founder wants to learn what works; the pair shows separately what English alone and stitching add.
 - Spend: ~$5-6, after the 1 November brake reset. The founder delegated the next steps ("move on to next thing, I
   trust your judgment", 2026-10-19) but has not yet seen this recipe; the launch waits for his OK on the spend.
+
+## D-0018 · 2026-10-19 · Stop the project
+- Founder: "I think let's not move forward with this project anymore" (after the stage 4 kickoff report).
+- State at stop: best model R-0012 (whisper-medium; FLEURS CER 8.03, NCHLT CER 2.33, Soapies mixed speech CER 38.43).
+  R-0015/R-0016 prepared but never launched; no GPU money committed. Laptop checks from P-0013 not re-run.
+- Supersedes D-0017's launch plan. Leftover storage in S3 and on the laptop: see JOURNAL 2026-10-19 (stop); deleting it
+  waits for the founder's word.

@@ -132,3 +132,12 @@ Format:
 - Cost: ~$0.05 (download node); laptop $0. Project total ~ $9.90.
 - Next: re-run stock medium on Soapies and the training smoke test, one at a time; launch R-0015/R-0016 after the
   1 November brake reset with the founder's OK on ~$5-6.
+
+## 2026-10-19 — Project stopped (D-0018)
+- Founder decided not to continue. No AWS machines running. Nothing launched or scheduled.
+- Left in S3 (bucket mgaguli-studio-render-<acct>): datasets/ 16.4 GB (NCHLT xho + eng, FLEURS, Soapies), models/ 5.0 GB
+  (R-0004, R-0007, R-0012), jobs/ 61 GB (run outputs and checkpoints; jobs/ expires automatically after 30 days).
+  Roughly $1.90 per month now, ~$0.50 per month once jobs/ expires, until deleted.
+- Left on the laptop (gitignored): data/ (models incl. int8 copies, Soapies, NCHLT test audio, Thetha recordings in
+  data/my_voice/live/ incl. a friend's clips), .venv. Thetha still works locally.
+- Project total spend ~ $9.90.
