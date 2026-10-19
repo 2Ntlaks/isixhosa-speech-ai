@@ -211,3 +211,11 @@ Format:
 - Next: founder checks the preview on his phone (sound, microphone, chart dragging) and merges to publish.
 - Founder said "merge it": PR #5 merged 2026-10-19 18:24 UTC. Live at https://ntlaks.dev/writing/teaching-whisper-isixhosa/
   (200, no blocking security headers; opening scene, story, figures and embedded Thetha tested at 1440 and 390 px).
+
+## 2026-10-19 late — Links and S3 clean-up
+- Blog write-up linked from the GitHub README, both Hugging Face model cards and the Thetha Space page.
+- S3 (shared bucket with Mgaguli SA Studio; only this project's prefixes touched): deleted datasets/ fleurs_xh_za,
+  nchlt_eng, nchlt_xho, soapies_engxho (about 16.4 GB; the first attempt was stopped by low laptop memory after FLEURS,
+  finished with batched deletes, 87 145 files). Kept models/ R-0004, R-0007, R-0012 (5.0 GB, ~$0.12/month). Left
+  jobs/R-0001..R-0012 and fetch-* (55 GB) to the bucket's own rule "expire-jobs" (30 days, verified enabled), so they
+  disappear around 16-17 November. Datasets can be fetched again with cloud/fetch_data.sh if training resumes.
