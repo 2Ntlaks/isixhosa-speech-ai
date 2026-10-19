@@ -135,3 +135,21 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   en_us text by sentence id (~3.4k training clips, 13 h): training data and an honest test (BLEU/chrF on FLEURS test).
   Train translate and transcribe together so transcription doesn't get worse; one change per run; GPU run ~$4.
   Not before stage 4 has started.
+
+## D-0016 · 2026-10-19 · Stage 4 without the founder recording: which data, and how Soapies may be used
+- Founder: too busy to record ~50 test clips plus training clips; this is a prototype to see if delegation works. "find
+  a way for now"; if it shows promise he will record a few himself later.
+- Finding: two SADiLaR datasets download without a login (checked 2026-10-19 via the repository API):
+  1) Corpus of multilingual code-switched soap opera speech ("Soapies", Stellenbosch University, van der Westhuizen &
+     Niesler, handle 20.500.12185/545): English-isiXhosa balanced set 3.14 h (balanced_engxho.zip, 338 MB), real
+     code-switched speech from Generations and Rhythm City, verbatim XML transcripts, official dev/test utterance ids.
+     Licence: "Research only"; the audio is cut from broadcast TV shows.
+  2) NCHLT English Speech Corpus (handle 20.500.12185/274): ~56 h South African English read speech, CC BY 3.0.
+- Options for Soapies: A) test (and dev) only; any published model is trained only on openly licensed data (NCHLT,
+  FLEURS, NCHLT English, and clips stitched from those) / B) also train on the Soapies train part, model kept private
+  forever / both.
+- Recommendation: A. Decision: **A** (founder, 2026-10-19).
+- Consequences: Soapies lives only in the private S3 bucket (datasets/soapies_engxho/) and on the laptop for scoring;
+  never re-hosted, never in a Hugging Face repo or Space, never used for training. Cite van der Westhuizen & Niesler
+  (LREC 2018) wherever a Soapies score appears. NCHLT English: credit CSIR Meraka / North-West University like NCHLT.
+  The founder's own recordings stay optional, as a final check later.

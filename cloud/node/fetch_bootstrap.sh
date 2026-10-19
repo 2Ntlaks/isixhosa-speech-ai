@@ -51,11 +51,46 @@ nchlt() {  # NCHLT isiXhosa Speech Corpus, CC BY 3.0, SADiLaR handle 20.500.1218
   publish nchlt_xho
 }
 
+md5ok() {  # file expected_md5
+  local m; m=$(md5sum "$1" | cut -d' ' -f1)
+  [ "$m" = "$2" ] || { echo "MD5 mismatch for $1: $m (SADiLaR lists $2)"; return 1; }
+  echo "MD5 of $1 matches SADiLaR's published checksum"
+}
+
+nchlt_eng() {  # NCHLT English Speech Corpus, CC BY 3.0, SADiLaR handle 20.500.12185/274 (stage 4, D-0016)
+  done_already nchlt_eng && return 0
+  mkdir -p "$W/nchlt_eng" && cd "$W/nchlt_eng" && : > MANIFEST.txt
+  get https://repo.sadilar.org/server/api/core/bitstreams/b18e11bc-7b45-4685-a584-1cead35fe347/content \
+      nchlt.speech.corpus.eng_1.zip || return 1
+  md5ok nchlt.speech.corpus.eng_1.zip fafafce8ff4700f9491bd1bf123a419f || return 1
+  unzip -q nchlt.speech.corpus.eng_1.zip -d extracted || return 1
+  find extracted -maxdepth 3 | head -20
+  publish nchlt_eng
+}
+
+soapies() {  # Soap opera code-switched speech, English-isiXhosa set, RESEARCH ONLY, handle 20.500.12185/545.
+  # Test/dev use only, never training a published model, never re-hosted (D-0016).
+  done_already soapies_engxho && return 0
+  mkdir -p "$W/soapies_engxho" && cd "$W/soapies_engxho" && : > MANIFEST.txt
+  local B=https://repo.sadilar.org/server/api/core/bitstreams
+  get $B/3320889f-5587-4da1-8340-7947b237fd54/content balanced_engxho.zip || return 1
+  get $B/0940a339-fadc-4246-bed2-3806f3322c76/content balanced_engxho.xml || return 1
+  get $B/60c781ad-2cd5-4003-bc78-76f1c960a6fa/content soapies_dev_and_test_set_utterance_ids.zip || return 1
+  get $B/2db1e48b-6f8f-4aff-b35f-b0718c6f5740/content README_data.txt || return 1
+  get $B/06253570-ccbd-4240-ac23-e7a2b5c37ec8/content license.txt || return 1
+  md5ok balanced_engxho.zip ba6d3ca27a169f32f42bcb55b7e99005 || return 1
+  md5ok balanced_engxho.xml d6fd7c59880ae411304d20f266e9a977 || return 1
+  md5ok soapies_dev_and_test_set_utterance_ids.zip df8b9fdd4a2e1c4680face3847ad752f || return 1
+  unzip -q balanced_engxho.zip -d extracted && unzip -q soapies_dev_and_test_set_utterance_ids.zip -d ids || return 1
+  find extracted ids -maxdepth 3 | head -20
+  publish soapies_engxho
+}
+
 STATUS=DONE
 IFS=',' read -ra LIST <<< "$DATASETS"
 for d in "${LIST[@]}"; do
   echo "=== $(date -u +%T) dataset: $d"
-  case "$d" in fleurs|nchlt) "$d" || { echo "=== $d FAILED"; STATUS=FAILED; } ;;
+  case "$d" in fleurs|nchlt|nchlt_eng|soapies) "$d" || { echo "=== $d FAILED"; STATUS=FAILED; } ;;
     *) echo "unknown dataset $d"; STATUS=FAILED ;; esac
   cd "$W"
 done

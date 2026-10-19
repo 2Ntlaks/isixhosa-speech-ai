@@ -11,7 +11,7 @@ JOB=""; DATASETS=""; MAXH=2; TYPE=t3.small
 while [ $# -gt 0 ]; do case "$1" in
   --job) JOB=$2;; --datasets) DATASETS=$2;; --max-hours) MAXH=$2;; --type) TYPE=$2;;
   *) echo "unknown arg $1"; exit 1;; esac; shift 2; done
-[ -n "$JOB" ] && [ -n "$DATASETS" ] || { echo "need --job and --datasets (fleurs,nchlt)"; exit 1; }
+[ -n "$JOB" ] && [ -n "$DATASETS" ] || { echo "need --job and --datasets (fleurs,nchlt,nchlt_eng,soapies)"; exit 1; }
 [ "$MAXH" -le 3 ] || { echo "--max-hours is capped at 3 for downloads (cost guard)"; exit 1; }
 case "$TYPE" in g*|p*) echo "downloads don't need a GPU"; exit 1;; esac
 
