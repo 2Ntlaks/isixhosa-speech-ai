@@ -186,3 +186,7 @@ Format:
 - Video cut 2 (D-0022), after the founder found cut 1 not eye-catching: kinetic launch trailer on a 100 BPM grid with a
   synthesised score. 43.2 s, release/video/out/thetha-vertical.mp4 and thetha-wide.mp4 (~37 MB each). Checked frames
   from the final files and the soundtrack (peak 0.65; deliberate near-silence at ~12 s before the riser and reveal).
+- TikTok cut (src/TikTok.tsx): 19.2 s, hook in the first second ("I asked AI to write down isiXhosa…" over the real
+  "kwa kwa kwa" loop), "so I trained my own.", same voice resolving into R-0012's exact transcript, three stat punches,
+  phone + "link in bio". All text inside TikTok's UI-free zone. Two files: with the synthesised beat, and voices only
+  (for a trending sound added in the app). release/video/out/thetha-tiktok*.mp4, ~17 MB each.

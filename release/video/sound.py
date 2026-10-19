@@ -117,3 +117,24 @@ t = tt(0.25)
 g = np.round(rng.standard_normal(t.size) * 3) / 3 * (np.sin(2 * np.pi * 37 * t) > 0) * np.exp(-t * 6) * 0.3
 sf.write(os.path.join(HERE, "public", "glitch.wav"), g.astype("float32"), SR, subtype="PCM_16")
 print(f"music.wav {len(out) / SR:.1f} s, peak {np.abs(out).max():.2f}")
+
+# ---- TikTok cut (src/TikTok.tsx): 32 beats, energy from frame 0, impact on beat 8, groove to the end ----
+out = np.zeros(int(SR * BEAT * 32) + SR)
+for b_ in range(0, 8):
+    add(kick(120, 40, 0.3), b_, 0.55)                 # tense pulse under the loop
+    add(hat(0.03), b_ + 0.5, 0.35)
+add(tone([55, 58.3], BEAT * 8, 0.12, attack=0.2, release=0.3), 0)
+add(impact, 8, 1.0)                                    # "so I trained my own."
+for b_ in range(10, 32):
+    add(kick(), b_, 0.75)
+    add(hat(), b_ + 0.5, 0.6)
+for bar, b_ in enumerate(range(10, 32, 4)):
+    r, ch = roots[bar % 4], chords[bar % 4]
+    bt = tt(BEAT * 4)
+    add((np.sin(2 * np.pi * r * bt) + 0.4 * np.sin(2 * np.pi * 2 * r * bt)) * np.minimum(1, bt / 0.02) * np.exp(-bt / 1.6), b_, 0.35)
+    add(tone(ch, BEAT * 4, 0.035, attack=0.4, release=0.6), b_)
+for b_ in (20, 21.5, 23):
+    add(kick(90, 35, 0.45, 0.8), b_, 0.7)              # the three stat punches
+out = np.tanh(out * 1.1) * 0.85
+sf.write(os.path.join(HERE, "public", "music_tiktok.wav"), out.astype("float32"), SR, subtype="PCM_16")
+print(f"music_tiktok.wav {len(out) / SR:.1f} s")

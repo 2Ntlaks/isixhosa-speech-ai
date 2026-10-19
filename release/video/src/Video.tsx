@@ -9,17 +9,17 @@ import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
 import { loadFont as loadGrot } from "@remotion/google-fonts/BricolageGrotesque";
 import data from "./data.json";
 
-const serif = loadSerif("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily;
+export const serif = loadSerif("normal", { weights: ["400"], subsets: ["latin"] }).fontFamily;
 loadSerif("italic", { weights: ["400"], subsets: ["latin"] });
-const mono = loadMono("normal", { weights: ["400", "600"], subsets: ["latin"] }).fontFamily;
-const grot = loadGrot("normal", { weights: ["800"], subsets: ["latin"] }).fontFamily;
+export const mono = loadMono("normal", { weights: ["400", "600"], subsets: ["latin"] }).fontFamily;
+export const grot = loadGrot("normal", { weights: ["800"], subsets: ["latin"] }).fontFamily;
 
-const C = { bg: "#0c0a08", ink: "#f2e9d8", soft: "#a39883", faint: "#5e564a", line: "#2a241c",
+export const C = { bg: "#0c0a08", ink: "#f2e9d8", soft: "#a39883", faint: "#5e564a", line: "#2a241c",
   ember: "#e2732b", glow: "#ffb067", ok: "#6fd0a6", err: "#ff6b57" };
-const FPS = 30, BT = 18;  // frames per beat at 100 BPM
-const b = (beats: number) => Math.round(beats * BT);
+export const FPS = 30, BT = 18;  // frames per beat at 100 BPM
+export const b = (beats: number) => Math.round(beats * BT);
 type Clip = (typeof data.clips)["loop"];
-const clips = data.clips as Record<"loop" | "train" | "east", Clip>;
+export const clips = data.clips as Record<"loop" | "train" | "east", Clip>;
 
 // sections, in beats (must match sound.py)
 const SEC = { open: [0, 4], reel: [4, 10], flood: [10, 17], taught: [17, 20], intro: [20, 24], reveal: [24, 28],
@@ -28,17 +28,17 @@ export const TOTAL = b(72);
 // where voices play (absolute frames): the score ducks under them
 const VOICES = [[b(10) + 6, b(17)], [b(28.5), b(40)], [b(40.5), b(48)], [b(56) + 6, b(63)]];
 
-const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const useL = () => { const { width, height } = useVideoConfig(); const tall = height > width;
+export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+export const useL = () => { const { width, height } = useVideoConfig(); const tall = height > width;
   return { tall, u: Math.min(width, height) / 1080, width, height }; };
-const pop = (f: number, at: number, damping = 12) => spring({ frame: f - at, fps: FPS, config: { damping, mass: 0.6 } });
-const Center: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) =>
+export const pop = (f: number, at: number, damping = 12) => spring({ frame: f - at, fps: FPS, config: { damping, mass: 0.6 } });
+export const Center: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) =>
   <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", ...style }}>{children}</AbsoluteFill>;
-const Sfx: React.FC<{ at: number; v?: number; src?: string }> = ({ at, v = 0.25, src = "tick.wav" }) =>
+export const Sfx: React.FC<{ at: number; v?: number; src?: string }> = ({ at, v = 0.25, src = "tick.wav" }) =>
   <Sequence from={at} durationInFrames={8} layout="none"><Audio src={staticFile(src)} volume={v} /></Sequence>;
 
 /* atmosphere: ember glow that breathes with the beat, film grain, vignette */
-const Backdrop: React.FC<{ heat: number }> = ({ heat }) => {
+export const Backdrop: React.FC<{ heat: number }> = ({ heat }) => {
   const f = useCurrentFrame(), { width, height } = useVideoConfig();
   const pulse = 1 + 0.04 * Math.exp(-((f % BT) / 5));
   return (
@@ -54,7 +54,7 @@ const Backdrop: React.FC<{ heat: number }> = ({ heat }) => {
 };
 
 /* Thetha's orb; level per bar (0..1), or a gentle breath */
-const Orb: React.FC<{ size: number; level?: (i: number) => number; burst?: number }> = ({ size, level, burst = 0 }) => {
+export const Orb: React.FC<{ size: number; level?: (i: number) => number; burst?: number }> = ({ size, level, burst = 0 }) => {
   const f = useCurrentFrame(), N = 84, c = size / 2, r0 = size * 0.235;
   return (
     <div style={{ position: "relative", width: size, height: size }}>
@@ -78,7 +78,7 @@ const Orb: React.FC<{ size: number; level?: (i: number) => number; burst?: numbe
   );
 };
 
-const Mono: React.FC<{ children: React.ReactNode; u: number; color?: string; size?: number; style?: React.CSSProperties }> =
+export const Mono: React.FC<{ children: React.ReactNode; u: number; color?: string; size?: number; style?: React.CSSProperties }> =
   ({ children, u, color = C.soft, size = 30, style }) =>
     <div style={{ fontFamily: mono, fontSize: size * u, letterSpacing: "0.16em", textTransform: "uppercase", color, ...style }}>{children}</div>;
 
@@ -215,7 +215,7 @@ const Reveal: React.FC = () => {
 
 /* ---------- G · you speak, Thetha writes: scrambled letters resolve in time with the voice ---------- */
 const ABC = "abcdefghijklmnopqrstuvwxyz";
-const scramble = (w: string, f: number, k: number) => w.split("").map((_, i) => ABC[Math.floor(random(`${k}-${i}-${Math.floor(f / 2)}`) * 26)]).join("");
+export const scramble = (w: string, f: number, k: number) => w.split("").map((_, i) => ABC[Math.floor(random(`${k}-${i}-${Math.floor(f / 2)}`) * 26)]).join("");
 const Decode: React.FC = () => {
   const f = useCurrentFrame(), { tall, u, width } = useL(), clip = clips.loop, len = b(12), lead = b(0.5);
   const words = clip.r0012.split(" ");
