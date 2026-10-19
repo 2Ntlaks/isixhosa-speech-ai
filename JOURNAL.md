@@ -183,3 +183,6 @@ Format:
   Rendered release/video/out/thetha-vertical.mp4 (1080x1920) and thetha-wide.mp4 (1920x1080), 40 s, ~27 MB each,
   h264 + aac. Checked: soundtrack peaks 0.64 (no clipping), voices in the right scenes, frames from the final files.
 - Cost: $0 (laptop). MP4s are not in git (size); they are in release/video/out/.
+- Video cut 2 (D-0022), after the founder found cut 1 not eye-catching: kinetic launch trailer on a 100 BPM grid with a
+  synthesised score. 43.2 s, release/video/out/thetha-vertical.mp4 and thetha-wide.mp4 (~37 MB each). Checked frames
+  from the final files and the soundtrack (peak 0.65; deliberate near-silence at ~12 s before the riser and reveal).
