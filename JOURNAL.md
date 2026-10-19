@@ -160,3 +160,15 @@ Format:
 - Cost: $0.
 - Next: founder creates a Hugging Face account and logs in (`hf auth login`); agent runs release/publish.py, checks the
   Space build, then fills the Hugging Face links into README and the drafts.
+
+## 2026-10-19 evening — Published on Hugging Face; free in-browser demo (D-0020, R-0017)
+- Agent/session: Claude Code (isiXhosa Speech AI session, account3)
+- Did: founder created a Hugging Face account and logged in himself. Uploaded Ntlakanipho/whisper-medium-isixhosa
+  (R-0012, 3.84 GB) and Ntlakanipho/whisper-small-isixhosa (R-0007, 1.22 GB), public, CC BY 4.0, honest model cards.
+  The Docker demo was refused: free Docker Spaces need PRO (P-0014). Founder chose a free static demo that runs the
+  model in the visitor's browser (D-0020). Converted R-0007 to ONNX 8-bit (two export problems, P-0015), measured it
+  (R-0017: CER 6.63 vs 6.43, passed), built release/web (Thetha look, model in a worker, nothing uploaded), tested it in
+  headless Chrome locally and live, published https://ntlakanipho-thetha.static.hf.space. README, model cards and
+  announcement drafts link to it.
+- Cost: $0 (Hugging Face free tier; laptop).
+- Next: founder tries the demo on his phone, edits and posts the LinkedIn/blog drafts (release/announce/).

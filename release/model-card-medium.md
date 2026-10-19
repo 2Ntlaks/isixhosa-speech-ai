@@ -48,7 +48,7 @@ OpenAI's **whisper-medium** fine-tuned to transcribe **isiXhosa**, a language st
 run **R-0012** of an open learning project. Every experiment, failed ones included, is documented at
 **https://github.com/2Ntlaks/isixhosa-speech-ai**.
 
-**Try it:** {SPACE_URL}
+**Try it:** {SPACE_URL} (runs the smaller [whisper-small-isixhosa](https://huggingface.co/{HF_USER}/whisper-small-isixhosa) in your browser)
 
 ## Scores
 

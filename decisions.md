@@ -181,3 +181,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   recordings); no whole Soapies utterances (research-only): R-0014 model outputs and samples stay local and
   gitignored; single-word examples (stubborn -> istabhunga) are kept, as a paper would quote them.
 - Founder effort: create a Hugging Face account and log in himself (`hf auth login`); never paste tokens in chat.
+
+## D-0020 · 2026-10-19 · Online demo: in the visitor's browser, free
+- Finding (P-0014): Hugging Face Docker/Gradio Spaces on free CPU now need PRO ($9/month); static Spaces are free.
+- Options: A) static Space running the small model in the browser (transformers.js, ONNX, 8-bit), $0, audio never
+  leaves the device, ~250 MB first download / B) PRO at $9/month for Thetha as built / C) no online demo.
+- Recommendation: A. Decision: **A** (founder, 2026-10-19).
+- Conditions: convert R-0007 to ONNX, measure accuracy against the original before publishing (new run), test the page
+  in a real browser. Medium stays available as a download for people with their own machine.

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thetha · isiXhosa speech to text</title>
+<meta name="description" content="Speak isiXhosa and see it written. The model runs in your browser; nothing you record leaves your device.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" crossorigin="anonymous">
+<style>
+/* Thetha, browser edition: same look as src/live.html; the model runs here, in a worker (worker.js). */
+:root{--bg:#100e0b;--ink:#f2e9d8;--soft:#a39883;--faint:#5e564a;--line:#2a241c;--ember:#e2732b;--glow:#ffb067;--ok:#6fd0a6;--err:#ff8a7a}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden}
+body{min-height:100vh;background:radial-gradient(900px 520px at 50% 26%,#2c1d10 0%,transparent 70%),var(--bg);color:var(--ink);
+  font:15px/1.5 "JetBrains Mono",ui-monospace,monospace}
+.top{position:fixed;inset:0 0 auto 0;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:3;
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 16px max(20px,env(safe-area-inset-left,0px));
+  background:linear-gradient(var(--bg) 40%,transparent)}
+.name{font:italic 400 26px/1 "Instrument Serif",Georgia,serif;letter-spacing:.01em}
+.name b{font-style:normal;color:var(--ember);font-weight:400}
+.tools{display:flex;gap:6px;align-items:center}
+.pill{border:1px solid var(--line);background:transparent;color:var(--soft);border-radius:999px;padding:5px 11px;font:12px "JetBrains Mono",monospace;cursor:pointer;text-decoration:none;line-height:1.2}
+.pill:hover{color:var(--ink)}
+.pill.icon{padding:5px 9px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--glow);outline-offset:4px}
+
+main{max-width:760px;margin:0 auto;padding:15vh max(16px,env(safe-area-inset-right,0px)) 110px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;align-items:center}
+.orb{position:relative;width:300px;height:300px;display:grid;place-items:center}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.rec{position:relative;width:118px;height:118px;border-radius:50%;border:0;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;
+  background:radial-gradient(circle at 36% 30%,var(--glow),var(--ember) 58%,#a84a15);
+  box-shadow:0 20px 60px -18px #e2732bcc,inset 0 -8px 16px #00000030;transition:transform .2s ease}
+.rec:hover{transform:scale(1.04)}
+.rec.on{transform:scale(.96)}
+.rec::after{content:"";position:absolute;inset:50%;width:34px;height:34px;margin:-17px;border-radius:50%;background:#1a0e05;transition:all .25s}
+.rec.on::after{border-radius:7px;width:30px;height:30px;margin:-15px}
+.rec.busy{filter:saturate(.35) brightness(.75);cursor:progress}
+.status{min-height:22px;margin-top:6px;color:var(--soft);font-size:13px;letter-spacing:.04em;text-align:center;max-width:90vw}
+.status.err{color:var(--err)}
+.bar{width:220px;height:3px;border-radius:2px;background:var(--line);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ember);transition:width .3s}
+
+.out{width:100%;margin-top:6vh;display:flex;flex-direction:column;gap:34px}
+.say{animation:rise .5s ease both}
+.say:nth-child(n+2){opacity:.5}.say:nth-child(n+4){opacity:.28}
+.say:hover,.say:focus-within{opacity:1}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.txt{margin:0;font:400 clamp(28px,5.6vw,46px)/1.12 "Instrument Serif",Georgia,serif;overflow-wrap:anywhere}
+.txt:empty::before{content:"…";color:var(--faint)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;margin-top:9px;color:var(--faint);font-size:12px}
+.act{border:0;background:none;color:var(--soft);cursor:pointer;padding:2px 3px;font:12px "JetBrains Mono",monospace}
+.act:hover{color:var(--ink)}
+.file{color:var(--faint);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.flash{color:var(--ok)}
+
+.drop{position:fixed;inset:12px;border:2px dashed var(--ember);border-radius:22px;display:none;place-items:center;z-index:5;
+  background:#100e0bd9;font:italic 400 44px "Instrument Serif",Georgia,serif;color:var(--glow)}
+body.dragging .drop{display:grid}
+.foot{position:fixed;inset:auto 0 0 0;text-align:center;font-size:11px;color:var(--faint);letter-spacing:.03em;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  background:linear-gradient(transparent,var(--bg) 55%)}
+.foot a{color:var(--soft)}
+@media (max-width:560px){.orb{width:240px;height:240px}.rec{width:100px;height:100px}main{padding-top:17vh}}
+@media (prefers-reduced-motion:reduce){.say,.rec{animation:none;transition:none}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="name">Thetha<b>.</b></div>
+  <div class="tools">
+    <button class="pill icon" id="up" title="Transcribe an audio file (or drop one anywhere)" aria-label="Transcribe an audio file">+</button>
+  </div>
+</div>
+<input type="file" id="file" accept="audio/*,video/*,.ogg,.opus,.m4a" hidden>
+<main>
+  <div class="orb"><canvas id="cv" aria-hidden="true"></canvas><button class="rec" id="rec" aria-label="Record: tap to start and stop, or hold to talk (Space works too)"></button></div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar" hidden><i></i></div>
+  <div class="out" id="out"></div>
+</main>
+<div class="drop" aria-hidden="true">drop to transcribe</div>
+<div class="foot">isiXhosa speech to text · runs in your browser, nothing you record leaves this device ·
+  <a href="https://github.com/2Ntlaks/isixhosa-speech-ai" target="_blank" rel="noopener">how it was made</a></div>
+<script>
+const $ = id => document.getElementById(id);
+const MODEL_MB = 300, MAX_S = 120;
+let rec = null, chunks = [], stream = null, ctx = null, an = null, t0 = 0, timer = 0, mode = "idle", ready = false, pending = null;
+let pressedAt = 0, holdable = false, jobs = 0;
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const status = (t, err) => { $("status").textContent = t; $("status").classList.toggle("err", !!err); };
+const esc = s => s.replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+/* the model lives in a worker so the page stays smooth while it thinks */
+const worker = new Worker("worker.js", {type: "module"});
+const files = {};
+worker.onmessage = ({data: d}) => {
+  if (d.type === "progress" && d.status === "progress" && d.total) {
+    files[d.file] = [d.loaded, d.total];
+    const [got, all] = Object.values(files).reduce((s, [l, t]) => [s[0] + l, s[1] + t], [0, 0]);
+    $("bar").hidden = false; $("bar").firstChild.style.width = (100 * got / all).toFixed(1) + "%";
+    status(`downloading the model, once: ${(got / 1e6).toFixed(0)} of ${(all / 1e6).toFixed(0)} MB`);
+  } else if (d.type === "ready") {
+    ready = true; $("bar").hidden = true; setMode("idle"); $("rec").classList.remove("busy");
+    status("tap or hold to speak");
+    if (pending) { const p = pending; pending = null; run(p.audio, p.url, p.name); }
+  } else if (d.type === "result") {
+    show(d, jobsMeta[d.id]); delete jobsMeta[d.id]; status(""); setMode("idle"); $("rec").classList.remove("busy");
+  } else if (d.type === "error") {
+    status(d.message.slice(0, 120), true); setMode("idle"); $("rec").classList.remove("busy");
+  }
+};
+function loadModel() {
+  if (ready || mode === "loading") return;
+  setMode("loading"); $("rec").classList.add("busy"); status("starting the model…"); worker.postMessage({type: "load"});
+}
+/* load at once if this browser already has the model; otherwise wait for a tap (it is a ~300 MB download) */
+(async () => {
+  let cached = false;
+  try { const c = await caches.open("transformers-cache"); cached = !!(await c.match(
+    "https://huggingface.co/Ntlakanipho/whisper-small-isixhosa/resolve/main/onnx/decoder_model_merged_quantized.onnx")); } catch (e) {}
+  if (cached) loadModel(); else status(`tap the circle to load the model · about ${MODEL_MB} MB, once`);
+})();
+
+/* the ring: breathes when idle, follows the voice when listening, circles while writing */
+const cv = $("cv"), g = cv.getContext("2d"), BARS = 84;
+let freq = new Uint8Array(128), smooth = new Float32Array(BARS);
+function size() { const r = devicePixelRatio || 1, w = cv.clientWidth; cv.width = w * r; cv.height = w * r; g.setTransform(r, 0, 0, r, 0, 0); }
+size(); addEventListener("resize", size);
+function draw(t) {
+  const w = cv.clientWidth, c = w / 2, r0 = w * 0.235;
+  g.clearRect(0, 0, w, w);
+  if (mode === "listen" && an) an.getByteFrequencyData(freq);
+  for (let i = 0; i < BARS; i++) {
+    let target;
+    if (mode === "listen") target = (freq[2 + (i < BARS / 2 ? i : BARS - i) % 60] / 255) ** 1.4;
+    else if (mode === "busy" || mode === "loading") { const d = ((i / BARS - t / 1100) % 1 + 1) % 1; target = Math.max(0, 1 - d * 3) * 0.85; }
+    else target = 0.06 + 0.04 * Math.sin(t / 900 + i * 0.3);
+    smooth[i] += (target - smooth[i]) * (mode === "listen" ? 0.35 : 0.12);
+    const a = i / BARS * Math.PI * 2 - Math.PI / 2, len = 6 + smooth[i] * w * 0.2;
+    g.strokeStyle = `rgba(255,${150 + smooth[i] * 60 | 0},${80 + smooth[i] * 40 | 0},${0.25 + smooth[i] * 0.75})`;
+    g.lineWidth = 2.4; g.lineCap = "round"; g.beginPath();
+    g.moveTo(c + Math.cos(a) * r0, c + Math.sin(a) * r0); g.lineTo(c + Math.cos(a) * (r0 + len), c + Math.sin(a) * (r0 + len)); g.stroke();
+  }
+  if (!still || mode !== "idle") requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+const setMode = m => { const was = mode; mode = m; if (still && was === "idle" && m !== "idle") requestAnimationFrame(draw); };
+
+/* recording: a quick tap toggles; holding (button or Space) records until release */
+async function start() {
+  if (mode !== "idle") return;
+  setMode("arming");
+  const asked = Date.now();
+  try { stream = await navigator.mediaDevices.getUserMedia({audio: {channelCount: 1, echoCancellation: false, noiseSuppression: false}}); }
+  catch (e) { setMode("idle"); return status("allow the microphone, then try again", true); }
+  holdable = Date.now() - asked < 400;
+  chunks = []; rec = new MediaRecorder(stream);
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  rec.onstop = () => send(new Blob(chunks, {type: rec.mimeType || "audio/webm"}), Date.now() - t0);
+  rec.start();
+  ctx = new AudioContext(); an = ctx.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = 0.6;
+  ctx.createMediaStreamSource(stream).connect(an);
+  t0 = Date.now(); setMode("listen"); $("rec").classList.add("on");
+  const tick = () => { const s = (Date.now() - t0) / 1000; status(s.toFixed(1) + " s"); if (s >= MAX_S) stop(); };
+  tick(); timer = setInterval(tick, 100);
+}
+function stop() {
+  if (!rec || rec.state !== "recording") return;
+  clearInterval(timer); rec.stop(); stream.getTracks().forEach(t => t.stop()); if (ctx) ctx.close(); an = null;
+  $("rec").classList.remove("on");
+}
+function press() {
+  if (!ready) return loadModel();
+  if (mode === "busy" || mode === "arming" || mode === "loading") return;
+  if (mode === "listen") { stop(); pressedAt = 0; return; }
+  pressedAt = Date.now(); start();
+}
+function release() {
+  if (pressedAt && Date.now() - pressedAt > 350 && holdable && mode === "listen") stop();
+  pressedAt = 0;
+}
+$("rec").addEventListener("pointerdown", e => { if (e.button === 0) { e.preventDefault(); press(); } });
+addEventListener("pointerup", release); addEventListener("pointercancel", release);
+let spaceAt = 0;
+$("rec").addEventListener("click", e => { if (e.detail === 0 && Date.now() - spaceAt > 150) press(); });
+addEventListener("keydown", e => { if (e.code === "Space" && !e.repeat) { e.preventDefault(); press(); } });
+addEventListener("keyup", e => { if (e.code === "Space") { e.preventDefault(); spaceAt = Date.now(); release(); } });
+
+/* files: the + button, or drop anywhere */
+$("up").onclick = () => $("file").click();
+$("file").onchange = () => { const f = $("file").files[0]; if (f) send(f, Infinity, f.name); $("file").value = ""; };
+let depth = 0;
+addEventListener("dragenter", e => { if ([...e.dataTransfer.types].includes("Files")) { depth++; document.body.classList.add("dragging"); } });
+addEventListener("dragleave", () => { if (--depth <= 0) { depth = 0; document.body.classList.remove("dragging"); } });
+addEventListener("dragover", e => e.preventDefault());
+addEventListener("drop", e => { e.preventDefault(); depth = 0; document.body.classList.remove("dragging");
+  const f = e.dataTransfer.files[0]; if (f && (mode === "idle" || !ready)) send(f, Infinity, f.name); });
+
+/* any audio the browser can decode -> 16 kHz mono, which is what Whisper hears */
+async function decode(blob) {
+  const ac = new AudioContext({sampleRate: 16000});
+  try { return (await ac.decodeAudioData(await blob.arrayBuffer())).getChannelData(0); } finally { ac.close(); }
+}
+const jobsMeta = {};
+async function send(blob, heldMs, fileName) {
+  if (heldMs < 400) { setMode("idle"); return status("too short", true); }
+  let audio;
+  try { audio = await decode(blob); } catch (e) { setMode("idle"); return status("could not read that audio", true); }
+  if (audio.length < 16000 * 0.3) { setMode("idle"); return status("too short", true); }
+  const url = URL.createObjectURL(blob);
+  if (!ready) { pending = {audio, url, name: fileName}; return loadModel(); }
+  run(audio, url, fileName);
+}
+function run(audio, url, fileName) {
+  const id = ++jobs; jobsMeta[id] = {url, fileName, seconds: (audio.length / 16000).toFixed(1)};
+  setMode("busy"); $("rec").classList.add("busy"); status(fileName ? "writing " + fileName : "writing");
+  const copy = new Float32Array(audio);  // decoded audio's own buffer can't be handed over; a copy can
+  worker.postMessage({type: "run", id, audio: copy}, [copy.buffer]);
+}
+
+/* a transcript: types itself out */
+function show(d, m) {
+  const el = document.createElement("div"); el.className = "say";
+  el.innerHTML = `<p class="txt"></p><div class="meta"><button class="act play" aria-label="Play recording" title="written in ${d.seconds.toFixed(1)} s">▶ ${m.seconds}s</button>
+    <button class="act copy">copy</button>${m.fileName ? `<span class="file" title="${esc(m.fileName)}">${esc(m.fileName)}</span>` : ""}</div>`;
+  $("out").prepend(el);
+  const p = el.querySelector(".txt"), text = d.text || "", meta = el.querySelector(".meta");
+  const flash = msg => { const s = document.createElement("span"); s.className = "flash"; s.textContent = msg; meta.append(s); setTimeout(() => s.remove(), 1600); };
+  let i = 0; const type = () => { p.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(type, still ? 0 : 18); };
+  text ? type() : (p.textContent = "");
+  const audio = new Audio(m.url);
+  el.querySelector(".play").onclick = () => audio.paused ? audio.play() : (audio.pause(), audio.currentTime = 0);
+  el.querySelector(".copy").onclick = async () => { try { await navigator.clipboard.writeText(p.textContent.trim()); flash("copied"); } catch (e) { flash("select and copy"); } };
+}
+</script>
+</body>
+</html>

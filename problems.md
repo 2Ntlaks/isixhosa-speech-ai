@@ -182,3 +182,16 @@ Format:
   founder: PRO ($9/month), an in-browser static demo (free), or no online demo.
 - Cost: $0; ~5 minutes.
 - Lesson: check a service's current pricing before promising "free"; the Hub API's 402 text is the source of truth.
+
+## P-0015 · 2026-10-19 · In-browser model: two export problems
+- Stage / run: R-0017 (ONNX copy of R-0007 for transformers.js, D-0020)
+- Symptom 1: the page downloaded the model, then failed: "An error occurred during model execution: "Missing the
+  following inputs: cache_position." Cause: optimum 1.21+/1.23 with transformers >= 4.42 export Whisper's decoder with a
+  cache_position input that transformers.js 3.0.2 does not supply. Fix: export with transformers 4.41.2 + optimum 1.20.0.
+- Symptom 2: that export's 8-bit decoder was 316 MB instead of ~195 MB. Cause: the output layer reuses the word-embedding
+  table through a Transpose, which dynamic quantisation skips, so a 159 MB float32 copy stayed. Fix: store the
+  transposed table as its own weight before quantising (decoder 197 MB). Accuracy re-measured on the final files.
+- Also: without cross-origin isolation the browser ran the model on one thread (~18 s per short clip). Serving
+  transformers.js and its wasm from the Space itself, plus COOP/COEP headers in the Space config, made it ~7 s.
+- Cost: $0; ~1.5 hours.
+- Lesson: test the exact files in the target runtime (a real browser), not only in Python; export versions matter.

@@ -1,0 +1,19 @@
+{
+ "model": "data/onnx/R-0007-v2",
+ "engine": "onnxruntime int8 (QUInt8 dynamic) CPU via optimum",
+ "reference": "runs/R-0007/eval_nchlt/predictions.jsonl",
+ "sample": "unseen:200",
+ "seed": 1,
+ "clips": 200,
+ "onnx_int8": {
+  "wer": 37.71,
+  "cer": 6.63
+ },
+ "gpu_fp16_same_clips": {
+  "wer": 36.35,
+  "cer": 6.43
+ },
+ "same_output_as_gpu": 163,
+ "seconds_per_clip": 2.26,
+ "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace"
+}

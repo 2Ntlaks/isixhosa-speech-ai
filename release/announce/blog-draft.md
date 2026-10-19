@@ -45,8 +45,8 @@ the fix (South African English plus joined isiXhosa–English clips), but haven'
   most of what I learned.
 
 Everything is open: code, run records, models and a demo.
-- Demo: {SPACE_URL}
-- Model: {MODEL_URL}
+- Demo: https://ntlakanipho-thetha.static.hf.space
+- Model: https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa
 - Code: https://github.com/2Ntlaks/isixhosa-speech-ai
 
 Thanks to SADiLaR, the CSIR Meraka Institute and North-West University (NCHLT), Google (FLEURS), and Stellenbosch

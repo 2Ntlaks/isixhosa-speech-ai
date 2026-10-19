@@ -48,7 +48,7 @@ OpenAI's **whisper-small** fine-tuned to transcribe **isiXhosa** (run **R-0007**
 **https://github.com/2Ntlaks/isixhosa-speech-ai**). It is about 3× smaller and faster than
 [whisper-medium-isixhosa](https://huggingface.co/{HF_USER}/whisper-medium-isixhosa), and a little less accurate.
 
-**Try it:** {SPACE_URL} (choose "small")
+**Try it in your browser:** {SPACE_URL} (this model, running on your own device; nothing is uploaded)
 
 | Test set | CER % | WER % |
 |---|---|---|
@@ -63,8 +63,10 @@ asr = pipeline("automatic-speech-recognition", model="{HF_USER}/whisper-small-is
 print(asr("clip.wav", generate_kwargs={"language": "sw", "task": "transcribe"})["text"])
 ```
 
-Always pass `language="sw"`: the model borrows Whisper's Swahili tag for isiXhosa. `ct2-int8/` holds an 8-bit
-CTranslate2 copy (240 MB) for CPUs.
+Always pass `language="sw"`: the model borrows Whisper's Swahili tag for isiXhosa. Two 8-bit copies are included:
+`ct2-int8/` (CTranslate2, 240 MB, for CPUs) and `onnx/` (ONNX for [transformers.js](https://github.com/huggingface/transformers.js),
+295 MB, what the browser demo runs). Run R-0017: the ONNX copy scores CER 6.63 vs 6.43 for the original on 200 unseen
+NCHLT test sentences.
 
 **Training:** `openai/whisper-small`, 4 000 steps, batch 32, learning rate 1e-5. Data: NCHLT isiXhosa train (51 h) and
 FLEURS `xh_za` train (13 h). One NVIDIA L4, 2.4 GPU hours.

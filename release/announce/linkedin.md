@@ -1,4 +1,4 @@
-<!-- DRAFT for the founder to edit and post himself. Links marked {…} are filled once the Hugging Face pages exist. -->
+<!-- DRAFT for the founder to edit and post himself. -->
 
 OpenAI's Whisper understands almost a hundred languages. isiXhosa isn't one of them.
 
@@ -16,8 +16,8 @@ Where it landed:
 Everything is open: the code, every experiment (including the ones that failed), the models, and a demo you can talk to
 on your phone. Nothing you record is stored.
 
-🎙️ Try it: {SPACE_URL}
-🤗 Model: {MODEL_URL}
+🎙️ Try it: https://ntlakanipho-thetha.static.hf.space
+🤗 Model: https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa
 💻 Code and the full lab notebook: https://github.com/2Ntlaks/isixhosa-speech-ai
 
 Credit to SADiLaR, CSIR Meraka, North-West University and Google for the open speech data that made this possible.
