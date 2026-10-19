@@ -209,3 +209,5 @@ Format:
   Generators: docs/blog/drawings.py, render.mjs, make_lab_data.py.
 - Cost: $0.
 - Next: founder checks the preview on his phone (sound, microphone, chart dragging) and merges to publish.
+- Founder said "merge it": PR #5 merged 2026-10-19 18:24 UTC. Live at https://ntlaks.dev/writing/teaching-whisper-isixhosa/
+  (200, no blocking security headers; opening scene, story, figures and embedded Thetha tested at 1440 and 390 px).
