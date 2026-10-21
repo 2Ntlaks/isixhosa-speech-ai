@@ -38,3 +38,13 @@
   it had memorised, fewer on new sentences. Caveat: the Swivuriso test comes from the same project (same app, topics)
   as its training data, so part of that gain is "home ground"; FLEURS is the fairest outside check.
 - Model: s3://mgaguli-studio-render-188250416608/models/R-0019/ (3.06 GB).
+
+## Correction · 2026-10-21 (PR #1 review by Codex)
+- Above, FLEURS is called "a dataset it never trained on". Wrong: R-0019 (like R-0007 and R-0012) trained on FLEURS's
+  train split (3 434 clips, 13.03 h, data_split.json). Only the FLEURS test sentences are unseen. The -22 % is a fair
+  held-out-split result, but not evidence of handling a completely new dataset. Scores unchanged.
+- Leak-filter gap found in review: the NCHLT dev speakers' sentences were not in the exclusion list. Measured
+  afterwards: 0 of the 32 397 Swivuriso training clips carry an NCHLT dev sentence, and Swivuriso's train / dev /
+  dev_test speakers share 0 people, so R-0019 is unaffected. Closed in train.py for future runs.
+- The Swivuriso scores cover clips of 1-30 s with full transcripts (2 145 of 3 639 dev_test clips); they say nothing
+  yet about longer or partly unclear speech.

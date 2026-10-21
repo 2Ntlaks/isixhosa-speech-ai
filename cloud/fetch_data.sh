@@ -22,10 +22,20 @@ BUCKET="mgaguli-studio-render-$ACCT"; S3="s3://$BUCKET/jobs/$JOB"
 TMP="$(mktemp -d)"; P() { cygpath -m "$1" 2>/dev/null || echo "$1"; }
 aws s3 rm "$S3/DONE" --only-show-errors 2>/dev/null || true
 aws s3 rm "$S3/FAILED" --only-show-errors 2>/dev/null || true
-if [[ ",$DATASETS," == *,swivuriso,* ]]; then  # gated on Hugging Face: file list, pinned revision and token for the node
-  "$ROOT/.venv/Scripts/python" "$ROOT/cloud/swivuriso_files.py" "$(P "$TMP")" || exit 1
-  for f in files.tsv revision.txt hf_token; do aws s3 cp "$(P "$TMP/$f")" "$S3/$f" --only-show-errors; done
+ID=""
+cleanup() {  # the token never outlives a launch that did not happen (PR #1 review)
   rm -f "$TMP/hf_token"
+  [ -n "$ID" ] || aws s3 rm "$S3/hf_token" --only-show-errors 2>/dev/null || true
+}
+trap cleanup EXIT
+if [[ ",$DATASETS," == *,swivuriso,* ]]; then  # gated on Hugging Face: file list, pinned revision and token for the node
+  if aws s3 ls "s3://$BUCKET/datasets/swivuriso_xho/COMPLETE" >/dev/null 2>&1; then
+    echo "== swivuriso is already complete in S3: no token sent"
+  else
+    "$ROOT/.venv/Scripts/python" "$ROOT/cloud/swivuriso_files.py" "$(P "$TMP")" || exit 1
+    for f in files.tsv revision.txt hf_token; do aws s3 cp "$(P "$TMP/$f")" "$S3/$f" --only-show-errors; done
+    rm -f "$TMP/hf_token"
+  fi
 fi
 
 sed -e 's/\r$//' -e "s/__BUCKET__/$BUCKET/" -e "s/__JOB__/$JOB/" -e "s/__MAXMIN__/$((MAXH * 60))/" \

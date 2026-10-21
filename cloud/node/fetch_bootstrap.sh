@@ -8,6 +8,15 @@ shutdown -h +"$MAXMIN"                       # hard cost cap, whatever happens b
 log_up() { aws s3 cp "$LOG" "$S3/node.log" --only-show-errors || true; }
 finish() { echo "$1" | aws s3 cp - "$S3/$1" || true; log_up; shutdown -h now; exit 0; }
 echo "=== $(date -u +%T) node up"
+# Hugging Face token hand-off (gated datasets, PR #1 review): read once and deleted from S3 first thing, before any
+# dataset can be skipped or fail. Kept only as a root-only header file, so it never appears in a process's arguments.
+umask 077
+if aws s3 cp "$S3/hf_token" /root/.hf_token --only-show-errors 2>/dev/null; then
+  printf 'Authorization: Bearer %s\n' "$(cat /root/.hf_token)" > /root/.hf_header; rm -f /root/.hf_token
+  aws s3 rm "$S3/hf_token" --only-show-errors || { echo "!!! could not delete the token from S3"; finish FAILED; }
+  echo "=== token read and deleted from S3"
+fi
+trap 'rm -f /root/.hf_header' EXIT
 dnf install -yq unzip >/dev/null || finish FAILED
 W=/data; mkdir -p "$W" && cd "$W"
 ( while sleep 60; do log_up; done ) &
@@ -105,22 +114,27 @@ nchlt_aux() {  # NCHLT isiXhosa Auxiliary Speech Corpus, CC BY 3.0, SADiLaR hand
 
 swivuriso() {  # South Africa African Next Voices (Swivuriso), isiXhosa part, CC BY 4.0, gated on Hugging Face (D-0024).
   # Speech recognition only: no TTS or voice cloning. The founder accepted the terms; the launcher leaves his token
-  # in this job's S3 folder, and it is deleted from S3 as soon as it is read. Files stay as published (parquet),
+  # in this job's S3 folder and the node deletes it at boot (see the top). Files stay as published (parquet),
   # each one checked against Hugging Face's sha256 and streamed to S3, so the disk only holds a few at a time.
   local NAME=swivuriso_xho
   done_already $NAME && return 0
   mkdir -p "$W/$NAME/tmp" && cd "$W/$NAME" && : > MANIFEST.txt
+  [ -s /root/.hf_header ] || { echo "no Hugging Face token was handed over"; return 1; }
   aws s3 cp "$S3/files.tsv" files.tsv --only-show-errors && aws s3 cp "$S3/revision.txt" revision.txt --only-show-errors \
-    && aws s3 cp "$S3/hf_token" /root/.hf_token --only-show-errors || return 1
-  aws s3 rm "$S3/hf_token" --only-show-errors || echo "!!! could not delete the token from S3"
+    || return 1
   aws s3 ls "$DS/$NAME/" --recursive | awk '{print $3"\t"$4}' > have.tsv    # resume: size and key of files already there
   export REV; REV=$(cat revision.txt); export BUCKET NAME W TOTAL; TOTAL=$(wc -l < files.tsv)
   one() {  # path size sha256 -> download, verify, upload, manifest line
     local p=$1 size=$2 sha=$3 key="datasets/$NAME/$1" tmp
-    if grep -qxF "$size"$'	'"$key" have.tsv; then echo "$size  $sha  $p  (already in S3)" >> MANIFEST.txt; return 0; fi
+    if grep -qxF "$size"$'	'"$key" have.tsv; then   # resume: same size in S3; re-check the bytes, not just the size
+      if [ "$sha" = - ]; then echo "$size  -  $p  (already in S3, size only)" >> MANIFEST.txt; return 0; fi
+      if [ "$(aws s3 cp "s3://$BUCKET/$key" - | sha256sum | cut -d' ' -f1)" = "$sha" ]; then
+        echo "$size  $sha  $p  (already in S3, sha256 re-checked)" >> MANIFEST.txt; return 0; fi
+      echo "--- $p in S3 does not match its sha256; downloading again"
+    fi
     tmp=$(mktemp -p "$W/$NAME/tmp")
     for try in 1 2 3; do
-      curl -fsSL --retry 5 --retry-delay 10 -H "Authorization: Bearer $(cat /root/.hf_token)" -o "$tmp" \
+      curl -fsSL --retry 5 --retry-delay 10 -H @/root/.hf_header -o "$tmp" \
         "https://huggingface.co/datasets/dsfsi-anv/za-african-next-voices/resolve/$REV/$p" \
         && [ "$(stat -c %s "$tmp")" = "$size" ] && { [ "$sha" = - ] || [ "$(sha256sum "$tmp" | cut -d' ' -f1)" = "$sha" ]; } \
         && break
@@ -134,7 +148,7 @@ swivuriso() {  # South Africa African Next Voices (Swivuriso), isiXhosa part, CC
   }
   export -f one
   tr '\t' ' ' < files.tsv | xargs -P 6 -L 1 bash -c 'one "$@"' _ ; local rc=$?
-  rm -f /root/.hf_token
+  rm -f /root/.hf_header
   local n; n=$(wc -l < MANIFEST.txt)
   [ $rc -eq 0 ] && [ "$n" -eq "$TOTAL" ] || { echo "only $n of $TOTAL files verified (xargs rc $rc)"; return 1; }
   { echo "# $NAME · fetched $(date -u +%F) by job $JOB · dsfsi-anv/za-african-next-voices @ $REV"

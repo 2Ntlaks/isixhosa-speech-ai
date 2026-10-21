@@ -9,7 +9,7 @@ sk.text(700, 108, "letters wrong out of every 100 (lower is better)", { size: 26
 const rows = [
   ["people talking freely", "Swivuriso test, unscripted", 10.8, 4.1, "-62 %"],
   ["people reading", "Swivuriso test, scripted", 7.6, 4.1, "-46 %"],
-  ["a dataset it never trained on", "FLEURS test", 8.03, 6.24, "-22 %"],
+  ["sentences it never heard", "FLEURS test (held-out split)", 8.03, 6.24, "-22 %"],
   ["the old reading test", "NCHLT test", 2.33, 2.31, "same"],
 ];
 const x0 = 560, scale = 50;   // 1 letter per 100 = 50 px

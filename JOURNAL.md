@@ -282,3 +282,17 @@ Format:
 - Next (founder's call): put R-0019 into Thetha (CTranslate2 int8 for the laptop page, ONNX for the browser demo) and
   Hugging Face; a longer R-0019 (dev CER still falling at 4000 steps); cut the 235 h of long Swivuriso clips into
   <= 30 s pieces; fix the NCHLT auxiliary zip. GPU limit increase to 32 vCPUs still pending.
+
+## 2026-10-21 afternoon — PR #1 review (Codex) and corrections
+- Opened PR #1 (more-data-swivuriso). Copilot could not review (monthly quota); the founder ran Codex locally, which
+  posted a review: 1 P1, 5 P2, speed ideas. Checked each one:
+  - P1 token cleanup on skip/failed-launch paths: real gap. Checked S3: bucket versioning never enabled and no hf_token
+    object or version exists anywhere, so nothing leaked. Fixed: node reads and deletes the token at boot, launcher
+    sends no token when Swivuriso is already complete and removes it if the launch fails.
+  - P2 NCHLT dev sentences missing from the leak filter: real gap, measured 0 affected clips in R-0019; fixed, plus
+    fail-closed and an assert. P2 token in curl argv: fixed (root-only header file). P2 resume recorded unchecked bytes
+    as verified: fixed (sha256 re-check from S3). P2 decoded length vs metadata duration: fixed.
+  - P2 FLEURS "never trained on": **my error** in run.md, the drawing, JOURNAL and the PR text. Corrected (FLEURS
+    train is in every model since R-0007; only its test sentences are unseen).
+  - P2 prepared-cache identity and the speed ideas: noted for the next run (move prep to a CPU node, cap Arrow threads,
+    cache token ids, evaluate FLEURS dev less often); not done today.

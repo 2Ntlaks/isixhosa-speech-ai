@@ -202,6 +202,7 @@ def main():
     if a.only_existing:
         clips = [c for c in clips if os.path.exists(c["path"])]
     train, dev, dev_speakers = split_dev(clips, a.dev_speakers, a.seed)
+    dev_texts = {normalise(c["text"]) for c in dev}  # every held-out dev sentence, before the 600-clip sample
     dev = random.Random(a.seed).sample(dev, min(a.dev_clips, len(dev)))
     extra, fleurs_dropped = [], 0
     if a.fleurs_tsv:  # added after the dev split, so dev (and test) stay identical to NCHLT-only runs
@@ -220,11 +221,15 @@ def main():
         for path in a.exclude_texts or []:
             with open(path, encoding="utf-8") as f:
                 test_texts |= {normalise(line) for line in f if line.strip()}
+        if not test_texts:  # fail closed: new data without a leak filter is never trained on
+            sys.exit("--swivuriso-tsv needs --exclude-texts with the test and dev sentences")
+        test_texts |= dev_texts  # the NCHLT dev speakers pick the checkpoint, so their sentences stay out too
         swiv = [c for c in sw if c["text"] not in test_texts]  # a test sentence never becomes training data
         swiv_leaks = len(sw) - len(swiv)
         n = len(swiv)  # Whisper writes at most 448 tokens (4 go to the prefix and end): longer transcripts can't be learned
         swiv = [c for c in swiv if len(proc.tokenizer(c["text"], add_special_tokens=False).input_ids) <= 440]
         swiv_too_long_text = n - len(swiv)
+        assert not {c["text"] for c in swiv} & test_texts, "a test or dev sentence got into training"
         train = train + swiv
     english, stitched = [], []
     if a.english_xml:  # also added after the dev split; dev and test stay NCHLT isiXhosa

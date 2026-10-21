@@ -54,7 +54,8 @@ def one_shard(job):
     if src.startswith("s3://"):
         tmp = tempfile.NamedTemporaryFile(suffix=".parquet", dir=out, delete=False).name
         subprocess.run(["aws", "s3", "cp", src, tmp, "--only-show-errors"], check=True)
-    rows, n = [], {"clips": 0, "too_long": 0, "too_short": 0, "unclear": 0, "empty": 0, "unreadable": 0}
+    rows, n = [], {"clips": 0, "too_long": 0, "too_short": 0, "unclear": 0, "empty": 0, "unreadable": 0,
+                   "decoded_length_outside": 0}
     cols = ["audio", "recorder_uuid", "type", "domain", "file_name", "transcript", "duration"]
     try:
         for batch in pq.ParquetFile(tmp or src).iter_batches(batch_size=32, columns=cols):
@@ -85,6 +86,9 @@ def one_shard(job):
                     g = gcd(sr, 16000)
                     audio = resample_poly(audio, 16000 // g, sr // g)
                 audio = np.clip(audio, -1, 1)
+                if not min_s <= len(audio) / 16000 <= max_s:  # the metadata duration can be wrong
+                    n["decoded_length_outside"] += 1
+                    continue
                 cid = os.path.splitext(r["file_name"])[0].replace(" ", "_")
                 rel = f"{split}/{cid}.wav"
                 sf.write(os.path.join(out, rel), audio, 16000, subtype="PCM_16")
