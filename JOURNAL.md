@@ -335,3 +335,10 @@ Format:
 - Output-cap check: no Swivuriso test clip comes near the 225-token live limit (longest 172 tokens).
 - Next (free, laptop): five-candidate audit, then a "my words" harm check with wrong lists, then fast-speech diagnosis. Paid step 4 (~$3-8) needs the founder's OK. Waiting on the founder: ~20 recorded sentences with what he said typed in.
 - $0 spent this evening.
+
+### 2026-10-21 (night): the three free tests from the combined plan
+
+- **R-0022 (passed):** on 100 NCHLT dev clips, the right word is often among beam 5's other guesses: best-of-5 ceiling WER 18.1 vs 30.4 shown; 36 of 83 missing words are in another candidate; no time cost. -> build "pick another word" in Thetha; try word-list rescoring.
+- **R-0023 (failed):** word lists don't leak names into other speech (0/100) but cost +1.4-1.7 WER through word splitting, and fill silence with a list word. -> only as an opt-in, side-by-side "my words" pass on speech; proper fix is training with prompts.
+- **R-0024:** speed is a small factor on Swivuriso test (fastest quarter CER 4.7 vs 3.6); the founder's "man ukuya" survives no audio change (louder, slower, cut). Likely a swallowed spoken form. Founder to listen and confirm.
+- Codex worked in the repo at the same time (live.py batching, thread profiler, R-0025). Told the founder run IDs R-0022-R-0024 are Claude's. $0 spent.
