@@ -64,3 +64,24 @@ new full-test accuracy results. Append results here and to results.md before mak
 These use fake models and cover chunk order/tails, batch bounds, feature reuse/isolation, the Transformers path,
 failure recovery, queued-request serialization, HTTP response compatibility and public transcript-log privacy.
 They do not establish real-model accuracy or performance. `git diff --check` also passed.
+
+## Outcome: real-model validation (Claude, 2026-10-21 ~22:00 SAST, laptop, $0)
+
+Run as handed over, each command to completion, nothing else running (only two idle `http.server` processes),
+`THETHA_ASSETS_ROOT` = the main checkout. Baseline 20b9468, candidate 34c8a32, R-0019-int8, 8 threads, beam 5.
+
+| Check | Baseline (old live.py) | Candidate (this PR) |
+|---|---|---|
+| 32 short NCHLT clips: identical normalised outputs | | **32 / 32** |
+| 32 clips: WER / CER | 21.74 / 3.59 | 21.74 / 3.59 |
+| 32 clips: mean wall seconds per clip | 4.448 | 4.454 (same) |
+| 48 s recording (2 chunks): output | | identical hash |
+| 48 s recording: wall seconds | 11.74 | 12.39 (+5.5 %) |
+| 48 s recording: peak process memory | 1,898 MB | **1,566 MB (-332 MB, -17 %)** |
+
+- **Passes the pre-set rule:** identical outputs, and bounded memory shown (-17 % peak on a 2-chunk recording; the saving
+  should grow with longer recordings, since the old code sent every chunk at once; not measured beyond 48 s).
+- **Trade-off, as Codex predicted:** one chunk at a time was 0.65 s (5.5 %) slower on the 48 s recording. One run per
+  setting, so this is within noise-sized territory but plausible. `--chunk-batch-size 2+` restores batching if wanted.
+- Short clips (one chunk) behave exactly as before. Not checked here: the comparison path (`also=`) with real models,
+  and lazy loading of the second model (covered only by the fake-model unit tests).
