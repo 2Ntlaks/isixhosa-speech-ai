@@ -13,3 +13,16 @@
   than returning 1 transcript; time at most 1.25x. The ceiling picks the best candidate WITH the reference, so it is an
   upper bound on what a human picking from a list could reach, not an accuracy.
 - **If it passes:** build "pick another word" in Thetha and try word-list rescoring. **If not:** drop both; the fix is training.
+
+## Outcome · 2026-10-21 21:00 SAST · PASSED (laptop, $0)
+- **Top choice = what Thetha shows today:** WER 30.38 / CER 4.43 on the 100 clips (82 unseen sentences: 34.29 / 4.67).
+  Returning 5 candidates changed nothing about the top choice (100/100 identical).
+- **Best of 5, picked with the reference (a ceiling, not an accuracy):** WER 18.09 / CER 2.69, i.e. **12.3 WER points**
+  below the top choice (pass mark 3). Unseen sentences: 20.82 / 3.02 (-13.5).
+- 61 of 100 clips have at least one wrong word in the top choice; in **18 of those, one of the other 4 candidates is
+  exactly right**. Of the 83 reference words missing from the top choice, **36 (43 %) appear in another candidate**.
+- **Time:** 498.6 s returning 5 vs 496.5 s returning 1 (ratio 1.004): free. Measured while Codex's thread profiler
+  shared the CPU, so absolute seconds are noisy; both settings ran interleaved on every clip, so the ratio is fair.
+- **Reading:** the right word is often already among the guesses, so a "pick another word" list in Thetha would let a
+  person fix about 4 in 10 wrong words with one tap, and an isiXhosa word list could try to pick automatically.
+  Caveat: NCHLT dev is short read speech; confirm on the founder's own recordings when he has made them.
