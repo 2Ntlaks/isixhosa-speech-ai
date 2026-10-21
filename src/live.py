@@ -169,8 +169,8 @@ class Handler(BaseHTTPRequestHandler):
                     os.makedirs(KEEP, exist_ok=True)
                     sf.write(os.path.join(KEEP, rid + ".wav"), audio, SR, subtype="PCM_16")
                     log({**res, "file": rid + ".wav"})
-                print(f"{name} {res['audio_seconds']} s audio -> {secs} s: {text}"
-                      + (f"  | {also}: {res['also']['text']}" if "also" in res else ""), flush=True)
+                print(f"{name} {res['audio_seconds']} s audio -> {secs} s" + ("" if PUBLIC else f": {text}"
+                      + (f"  | {also}: {res['also']['text']}" if "also" in res else "")), flush=True)  # public: no text in logs
                 return self.send(200, res)
             if url.path == "/correct" and not PUBLIC:
                 j = json.loads(body)
