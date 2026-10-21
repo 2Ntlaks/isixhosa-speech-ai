@@ -29,3 +29,21 @@
 - **Pass rule for "fast":** on each set, WER and CER at most 0.3 points worse than "now", and at least 2x faster.
   "guards" shows whether the repetition settings alone change answers.
 - Not covered: long recordings (> 30 s, several windows) and the founder's own speech; check before switching the page.
+
+## Outcome, part 2 · 2026-10-21 22:43 SAST · "fast" FAILED the pass rule (laptop, $0)
+| Set | Setting | WER % | CER % | seconds per clip | same output as "now" |
+|---|---|---|---|---|---|
+| NCHLT test, 200 | now (live page) | 27.65 | 4.73 | 4.67 | 200 |
+| | guards only | 27.13 | 4.73 | 4.68 | 192 |
+| | **fast** (guards + 10 s window) | 28.84 | 4.97 | **1.50 (3.1x)** | 165 |
+| NCHLT dev, 100 | now | 30.38 | 4.43 | 4.50 | 100 |
+| | guards only | 31.74 | 4.61 | 4.45 | 94 |
+| | **fast** | 33.45 | 5.13 | **1.49 (3.0x)** | 85 |
+- "fast" is 3x faster but costs +1.2 WER / +0.24 CER on test and +3.1 / +0.7 on dev (rule: at most +0.3). The 32-clip
+  probe (part 1) was too optimistic, as feared. "guards" alone is mixed (better on test, worse on dev): not adopted.
+- **Thetha stays as it is.** The speed is real but costs accuracy, because R-0019 never saw short windows in training.
+- **Next option (needs the founder's OK, GPU cost):** fine-tune with randomly shortened encoder windows so the model
+  learns them (the idea behind whisper.cpp's audio_ctx and later "dynamic audio context" fine-tunes). It could be paired with
+  the step-4 continuation run, as a separate arm so each change is measured on its own.
+- **Correction:** the part 1 heading says "~22:30 SAST"; it was ~21:30. And R-0025's outcome heading in that run folder
+  says "~22:00"; it was ~21:30.

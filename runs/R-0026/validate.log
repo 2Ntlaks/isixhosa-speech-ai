@@ -1,0 +1,15 @@
+nchlt_test_200 25
+nchlt_test_200 50
+nchlt_test_200 75
+nchlt_test_200 100
+nchlt_test_200 125
+nchlt_test_200 150
+nchlt_test_200 175
+nchlt_test_200 200
+nchlt_test_200 {'now': {'wer': 27.65, 'cer': 4.73, 'mean_seconds': 4.672, 'same_as_now': 200}, 'guards': {'wer': 27.13, 'cer': 4.73, 'mean_seconds': 4.68, 'same_as_now': 192}, 'fast': {'wer': 28.84, 'cer': 4.97, 'mean_seconds': 1.502, 'same_as_now': 165}, 'clips': 200}
+nchlt_dev_100 25
+nchlt_dev_100 50
+nchlt_dev_100 75
+nchlt_dev_100 100
+nchlt_dev_100 {'now': {'wer': 30.38, 'cer': 4.43, 'mean_seconds': 4.501, 'same_as_now': 100}, 'guards': {'wer': 31.74, 'cer': 4.61, 'mean_seconds': 4.45, 'same_as_now': 94}, 'fast': {'wer': 33.45, 'cer': 5.13, 'mean_seconds': 1.49, 'same_as_now': 85}, 'clips': 100}
+{"mode": "validate", "clips": 32, "mean_audio_seconds": 4.23, "ctranslate2": "4.5.0", "mkl": "0", "sets": {"nchlt_test_200": {"now": {"wer": 27.65, "cer": 4.73, "mean_seconds": 4.672, "same_as_now": 200}, "guards": {"wer": 27.13, "cer": 4.73, "mean_seconds": 4.68, "same_as_now": 192}, "fast": {"wer": 28.84, "cer": 4.97, "mean_seconds": 1.502, "same_as_now": 165}, "clips": 200}, "nchlt_dev_100": {"now": {"wer": 30.38, "cer": 4.43, "mean_seconds": 4.501, "same_as_now": 100}, "guards": {"wer": 31.74, "cer": 4.61, "mean_seconds": 4.45, "same_as_now": 94}, "fast": {"wer": 33.45, "cer": 5.13, "mean_seconds": 1.49, "same_as_now": 85}, "clips": 100}}}
