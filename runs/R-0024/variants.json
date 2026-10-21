@@ -1,0 +1,179 @@
+{
+ "recording": "20261021-135703-766246.wav",
+ "founder_words_checked": "man ukuya",
+ "beam_size": 5,
+ "models": {
+  "R-0019-int8": {
+   "original": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amane esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye isikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda"
+    ]
+   },
+   "louder (-20 dBFS)": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye isikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena amane esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni nomhlanje ngeyabanda nobanda"
+    ]
+   },
+   "slowed 0.9x": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena manu yesikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanwe esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amane esikolweni namhlanje ngeyabanda nobanda"
+    ]
+   },
+   "slowed 0.8x": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni nomhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena maniweyo esikolweni namhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda"
+    ]
+   },
+   "first 4.0 s": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje",
+     "ingxaki ndiyonqena amane esikolweni namhlanje",
+     "ingxaki ndiyonqena amane yesikolweni namhlanje",
+     "ingxaki ndiyonqena amane usikolweni namhlanje",
+     "iingxaki ndiyonqena amanye esikolweni namhlanje"
+    ]
+   },
+   "first 3.0 s": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amane usikolo",
+     "ingxaki ndiyonqena amane yesiko",
+     "ingxaki ndiyonqena amanye isiko",
+     "ingxaki ndiyonqena amane esikolo",
+     "ingxaki ndiyonqena amanye esikolo"
+    ]
+   },
+   "0.5 s silence before": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amane esikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndiyonqena amanye esikolweni namhlanje kuyabanda nobanda"
+    ]
+   }
+  },
+  "R-0012-int8": {
+   "original": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndyonqena manusikolweni nomhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni nomhlanje ngeyabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni nomhlanje ngebanda nobanda"
+    ]
+   },
+   "louder (-20 dBFS)": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndyonqena manusikolweni nomhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni nomhlanje ngebanda nobanda",
+     "ingxaki ndyonqena manusikolweni nomhlanje ngeyabanda nobanda",
+     "ingxaki ndonqena manusikolweni nomhlanje ngebanda nobanda"
+    ]
+   },
+   "slowed 0.9x": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndunxena manusikolweni namhlanje ngeyabanda nobanda",
+     "iingxaki ndyonqena manusikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje ngeyabanda nobanda",
+     "ingxaki ndunxena manusikolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje njabanda nobanda"
+    ]
+   },
+   "slowed 0.8x": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndunxenamanywezi kolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje njabanda nobanda",
+     "ingxaki ndunxenamanywezi kolweni nomhlanje njabanda nobanda",
+     "ingxaki ndunxenamanywezi kolwenamhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolwe nomhlanje njabanda nobanda"
+    ]
+   },
+   "first 4.0 s": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndyonqena manusikolweni namhlanje",
+     "ingxaki ndiyongqina manusikolweni namhlanje",
+     "ingxaki ndiyongxena manusikolweni namhlanje",
+     "ingxaki ndyonqena manusikolweni namhla nje",
+     "ingxaki ndyonqena manusikolweni namhla"
+    ]
+   },
+   "first 3.0 s": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndyonqena manyesi kodwa",
+     "ingxaki ndyonqena manesikolo",
+     "ingxaki ndyonqena manusikolo",
+     "ingxaki ndyonqena manesiko",
+     "ingxaki ndiyongxena manyesikolo"
+    ]
+   },
+   "0.5 s silence before": {
+    "top_has_man_ukuya": false,
+    "any_has_man_ukuya": false,
+    "any_has_ukuya": false,
+    "candidates": [
+     "ingxaki ndyonqena manusikolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni nomhlanje njabanda nobanda",
+     "ingxaki ndyonqena manuwies kolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manius kolweni namhlanje njabanda nobanda",
+     "ingxaki ndyonqena manusikolweni namhlanje ngeyabanda nobanda"
+    ]
+   }
+  }
+ }
+}

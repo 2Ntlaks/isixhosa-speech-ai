@@ -22,3 +22,28 @@
 `  5 candidates each. Question: which change, if any, brings back "man ukuya" (the founder's words). One recording, so
 `  this gives clues, not proof.
 `- **Command:** \`CT2_USE_MKL=0 .venv/Scripts/python runs/R-0024/variants.py\` (after R-0022/R-0023 finish; one heavy job at a time).
+
+## Outcome, part 2 · 2026-10-21 21:20 SAST (laptop, $0)
+Third word of the transcript (where the founder said "man ukuya"), top choice plus the other 4 candidates:
+
+| Version | R-0019-int8 (5 candidates) | R-0012-int8 (5 candidates) |
+|---|---|---|
+| original | amanye, amane, amanye, amanye, amanye | manusikolweni (all 5) |
+| louder (-20 dBFS) | amanye x4, amane | manusikolweni (all 5) |
+| slowed 0.9x | amanye, amanye, manu, amanwe, amane | manusikolweni (all 5) |
+| slowed 0.8x | amanye x4, maniweyo | kolweni, manusikolweni, ... |
+| first 4.0 s | amanye, amane x3, amanye | manusikolweni (all 5) |
+| first 3.0 s | amane, amane, amanye, amane, amanye | manyesi, manesikolo, ... |
+| 0.5 s silence before | amanye x4, amane | manusikolweni, ... |
+
+- **No version brings back "man ukuya"**, in any of the 5 candidates, for either model. Louder, slower, shorter, or more
+  context before: none of it matters. So this error is not about speed, level, the 30 s cut or missing context.
+- Both models hear roughly "ma-n-u" followed straight by "esikolweni" (R-0012 even writes it as one word,
+  "manusikolweni"). Our guess: the founder said the relaxed spoken form, with "ukuya" shortened to almost nothing
+  ("man' u(kuy') esikolweni"), while the written sentence has the full words. The sound and the spelling disagree, so no
+  amount of acoustic tweaking helps; the model would need to have learned that "man ukuya esikolweni" is how that
+  relaxed sound is written.
+- **What could fix it:** (a) training on more relaxed, conversational speech transcribed in full written form
+  (Swivuriso unscripted, step 4); (b) an isiXhosa word-pair model that knows "ukuya esikolweni" is very common, but
+  R-0022's guesses don't even contain "ukuya" here, so (b) cannot help this case. One recording only: clues, not proof.
+- Ask for the founder: listen to recording 20261021-135703 and say whether "ukuya" is clearly spoken or swallowed.
