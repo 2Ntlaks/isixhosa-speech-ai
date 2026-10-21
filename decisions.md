@@ -242,3 +242,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Found: the account's G-instance limit is 8 vCPUs (on-demand and spot), so only g6e.xlarge/2xlarge can launch.
   Requested an increase to 32 (Service Quotas request d37a6c470b4040c594055f851720da095yVcec32, PENDING).
 - Outcome: a retry loop got g6e.xlarge on-demand ($1.861/h) at 09:08 SAST for R-0019.
+
+## D-0027 · 2026-10-21 · R-0019 becomes the published medium model and Thetha's default
+- Options: keep R-0012 public until stage 3b is complete, or ship R-0019 now. Agent recommended shipping now (better on
+  FLEURS, Swivuriso and NCHLT unseen sentences; same size; 8-bit copy checked in R-0020).
+- Founder: "do it" (after a live test where R-0019 got 1 word wrong of 16 on his own mixed sentence, R-0012 7).
+- Done: PR #1 merged; Hugging Face Ntlakanipho/whisper-medium-isixhosa updated to R-0019 (commit 603a39b5f7, weights and
+  ct2-int8, new card crediting Swivuriso and its no-TTS/voice-cloning terms); the previous version kept as tag R-0012.
+  src/live.py defaults to R-0019-int8,R-0007-int8; README updated (status active, R-0019 results, honest notes).
+- Not changed: the in-browser demo still runs the small model R-0007 (a small model on the new data is a later run).

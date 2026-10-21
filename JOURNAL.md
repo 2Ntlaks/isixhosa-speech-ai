@@ -296,3 +296,14 @@ Format:
     train is in every model since R-0007; only its test sentences are unseen).
   - P2 prepared-cache identity and the speed ideas: noted for the next run (move prep to a CPU node, cap Arrow threads,
     cache token ids, evaluate FLEURS dev less often); not done today.
+
+## 2026-10-21 late afternoon — Live test, then R-0019 shipped
+- Founder tested R-0019 vs R-0012 on the laptop page. His own mixed sentence ("molweni apho kutwitter ... le model
+  Thetha ... lwase south africa", his transcript saved as a correction): R-0019 WER 6.2 / CER 2.7 (only "Thetha" ->
+  "tether"), R-0012 WER 43.8 / CER 6.4. A school sentence showed fast, run-together speech is still weak ("man ukuya"
+  -> "amanye", both models); R-0019 also wrote "shackles" where R-0012 wrote "shuttle" (founder's transcript pending).
+  Pattern: R-0019 writes English words in English, but sometimes guesses an English word too eagerly.
+- Shipped (D-0027): PR #1 merged; Hugging Face medium model = R-0019 (tag R-0012 keeps the old one); live page default
+  R-0019-int8; README updated.
+- Next: build the long-clip cutter for Swivuriso (forced alignment, listen-checked) and train R-0021; then a small
+  model on the new data for the browser demo. October GPU spend is ~$23 of the $30 brake.

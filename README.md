@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img alt="status: paused" src="https://img.shields.io/badge/status-paused-5d6b7d">
+  <img alt="status: active" src="https://img.shields.io/badge/status-active-059669">
   <img alt="model: whisper-medium" src="https://img.shields.io/badge/model-whisper--medium-142a47">
-  <img alt="FLEURS CER: 8.0%" src="https://img.shields.io/badge/FLEURS%20CER-8.0%25-f4715f">
-  <img alt="cloud cost: about $10" src="https://img.shields.io/badge/cloud%20cost-~%2410-059669">
+  <img alt="FLEURS CER: 6.2%" src="https://img.shields.io/badge/FLEURS%20CER-6.2%25-f4715f">
+  <img alt="cloud cost: about $16" src="https://img.shields.io/badge/cloud%20cost-~%2416-059669">
   <img alt="licence: MIT" src="https://img.shields.io/badge/licence-MIT-142a47">
   <br>
   <a href="https://ntlakanipho-thetha.static.hf.space/index.html"><img alt="Try the demo" src="https://img.shields.io/badge/%F0%9F%8E%99%EF%B8%8F%20try%20the%20demo-Thetha-f4715f"></a>
@@ -32,8 +32,9 @@ end to end, from raw corpora to a model you can talk to, not just to ship a chec
 > **Use it:** [whisper-medium-isixhosa](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) (more accurate) or [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa) (faster) on Hugging Face.
 
 > [!NOTE]
-> **Training paused on 19 October 2026** ([D-0018](decisions.md)). Stages 1–3 are complete, and the best model is
-> **R-0012**. Stage 4 (isiXhosa mixed with English) was measured and its training prepared, but never run.
+> **Training resumed on 21 October 2026** ([D-0024](decisions.md)) with a second, larger corpus: Swivuriso, ~146 hours
+> of read and unscripted isiXhosa from 407 speakers. The best model is now **R-0019**. On people speaking in their own
+> words, its letter errors fell from 10.8 % to 4.1 % ([R-0019](runs/R-0019)), and on FLEURS from 8.0 % to 6.2 %.
 
 ## Hear the difference
 
@@ -64,6 +65,7 @@ The same FLEURS test sentences, which none of the models saw in training:
 | **1 · Baseline** | Stock Whisper on 2 770 isiXhosa clips. It guessed 52 different languages and wrote 30 % of its output in non-Latin scripts. | CER 75 % ([R-0001](runs/R-0001)) |
 | **2 · First fine-tune** | whisper-small on 51 hours of NCHLT read speech, about $1.85 of GPU. It learned the corpus's short prompts so well that it glued words together on longer sentences. | NCHLT CER 46 → 3 % ([R-0004](runs/R-0004)) |
 | **3 · Improve** | Adding 13 hours of varied FLEURS sentences fixed the word-gluing. Moving from small to medium helped on every test set. An 8-bit copy runs on a laptop at the same accuracy. | FLEURS CER 8 % ([R-0012](runs/R-0012), [R-0013](runs/R-0013)) |
+| **3b · More data** | Added Swivuriso (South Africa African Next Voices): 146 h of read and unscripted speech from 407 new speakers, with every test and dev sentence kept out. Same model and recipe otherwise. | FLEURS CER 6.2 %, unscripted speech 10.8 → 4.1 % ([R-0019](runs/R-0019)) |
 | **4 · Mixed speech** | Tested on real isiXhosa–English TV dialogue. The model hears English words but spells them the isiXhosa way: "stubborn" comes out as "istabhunga". Fix designed, not run. | CER 38 % ([R-0014](runs/R-0014)) |
 | **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017)). | [demo](https://ntlakanipho-thetha.static.hf.space/index.html) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
 
@@ -88,15 +90,21 @@ letter fails a whole word; CER is the fairer headline.
 | Stock whisper-medium ([R-0011](runs/R-0011)) | 33.7 / 137.2 | 45.9 / 142.3 | – |
 | whisper-small, NCHLT ([R-0004](runs/R-0004)) | 2.98 / 16.6 | 29.8 / 94.9 | – |
 | whisper-small, NCHLT + FLEURS ([R-0007](runs/R-0007)) | 2.91 / 16.8 | 10.2 / 44.4 | 42.1 / 88.0 |
-| **whisper-medium, NCHLT + FLEURS ([R-0012](runs/R-0012))** | **2.33 / 12.7** | **8.03 / 37.8** | **38.4 / 79.6** |
+| whisper-medium, NCHLT + FLEURS ([R-0012](runs/R-0012)) | 2.33 / 12.7 | 8.03 / 37.8 | 38.4 / 79.6 |
+| **whisper-medium, + Swivuriso ([R-0019](runs/R-0019))** | **2.31 / 13.7** | **6.24 / 30.3** | not measured yet |
 
-<sub>Each cell is CER / WER in %. Every run, including the failed ones, is in <a href="results.md">results.md</a>.</sub>
+<sub>Each cell is CER / WER in %. Every run, including the failed ones, is in <a href="results.md">results.md</a>.
+On the Swivuriso test (2 145 clips of 1–30 s, 24 speakers of its own), R-0019 scores 4.12 / 19.1 against R-0012's
+9.00 / 37.3 (<a href="runs/R-0018">R-0018</a>).</sub>
 
 > [!IMPORTANT]
 > **Reading these numbers honestly**
 > - **NCHLT flatters the model.** 82 % of its test clips repeat a training sentence. On sentences it never saw,
->   R-0012 scores CER 5.0 / WER 28.7.
-> - **FLEURS is the fair score.** CER 8 % still means about one word in three has a slip.
+>   R-0019 scores CER 4.4 / WER 26.6 (R-0012: 5.0 / 28.7).
+> - **FLEURS is the fair score**, but not a brand-new dataset: every model since R-0007 trained on FLEURS's training
+>   split; only its test sentences are unseen. CER 6 % still means about one word in four has a slip.
+> - **The Swivuriso test is home ground** for R-0019 (same recording project and topics as its new training data), and
+>   it covers short, fully transcribed clips only.
 > - **The model tags isiXhosa as Swahili.** It borrows Whisper's `<|sw|>` token ([D-0007](decisions.md)).
 
 ## How it works
@@ -112,7 +120,7 @@ letter fails a whole word; CER is the fairer headline.
 - **The training choices**: whole speakers are held out as a dev set, the checkpoint with the lowest dev CER is kept,
   and a run resumes if the machine dies. One light text normalisation is shared by every score, so results stay
   comparable.
-- **Everything is written down.** 14 problems ([problems.md](problems.md)), 18 decisions
+- **Everything is written down.** 17 problems ([problems.md](problems.md)), 26 decisions
   ([decisions.md](decisions.md)) and a session-by-session [JOURNAL](JOURNAL.md).
 
 <details>
@@ -121,7 +129,8 @@ letter fails a whole word; CER is the fairer headline.
 <br>
 
 **Thetha, the talk-to-it page (laptop, CPU only).** This needs Python 3.12 and ffmpeg. The models are not in this repo:
-copy the `ct2-int8/` folder of each Hugging Face model into `data/models/` as `R-0012-int8` and `R-0007-int8`.
+copy the `ct2-int8/` folder of each Hugging Face model into `data/models/` as `R-0019-int8` (medium) and
+`R-0007-int8` (small).
 
 ```powershell
 python -m venv .venv
@@ -166,6 +175,7 @@ cloud/wait.sh R-0012 && cloud/collect.sh R-0012                 # follow it, the
 |---|---|---|
 | [NCHLT isiXhosa Speech Corpus](https://hdl.handle.net/20.500.12185/279), CSIR Meraka Institute and North-West University, via SADiLaR | training and test, ~56 h | CC BY 3.0 |
 | [Google FLEURS](https://huggingface.co/datasets/google/fleurs) `xh_za` | training and test, ~13 h | CC BY 4.0 |
+| [Swivuriso: South Africa African Next Voices](https://huggingface.co/datasets/dsfsi-anv/za-african-next-voices), isiXhosa, by the South Africa NextVoices team (DSFSI, University of Pretoria) | training (146 h) and test, from R-0019 | CC BY 4.0, speech recognition only (no TTS or voice cloning); gated, never re-hosted here |
 | [NCHLT English Speech Corpus](https://hdl.handle.net/20.500.12185/274), via SADiLaR | stage 4 training (prepared, never run) | CC BY 3.0 |
 | [Multilingual code-switched soap opera speech](https://hdl.handle.net/20.500.12185/545), van der Westhuizen & Niesler, Stellenbosch University (LREC 2018) | **testing only**, never trained on ([D-0016](decisions.md)) | research only |
 
@@ -173,7 +183,9 @@ No audio, corpus files or model weights are stored in this repository. Built on
 [OpenAI Whisper](https://github.com/openai/whisper) via Hugging Face Transformers, and
 [CTranslate2](https://github.com/OpenNMT/CTranslate2).
 
-**Limitations.** The training speech is read aloud, so fast conversation, noise and unfamiliar accents are weak spots.
+**Limitations.** Most training speech is read aloud or short (clips of 30 s or less), so fast, run-together
+conversation and noise are still weak spots. Since R-0019 the model writes English words in English, but sometimes
+guesses an English word too eagerly (the name "Thetha" came out as "tether" in a live test).
 The code-switched test set has only 5 speakers. The model writes no punctuation or capitals, and writes prefix +
 loanword with a space (`e afrika`, not `e-Afrika`).
 
