@@ -16,3 +16,6 @@
 - **Founder approval:** 2026-10-21, "Launch medium (Recommended)" in reply to ~4.5 h / ~$8-9 / cap 6 h (D-0024, D-0025).
 - **Expected:** Swivuriso test clearly better than R-0018; FLEURS and NCHLT test not worse than R-0012 (8.03 / 2.33 CER).
   Est. ~4.5 h, ~$8-9, cap 6 h (~$11).
+
+## Outcome · 2026-10-21 · started (commit 6a71856, node i-0d13aae1c15e11850, g6e.xlarge on-demand)
+- Launch: no L40S capacity 08:44-09:08 SAST; retry loop got one at 09:08 SAST (07:08 UTC). Cap 6 h.

@@ -233,3 +233,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   Alerts at 50 %, 80 % and forecast 100 % now fire at $15, $24 and $30. October at change time: $17.13 used,
   so ~$12.87 of GPU room is left this month.
 - Supersedes the "$20 brake" in AGENTS.md; the $20 account alert (My Monthly Cost Budget) is unchanged.
+
+## D-0026 · 2026-10-21 · GPU machines up to $5/h; going past the $30 brake is acceptable
+- Context: no g6e.xlarge (L40S) capacity at 08:44-09:08 SAST. Founder: "take even if it's expensive one but should be
+  <= $5/h", then "even if it exceeds $30 brake for now... i have more than $100 credits".
+- Agent's reading: any single-GPU L40S size up to g6e.8xlarge ($4.53/h) may be used, cheapest first; if October GPU
+  spend passes $30 the brake blocks new GPU launches until 1 Nov (a running job is not stopped) and that is accepted.
+- Found: the account's G-instance limit is 8 vCPUs (on-demand and spot), so only g6e.xlarge/2xlarge can launch.
+  Requested an increase to 32 (Service Quotas request d37a6c470b4040c594055f851720da095yVcec32, PENDING).
+- Outcome: a retry loop got g6e.xlarge on-demand ($1.861/h) at 09:08 SAST for R-0019.
