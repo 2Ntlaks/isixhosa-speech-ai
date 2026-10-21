@@ -14,3 +14,19 @@
   than 0.5 points worse than no list; no list word on silence or noise.
 - **Already seen on a 3-clip smoke test:** silence and quiet noise with list (1) came out as "thetha" (no list: "i", "c").
   So the silence part will likely fail; the question is how often it leaks into real speech.
+
+## Outcome · 2026-10-21 21:10 SAST · FAILED the pass rule (laptop, $0)
+| List (previous text) | WER % | CER % | list words inserted (100 clips) | 5 s silence | 5 s quiet noise |
+|---|---|---|---|---|---|
+| none | 30.38 | 4.43 | - | "i" | "c" |
+| Thetha model twitter | 31.74 | 4.47 | **0** | "thetha" | "thetha" |
+| Ntlakanipho Mgaguli CPUT Bellville WhatsApp | 32.08 | 4.40 | **0** | "Ntlakanipho" | "Ntlakanipho" |
+- Unseen sentences (82): none 34.29 / 4.67; list 1 36.33 / 4.79; list 2 36.33 / 4.75. Time: no difference.
+- **Good:** no list word leaked into real speech (0 of 100 clips, both lists); letters (CER) about unchanged.
+- **Bad 1:** WER +1.4 and +1.7 points (rule: at most +0.5). Lists changed 6 and 10 clips, mostly word splits and
+  double vowels ("yayizakuba" -> "yayiza kuba", "zepolisi" -> "zeepolisi"); some changes fixed, some broke words.
+- **Bad 2:** on silence and noise the model writes a list word, so a list must never be used on audio without speech.
+- **Reading:** a list can fix a name (the "Thetha" probe) without spraying names into other speech, but it nudges word
+  splitting on everything. Not safe as an always-on setting. Usable only as an opt-in "my words" pass that is shown next
+  to the normal transcript (with and without), and only on recordings with speech. The real fix is training with prompts
+  (combined plan, later list), so the model learns lists are hints.
