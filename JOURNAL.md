@@ -268,3 +268,17 @@ Format:
 - Cost so far today: download nodes ~$0.10; R-0019 expected ~4.3 h x $1.861 = ~$8 (cap 6 h).
 - Next: when the node finishes (expected ~13:30 SAST, self-terminates by 15:08 SAST at the latest): cloud/collect.sh
   R-0019 and R-0018, fill results.md, run.md outcome, explain the numbers to the founder. Then NCHLT auxiliary.
+
+## 2026-10-21 midday — R-0019 results
+- R-0019 finished 12:06 SAST (DONE, ~2.97 h, ~$5.53; node terminated). Model in S3 models/R-0019/ (3.06 GB).
+- Swivuriso test (2145 clips, 24 own speakers): R-0012 37.32 / 9.00 (R-0018) -> R-0019 **19.12 / 4.12** WER/CER.
+  Unscripted speech 42.4 / 10.8 -> 19.0 / 4.1. FLEURS test 37.83 / 8.03 -> **30.32 / 6.24**. NCHLT test
+  12.71 / 2.33 -> 13.67 / 2.31 (memorised sentences slightly worse, new sentences better: 28.7 / 5.0 -> 26.6 / 4.4).
+- Used 146.6 h of Swivuriso (32 397 clips); the leak filter removed 6 139 clips whose sentence is in a test/dev set.
+- Caught before pushing: the results commit included Swivuriso per-clip transcripts (predictions.jsonl, samples.md).
+  The repo is public and the dataset is gated, so those files were taken out of the (unpushed) commit and gitignored.
+- NCHLT auxiliary: downloaded but the 9.4 GB zip will not unpack (P-0017); not used yet.
+- Drawing: docs/r0019-results.png.
+- Next (founder's call): put R-0019 into Thetha (CTranslate2 int8 for the laptop page, ONNX for the browser demo) and
+  Hugging Face; a longer R-0019 (dev CER still falling at 4000 steps); cut the 235 h of long Swivuriso clips into
+  <= 30 s pieces; fix the NCHLT auxiliary zip. GPU limit increase to 32 vCPUs still pending.
