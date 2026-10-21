@@ -1,0 +1,18 @@
+{
+ "long_clips": 8,
+ "pieces": 25,
+ "piece_seconds": [
+  2.7,
+  17.1,
+  27.0
+ ],
+ "words_whose_clip_overlaps_their_piece": "328/328",
+ "r0019_on_pieces": {
+  "wer": 18.9,
+  "cer": 2.71
+ },
+ "first_word_right": "21/25",
+ "last_word_right": "21/25",
+ "score_min_median": 0.796,
+ "score_mean_median": 0.943
+}

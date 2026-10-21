@@ -1,0 +1,11 @@
+  10/100 clips, 101 s
+  20/100 clips, 204 s
+  30/100 clips, 309 s
+  40/100 clips, 414 s
+  50/100 clips, 509 s
+  60/100 clips, 611 s
+  70/100 clips, 711 s
+  80/100 clips, 804 s
+  90/100 clips, 898 s
+  100/100 clips, 996 s
+{"mode": "candidates", "model": "data/models/R-0019-int8", "engine": "ctranslate2 4.5.0 int8 CPU (8 threads)", "clips_file": "runs/R-0022/clips.jsonl", "clips": 100, "beam_size": 5, "max_new_tokens": 96, "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace", "mkl": "0", "hypotheses": 5, "all": {"returning_1": {"wer": 30.38, "cer": 4.43, "clips": 100}, "top_of_5": {"wer": 30.38, "cer": 4.43, "clips": 100}, "best_of_5_ceiling": {"wer": 18.09, "cer": 2.69, "clips": 100}, "ceiling_wer_gain": 12.29, "top_wrong_but_a_candidate_exact": 18, "top_wrong": 61, "words_missing_from_top": 83, "of_which_in_another_candidate": 36}, "unseen": {"returning_1": {"wer": 34.29, "cer": 4.67, "clips": 82}, "top_of_5": {"wer": 34.29, "cer": 4.67, "clips": 82}, "best_of_5_ceiling": {"wer": 20.82, "cer": 3.02, "clips": 82}, "ceiling_wer_gain": 13.47, "top_wrong_but_a_candidate_exact": 16, "top_wrong": 57, "words_missing_from_top": 78, "of_which_in_another_candidate": 33}, "top_same_as_returning_1": 100, "seconds_returning_1": 496.5, "seconds_returning_5": 498.6, "time_ratio": 1.004, "pass": true}

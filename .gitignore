@@ -16,3 +16,5 @@ runs/R-0014/samples.md
 # Swivuriso transcripts are gated (accepted terms): keep per-clip outputs local, never in the public repo (D-0024)
 runs/**/eval_swivuriso/predictions.jsonl
 runs/**/eval_swivuriso/samples.md
+runs/**/gate_r0019/predictions.jsonl
+runs/**/gate_r0019/samples.md

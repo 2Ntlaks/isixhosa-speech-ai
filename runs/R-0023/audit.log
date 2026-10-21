@@ -1,0 +1,11 @@
+  10/100 clips, 135 s
+  20/100 clips, 274 s
+  30/100 clips, 421 s
+  40/100 clips, 576 s
+  50/100 clips, 724 s
+  60/100 clips, 863 s
+  70/100 clips, 1004 s
+  80/100 clips, 1148 s
+  90/100 clips, 1289 s
+  100/100 clips, 1428 s
+{"mode": "context", "model": "data/models/R-0019-int8", "engine": "ctranslate2 4.5.0 int8 CPU (8 threads)", "clips_file": "runs/R-0022/clips.jsonl", "clips": 100, "beam_size": 5, "max_new_tokens": 96, "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace", "mkl": "0", "contexts": ["Thetha model twitter", "Ntlakanipho Mgaguli CPUT Bellville WhatsApp"], "all": {"none": {"wer": 30.38, "cer": 4.43, "clips": 100}, "Thetha model twitter": {"wer": 31.74, "cer": 4.47, "clips": 100}, "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": {"wer": 32.08, "cer": 4.4, "clips": 100}}, "unseen": {"none": {"wer": 34.29, "cer": 4.67, "clips": 82}, "Thetha model twitter": {"wer": 36.33, "cer": 4.79, "clips": 82}, "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": {"wer": 36.33, "cer": 4.75, "clips": 82}}, "false_insertions": {"Thetha model twitter": 0, "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": 0}, "seconds": {"none": 472.7, "Thetha model twitter": 473.3, "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": 480.9}, "empty_audio": {"silence 5 s": {"none": "i", "Thetha model twitter": "thetha", "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": "Ntlakanipho"}, "quiet noise 5 s": {"none": "c", "Thetha model twitter": "thetha", "Ntlakanipho Mgaguli CPUT Bellville WhatsApp": "Ntlakanipho"}}}
