@@ -219,3 +219,80 @@ Format:
   finished with batched deletes, 87 145 files). Kept models/ R-0004, R-0007, R-0012 (5.0 GB, ~$0.12/month). Left
   jobs/R-0001..R-0012 and fetch-* (55 GB) to the bucket's own rule "expire-jobs" (30 days, verified enabled), so they
   disappear around 16-17 November. Datasets can be fetched again with cloud/fetch_data.sh if training resumes.
+
+## 2026-10-21 — Reception on X
+- Founder reports the project post on X did better than expected: followers went from 14 to 44 (founder's own count;
+  no screenshot yet). First outside signal of interest in the work.
+- Cost: $0.
+
+## 2026-10-21 — Wearable translator idea
+- Founder's idea from an X reply: a wearable that translates in real time. Drawn in docs/wearable-idea.png
+  (make_wearable_idea.js): mic badge -> Thetha -> translation -> voice; the badge streams to a phone/server first.
+- Founder pointed to the Siyamthanda Project (OneDrive/Documents; S. Kweni's final-year project), which already runs
+  that path live: one ESP32 with an INMP441 mic and a MAX98357A speaker over Wi-Fi to a PC hub (Meta Omnilingual CTC
+  1B INT8 -> NLLB 600M -> Piper), no training. 2026-10-19: 19 live isiXhosa utterances, hub median wait 2.07 s
+  (lower bound, acoustic wait not measured). Their FLEURS xh test (100 clips): WER 35.97 %, BLEU 18.19. Our R-0012
+  FLEURS test WER 37.83 % is a different clip set and normalisation, so not comparable yet. Their live notes show the
+  same hard parts: translation slips on correct words, loanwords and code-switching, long sentences slow.
+- Nothing run or changed in either project. Cost: $0.
+
+## 2026-10-21 — Where more isiXhosa speech could come from (research only)
+- Drawn in docs/more-data.png (make_more_data.js). Checked online today:
+  - Swivuriso / South Africa African Next Voices (UP DSFSI, huggingface.co/datasets/dsfsi-anv/za-african-next-voices):
+    isiXhosa listed as released, target ~500 h, scripted + unscripted, transcripts included, CC BY 4.0, gated (accept
+    terms on Hugging Face), TTS/voice cloning prohibited. Biggest candidate (~9x NCHLT). Not downloaded.
+  - NCHLT isiXhosa Auxiliary (SADiLaR handle 20.500.12185/514): xho-aux1.zip 8.75 GB + xho-aux2.zip 4.4 GB, CC BY 3.0;
+    catalogue says ~103 h + ~55 h; recordings left out of the 2014 release, quality unknown.
+  - Dead ends: Common Voice isiXhosa (30 clips, v25), Google WAXAL (no isiXhosa in its 19 ASR languages).
+  - Free robustness step without new speech: noise/room augmentation of the existing clips.
+- Any download needs the founder to accept the licence terms; training is paused (D-0018). Cost: $0.
+
+## 2026-10-21 morning — More data: Swivuriso in S3, R-0019 training on AWS
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Founder accepted the Swivuriso terms on Hugging Face, raised the GPU brake to $30 (D-0025), then allowed machines up
+  to $5/h and going past the brake (D-0026, >$100 credits). Asked for all downloads to go to S3 in the cloud.
+- Downloads (cloud only, nothing on the laptop): Swivuriso isiXhosa 263 files / 140.1 GB at revision 9e95988ca334,
+  every file sha256-checked, in S3 datasets/swivuriso_xho/ (job fetch-swiv-1, c6in.large, ~16 min; the founder's HF
+  token was put in the job folder and deleted from S3 as soon as the node read it). NCHLT, FLEURS, Soapies re-fetched
+  (deleted 19 Oct; fetch-base-2). NCHLT auxiliary: first attempt stalled at 8.0 GB (P-0016), fixed and relaunched as
+  fetch-aux-2 (still running at the time of writing).
+- Swivuriso facts from its transcript files: train 62 786 clips / 427.4 h, 407 speakers; dev 25.2 h; dev_test 25.6 h.
+  Only 191.9 h of train are in clips <= 30 s (93.4 h read, 98.5 h unscripted); 30.9 h of those contain [?] (unclear
+  speech) and are dropped, so ~161 h are expected to be usable now. Audio is 48 kHz.
+- Code: src/swivuriso.py (prepare: parquet -> 16 kHz WAV + TSV + summary.json; tested on a synthetic parquet), train.py
+  (--swivuriso-tsv, --exclude-texts leak filter, 440-token limit, --train-longest memory check), baseline.py (Swivuriso
+  test set + scripted/unscripted breakdown). Drawings: docs/data-pipeline.png.
+- R-0019 (whisper-medium, R-0012 + Swivuriso, 4000 steps) and R-0018 (R-0012 on Swivuriso test) launched 09:08 SAST
+  on g6e.xlarge on-demand after 25 min of no L40S capacity. The account's G-instance limit is 8 vCPUs; increase to 32
+  requested (D-0026). Preflight passed; Swivuriso prep running at ~7 shards/min.
+- Cost so far today: download nodes ~$0.10; R-0019 expected ~4.3 h x $1.861 = ~$8 (cap 6 h).
+- Next: when the node finishes (expected ~13:30 SAST, self-terminates by 15:08 SAST at the latest): cloud/collect.sh
+  R-0019 and R-0018, fill results.md, run.md outcome, explain the numbers to the founder. Then NCHLT auxiliary.
+
+## 2026-10-21 midday — R-0019 results
+- R-0019 finished 12:06 SAST (DONE, ~2.97 h, ~$5.53; node terminated). Model in S3 models/R-0019/ (3.06 GB).
+- Swivuriso test (2145 clips, 24 own speakers): R-0012 37.32 / 9.00 (R-0018) -> R-0019 **19.12 / 4.12** WER/CER.
+  Unscripted speech 42.4 / 10.8 -> 19.0 / 4.1. FLEURS test 37.83 / 8.03 -> **30.32 / 6.24**. NCHLT test
+  12.71 / 2.33 -> 13.67 / 2.31 (memorised sentences slightly worse, new sentences better: 28.7 / 5.0 -> 26.6 / 4.4).
+- Used 146.6 h of Swivuriso (32 397 clips); the leak filter removed 6 139 clips whose sentence is in a test/dev set.
+- Caught before pushing: the results commit included Swivuriso per-clip transcripts (predictions.jsonl, samples.md).
+  The repo is public and the dataset is gated, so those files were taken out of the (unpushed) commit and gitignored.
+- NCHLT auxiliary: downloaded but the 9.4 GB zip will not unpack (P-0017); not used yet.
+- Drawing: docs/r0019-results.png.
+- Next (founder's call): put R-0019 into Thetha (CTranslate2 int8 for the laptop page, ONNX for the browser demo) and
+  Hugging Face; a longer R-0019 (dev CER still falling at 4000 steps); cut the 235 h of long Swivuriso clips into
+  <= 30 s pieces; fix the NCHLT auxiliary zip. GPU limit increase to 32 vCPUs still pending.
+
+## 2026-10-21 afternoon — PR #1 review (Codex) and corrections
+- Opened PR #1 (more-data-swivuriso). Copilot could not review (monthly quota); the founder ran Codex locally, which
+  posted a review: 1 P1, 5 P2, speed ideas. Checked each one:
+  - P1 token cleanup on skip/failed-launch paths: real gap. Checked S3: bucket versioning never enabled and no hf_token
+    object or version exists anywhere, so nothing leaked. Fixed: node reads and deletes the token at boot, launcher
+    sends no token when Swivuriso is already complete and removes it if the launch fails.
+  - P2 NCHLT dev sentences missing from the leak filter: real gap, measured 0 affected clips in R-0019; fixed, plus
+    fail-closed and an assert. P2 token in curl argv: fixed (root-only header file). P2 resume recorded unchecked bytes
+    as verified: fixed (sha256 re-check from S3). P2 decoded length vs metadata duration: fixed.
+  - P2 FLEURS "never trained on": **my error** in run.md, the drawing, JOURNAL and the PR text. Corrected (FLEURS
+    train is in every model since R-0007; only its test sentences are unseen).
+  - P2 prepared-cache identity and the speed ideas: noted for the next run (move prep to a CPU node, cap Arrow threads,
+    cache token ids, evaluate FLEURS dev less often); not done today.

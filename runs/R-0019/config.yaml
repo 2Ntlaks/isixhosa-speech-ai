@@ -1,0 +1,14 @@
+run: R-0019
+stage: 3
+what: R-0012's recipe with ONE change: Swivuriso isiXhosa train added (D-0024)
+model: openai/whisper-medium
+language_tag: sw (D-0007)
+train: NCHLT train minus the same 6 dev speakers + FLEURS xh_za train <= 30 s (both exactly as R-0012) + Swivuriso train
+  (dsfsi-anv/za-african-next-voices @ 9e95988ca334, xho): clips 1-30 s, no [?] in the transcript, text = scoring.normalise,
+  minus clips whose sentence is in NCHLT test, FLEURS dev/test or Swivuriso dev/dev_test, minus transcripts over 440 tokens
+dev: unchanged 600 NCHLT clips, best checkpoint on NCHLT dev CER; 200 FLEURS dev clips, information only
+steps: 4000; batch 8 x grad-accum 4 = 32 (fallback 4 x 8 if the longest-transcript memory check fails); lr 1e-5, warmup 500, linear decay; bf16
+generation max length: 96 during training evaluations (as R-0012)
+test: NCHLT test (2770 clips, max 96 tokens), FLEURS test (<= 30 s, max 225 tokens), Swivuriso test = dev_test split
+  (same 1-30 s / no [?] rules, own speakers, max 440 tokens)
+machine: g6e.xlarge (NVIDIA L40S 48 GB) on-demand, $1.861/h, 250 GB disk, max 6 h; expected ~4.5 h incl. prep and R-0018, about $8-9

@@ -1,0 +1,174 @@
+{
+  "model": "models/R-0012",
+  "language": "sw",
+  "test_set": "dev_test.tsv",
+  "clips": 2145,
+  "left_out_over_max_seconds": 0,
+  "max_new_tokens": 440,
+  "audio_hours": 9.398,
+  "wer": 37.32,
+  "cer": 9.0,
+  "exact_match_pct": 6.34,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 2145
+  },
+  "per_speaker": {
+    "swiv_119f0926-f8fc-11ef-a9a6-0242ac120003": {
+      "wer": 64.3,
+      "cer": 20.5,
+      "n": 131
+    },
+    "swiv_1293d771-0621-11f0-8778-0242ac120002": {
+      "wer": 31.8,
+      "cer": 5.7,
+      "n": 120
+    },
+    "swiv_142c2c89-219d-11f0-9a50-0242ac120005": {
+      "wer": 66.9,
+      "cer": 31.9,
+      "n": 64
+    },
+    "swiv_1fc9720a-1463-11f0-b3c5-0242ac120004": {
+      "wer": 47.4,
+      "cer": 10.3,
+      "n": 87
+    },
+    "swiv_44e069f2-e2c9-11ef-931f-0242ac120004": {
+      "wer": 27.2,
+      "cer": 5.2,
+      "n": 79
+    },
+    "swiv_5299032f-1f45-11f0-8813-0242ac120003": {
+      "wer": 35.2,
+      "cer": 8.9,
+      "n": 47
+    },
+    "swiv_5ff626a5-eea9-11ef-9a96-0242ac120002": {
+      "wer": 40.3,
+      "cer": 9.7,
+      "n": 133
+    },
+    "swiv_6219b0dd-096c-11f0-ae3c-0242ac120003": {
+      "wer": 30.1,
+      "cer": 5.8,
+      "n": 111
+    },
+    "swiv_774412ef-e784-11ef-9e0f-0242ac120002": {
+      "wer": 36.6,
+      "cer": 8.9,
+      "n": 59
+    },
+    "swiv_86657798-00a0-11f0-9dd7-0242ac120004": {
+      "wer": 39.4,
+      "cer": 8.4,
+      "n": 98
+    },
+    "swiv_8c5cf8a4-137a-11f0-b3c5-0242ac120004": {
+      "wer": 26.0,
+      "cer": 4.9,
+      "n": 49
+    },
+    "swiv_8d9824e4-736a-11f0-9db4-0242ac120005": {
+      "wer": 31.5,
+      "cer": 6.3,
+      "n": 224
+    },
+    "swiv_9e113e71-150d-11f0-b3c5-0242ac120004": {
+      "wer": 33.7,
+      "cer": 7.0,
+      "n": 85
+    },
+    "swiv_aa4a35ee-4052-11f0-9ff3-0242ac120004": {
+      "wer": 36.9,
+      "cer": 7.4,
+      "n": 63
+    },
+    "swiv_ab12644d-ee02-11ef-9554-0242ac120003": {
+      "wer": 29.4,
+      "cer": 11.8,
+      "n": 80
+    },
+    "swiv_aba39071-e551-11ef-b500-0242ac120002": {
+      "wer": 29.5,
+      "cer": 5.4,
+      "n": 73
+    },
+    "swiv_bcdfffa5-5b11-11f0-ac40-0242ac120003": {
+      "wer": 46.1,
+      "cer": 12.0,
+      "n": 59
+    },
+    "swiv_c5057347-5352-11f0-a31a-0242ac120005": {
+      "wer": 28.5,
+      "cer": 5.3,
+      "n": 122
+    },
+    "swiv_cde33783-13b9-11f0-b3c5-0242ac120004": {
+      "wer": 44.5,
+      "cer": 10.4,
+      "n": 137
+    },
+    "swiv_d370ace5-0879-11f0-ae3c-0242ac120003": {
+      "wer": 27.8,
+      "cer": 4.8,
+      "n": 74
+    },
+    "swiv_f28a3507-e3c2-11ef-baa7-0242ac120004": {
+      "wer": 30.0,
+      "cer": 4.9,
+      "n": 54
+    },
+    "swiv_f4d50ebf-317f-11f0-833b-0242ac120004": {
+      "wer": 42.5,
+      "cer": 10.3,
+      "n": 85
+    },
+    "swiv_f8e378a7-f4d2-11ef-ac4e-0242ac120005": {
+      "wer": 23.9,
+      "cer": 3.5,
+      "n": 57
+    },
+    "swiv_fb1357c7-f7f5-11ef-bf9c-0242ac120002": {
+      "wer": 28.5,
+      "cer": 6.2,
+      "n": 54
+    }
+  },
+  "per_gender": {
+    "": {
+      "wer": 37.3,
+      "cer": 9.0,
+      "n": 2145
+    }
+  },
+  "by_text_in_training": {
+    "unseen": {
+      "wer": 37.3,
+      "cer": 9.0,
+      "n": 2145
+    }
+  },
+  "per_type": {
+    "scripted": {
+      "wer": 33.4,
+      "cer": 7.6,
+      "n": 1422
+    },
+    "unscripted": {
+      "wer": 42.4,
+      "cer": 10.8,
+      "n": 723
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 225.8,
+  "batch_size": 32,
+  "env": {
+    "torch": "2.5.1+cu124",
+    "device": "cuda",
+    "gpu": "NVIDIA L40S",
+    "transformers": "4.46.3",
+    "python": "3.12.3"
+  }
+}

@@ -7,6 +7,8 @@
 - A few training speakers are held out as a dev set to pick the best checkpoint; the 8 test speakers are never touched here.
 - Checkpoints go to <out>/checkpoints/; if one exists the run resumes from it (survives a restarted machine).
 - The best checkpoint (lowest dev CER) is saved to <out>/final with its processor, ready for src/baseline.py.
+Stage 3 more data (D-0024): --swivuriso-tsv/--swivuriso-audio add Swivuriso clips prepared by src/swivuriso.py;
+--exclude-texts drops any of them whose sentence is in a test set.
 Stage 4 (code-switching, D-0016/D-0017), all optional:
 - --english-xml: NCHLT English training clips (--english-hours of them), learned with Whisper's own <|en|> tag.
 - --stitch N: N clips made by joining a real NCHLT isiXhosa clip and a real NCHLT English clip (x+e, e+x or x+e+x,
@@ -35,6 +37,7 @@ from transformers import (Seq2SeqTrainer, Seq2SeqTrainingArguments, WhisperForCo
 sys.path.insert(0, os.path.dirname(__file__))
 import fleurs  # noqa: E402
 import soapies  # noqa: E402
+import swivuriso  # noqa: E402
 from nchlt import load_split  # noqa: E402
 from scoring import normalise, score  # noqa: E402
 
@@ -180,6 +183,12 @@ def main():
                     help="recompute activations instead of storing them: less GPU memory, ~30%% slower")
     ap.add_argument("--only-existing", action="store_true",
                     help="use only clips whose audio is on disk (preflight with a few speakers downloaded)")
+    ap.add_argument("--swivuriso-tsv", help="extra training data: Swivuriso train.tsv from src/swivuriso.py prepare")
+    ap.add_argument("--swivuriso-audio", help="folder the Swivuriso TSV's file paths are relative to")
+    ap.add_argument("--exclude-texts", nargs="*", help="files with one test sentence per line; Swivuriso training"
+                    " clips with any of these sentences are dropped (leak filter)")
+    ap.add_argument("--train-longest", type=int, default=0,
+                    help="train only on the N clips with the longest transcripts (GPU memory check before a real run)")
     ap.add_argument("--english-xml", help="NCHLT English training XML (stage 4): English clips with the <|en|> tag")
     ap.add_argument("--english-hours", type=float, default=10.0, help="how much of NCHLT English to train on")
     ap.add_argument("--stitch", type=int, default=0, help="number of joined isiXhosa+English clips (needs --english-xml)")
@@ -187,11 +196,13 @@ def main():
                     " set is scored at each evaluation and picks the best checkpoint (never trained on, D-0016)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
+    proc = WhisperProcessor.from_pretrained(a.model, language=a.language, task="transcribe")
 
     clips = [c for c in load_split(a.xml, a.root) if c["duration"] <= a.max_seconds and target_text(c["text"])]
     if a.only_existing:
         clips = [c for c in clips if os.path.exists(c["path"])]
     train, dev, dev_speakers = split_dev(clips, a.dev_speakers, a.seed)
+    dev_texts = {normalise(c["text"]) for c in dev}  # every held-out dev sentence, before the 600-clip sample
     dev = random.Random(a.seed).sample(dev, min(a.dev_clips, len(dev)))
     extra, fleurs_dropped = [], 0
     if a.fleurs_tsv:  # added after the dev split, so dev (and test) stay identical to NCHLT-only runs
@@ -203,6 +214,23 @@ def main():
         if a.only_existing:
             extra = [c for c in extra if os.path.exists(c["path"])]
         train = train + extra
+    swiv, swiv_leaks, swiv_too_long_text = [], 0, 0
+    if a.swivuriso_tsv:  # also added after the dev split (D-0024); text already normalised by swivuriso.prepare
+        sw = [c for c in swivuriso.load_split(a.swivuriso_tsv, a.swivuriso_audio) if c["duration"] <= a.max_seconds]
+        test_texts = set()
+        for path in a.exclude_texts or []:
+            with open(path, encoding="utf-8") as f:
+                test_texts |= {normalise(line) for line in f if line.strip()}
+        if not test_texts:  # fail closed: new data without a leak filter is never trained on
+            sys.exit("--swivuriso-tsv needs --exclude-texts with the test and dev sentences")
+        test_texts |= dev_texts  # the NCHLT dev speakers pick the checkpoint, so their sentences stay out too
+        swiv = [c for c in sw if c["text"] not in test_texts]  # a test sentence never becomes training data
+        swiv_leaks = len(sw) - len(swiv)
+        n = len(swiv)  # Whisper writes at most 448 tokens (4 go to the prefix and end): longer transcripts can't be learned
+        swiv = [c for c in swiv if len(proc.tokenizer(c["text"], add_special_tokens=False).input_ids) <= 440]
+        swiv_too_long_text = n - len(swiv)
+        assert not {c["text"] for c in swiv} & test_texts, "a test or dev sentence got into training"
+        train = train + swiv
     english, stitched = [], []
     if a.english_xml:  # also added after the dev split; dev and test stay NCHLT isiXhosa
         eng = [c for c in load_split(a.english_xml, a.root) if c["duration"] <= a.max_seconds and target_text(c["text"])]
@@ -217,6 +245,8 @@ def main():
                     f.write(json.dumps({k: c[k] for k in ("id", "part_ids", "gaps", "pattern", "text")},
                                        ensure_ascii=False) + "\n")
         train = train + english + stitched
+    if a.train_longest:  # memory check: only the clips with the longest transcripts
+        train = sorted(train, key=lambda c: len(target_text(c["text"])), reverse=True)[:a.train_longest]
     soapies_dev = []
     if a.soapies_root:
         R = a.soapies_root
@@ -239,6 +269,9 @@ def main():
             "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips),
             "fleurs_train_clips": len(extra), "fleurs_dropped_over_max_seconds": fleurs_dropped, "fleurs_train_hours": round(sum(c["duration"] for c in extra) / 3600, 2),
             "fleurs_dev_clips_scored": len(fleurs_dev),
+            "swivuriso_train_clips": len(swiv), "swivuriso_train_hours": round(sum(c["duration"] for c in swiv) / 3600, 2),
+            "swivuriso_dropped_test_sentences": swiv_leaks,
+            "swivuriso_dropped_over_440_tokens": swiv_too_long_text, "swivuriso_train_speakers": len({c["speaker"] for c in swiv}),
             "english_train_clips": len(english), "english_train_hours": round(sum(c["duration"] for c in english) / 3600, 2),
             "stitched_clips": len(stitched), "stitched_hours": round(sum(c["duration"] for c in stitched) / 3600, 2),
             "soapies_dev_clips_scored": len(soapies_dev), "model": a.model, "batch_size": a.batch_size,
@@ -247,7 +280,6 @@ def main():
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
 
-    proc = WhisperProcessor.from_pretrained(a.model, language=a.language, task="transcribe")
     model = WhisperForConditionalGeneration.from_pretrained(a.model)
     model.generation_config.language = a.language
     model.generation_config.task = "transcribe"

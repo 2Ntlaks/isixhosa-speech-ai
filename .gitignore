@@ -12,3 +12,7 @@ __pycache__/
 # Soapies transcripts are research-only (D-0016, D-0019): scores go in git, model outputs and samples stay local
 runs/R-0014/*/predictions.jsonl
 runs/R-0014/samples.md
+
+# Swivuriso transcripts are gated (accepted terms): keep per-clip outputs local, never in the public repo (D-0024)
+runs/**/eval_swivuriso/predictions.jsonl
+runs/**/eval_swivuriso/samples.md
