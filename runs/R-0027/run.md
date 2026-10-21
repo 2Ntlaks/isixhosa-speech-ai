@@ -29,3 +29,9 @@
 - R-0019-int8 on the pieces: WER 18.9 / CER 2.71 (its NCHLT test score is 13.67 / 2.31; pieces are longer and have more
   words to get wrong at the joins). First word right in 21/25 pieces, last word in 21/25.
 - Alignment scores on clean read speech: weakest word median 0.80, mean median 0.94 (a reference for the gate).
+
+## Launch note · 2026-10-21 23:30 SAST
+- No g6e.xlarge (L40S) on-demand capacity in us-east-1 on 6 tries (23:14-23:26). whisper-small and the aligner fit a
+  24 GB GPU, so the run moves to **g6.xlarge (L4 24 GB, 16 GB RAM, $0.805/h)**, falling back to g5.xlarge (A10G,
+  $1.006/h). Extraction workers 6 -> 4 to fit 16 GB of RAM. Cap 6 h (slower GPU). Estimate ~4-5 h x $0.805 = ~$3.5-4.
+- **Command:** `DISK_GB=300 FALLBACK_TYPES="g5.xlarge" cloud/run_job.sh --run R-0027 --type g6.xlarge --market ondemand --max-hours 6`

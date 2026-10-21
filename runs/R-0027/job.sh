@@ -43,7 +43,7 @@ if aws s3 ls "$LC/COMPLETE" >/dev/null 2>&1; then
 else
   echo "=== $(date -u +%T) long clips: extracting from the parquet shards"
   python src/swivuriso_long.py extract --source "s3://$BUCKET/datasets/swivuriso_xho/xho/" --out $L \
-    --exclude-texts data/test_texts.txt --workers 6 2>&1 | quiet
+    --exclude-texts data/test_texts.txt --workers 4 2>&1 | quiet   # 4: also fits a 16 GB node
   df -h / | tail -1
   echo "=== $(date -u +%T) long clips: word timings and cutting (GPU)"
   python src/swivuriso_long.py cut --out $L --delete-long 2>&1 | quiet
