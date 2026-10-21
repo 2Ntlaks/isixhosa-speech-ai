@@ -235,3 +235,14 @@ Format:
   FLEURS test WER 37.83 % is a different clip set and normalisation, so not comparable yet. Their live notes show the
   same hard parts: translation slips on correct words, loanwords and code-switching, long sentences slow.
 - Nothing run or changed in either project. Cost: $0.
+
+## 2026-10-21 — Where more isiXhosa speech could come from (research only)
+- Drawn in docs/more-data.png (make_more_data.js). Checked online today:
+  - Swivuriso / South Africa African Next Voices (UP DSFSI, huggingface.co/datasets/dsfsi-anv/za-african-next-voices):
+    isiXhosa listed as released, target ~500 h, scripted + unscripted, transcripts included, CC BY 4.0, gated (accept
+    terms on Hugging Face), TTS/voice cloning prohibited. Biggest candidate (~9x NCHLT). Not downloaded.
+  - NCHLT isiXhosa Auxiliary (SADiLaR handle 20.500.12185/514): xho-aux1.zip 8.75 GB + xho-aux2.zip 4.4 GB, CC BY 3.0;
+    catalogue says ~103 h + ~55 h; recordings left out of the 2014 release, quality unknown.
+  - Dead ends: Common Voice isiXhosa (30 clips, v25), Google WAXAL (no isiXhosa in its 19 ASR languages).
+  - Free robustness step without new speech: noise/room augmentation of the existing clips.
+- Any download needs the founder to accept the licence terms; training is paused (D-0018). Cost: $0.
