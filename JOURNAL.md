@@ -224,3 +224,14 @@ Format:
 - Founder reports the project post on X did better than expected: followers went from 14 to 44 (founder's own count;
   no screenshot yet). First outside signal of interest in the work.
 - Cost: $0.
+
+## 2026-10-21 — Wearable translator idea
+- Founder's idea from an X reply: a wearable that translates in real time. Drawn in docs/wearable-idea.png
+  (make_wearable_idea.js): mic badge -> Thetha -> translation -> voice; the badge streams to a phone/server first.
+- Founder pointed to the Siyamthanda Project (OneDrive/Documents; S. Kweni's final-year project), which already runs
+  that path live: one ESP32 with an INMP441 mic and a MAX98357A speaker over Wi-Fi to a PC hub (Meta Omnilingual CTC
+  1B INT8 -> NLLB 600M -> Piper), no training. 2026-10-19: 19 live isiXhosa utterances, hub median wait 2.07 s
+  (lower bound, acoustic wait not measured). Their FLEURS xh test (100 clips): WER 35.97 %, BLEU 18.19. Our R-0012
+  FLEURS test WER 37.83 % is a different clip set and normalisation, so not comparable yet. Their live notes show the
+  same hard parts: translation slips on correct words, loanwords and code-switching, long sentences slow.
+- Nothing run or changed in either project. Cost: $0.
