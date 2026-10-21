@@ -13,5 +13,6 @@
   ~2.8 times). Kept at 4000 so the only change is the data; a longer run is a separate experiment if this one helps.
 - **New test set:** Swivuriso dev_test (own speakers, same clip rules), scored for R-0012 (as R-0018) and R-0019.
 - **Command:** `DISK_GB=250 FALLBACK_TYPES="" cloud/run_job.sh --run R-0019 --type g6e.xlarge --market ondemand --max-hours 6`
+- **Founder approval:** 2026-10-21, "Launch medium (Recommended)" in reply to ~4.5 h / ~$8-9 / cap 6 h (D-0024, D-0025).
 - **Expected:** Swivuriso test clearly better than R-0018; FLEURS and NCHLT test not worse than R-0012 (8.03 / 2.33 CER).
   Est. ~4.5 h, ~$8-9, cap 6 h (~$11).
