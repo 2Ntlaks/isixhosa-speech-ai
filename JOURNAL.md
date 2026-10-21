@@ -317,3 +317,13 @@ Format:
   words. No context: "tether" (greedy and beam). Context " Thetha": "thetha" but "model" -> "modeli". Context
   " Thetha model twitter": greedy still "tether", beam 5 = founder's transcript exactly. So context words work even
   without prompt training, but fragile; needs a 200-clip harm check and more founder recordings before any UI.
+
+## 2026-10-21 evening - Independent Codex recommendations
+- Wrote docs/codex-ideas-2026-10-21.md sections 1-5 before opening Claude's ideas; then appended the comparison.
+- Read-only aggregate recount of R-0021 predictions: 586 reference words, 149 substitutions, 9 deletions, 4 insertions;
+  111 of 149 aligned substitution pairs differ by 1-2 character edits; 8 of 200 clips differ solely in spacing.
+  No transcripts were copied into the recommendations. These are analyses of R-0021, not a new inference run.
+- Recommended first: a fixed dev/founder five-candidate recovery audit, with explicit accuracy/latency gates before
+  building an audio-linked correction interface. Other suggestions are hypotheses, with risks and proposed measures.
+- Cost: $0 cloud. No model loaded, inference/training launched, code edited, or AWS operation performed.
+- Next: founder chooses whether to authorize the proposed experiment. No training decision made.
