@@ -213,3 +213,15 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - The demo model (R-0007, also what Thetha wrote live on 17 Oct) wrote "iqaqa lizizi qikaqika": "iqaqa" and
   "qikaqika" exact, one extra "zi". R-0012 wrote "iqaqa liziqiqaqiqa". The video shows the demo model's real output
   next to his words, framed as "so close". The friend's clips stay unused.
+
+## D-0024 · 2026-10-21 · More training data, paid with AWS credits
+- Context: founder asked how to make Thetha more robust and whether all new datasets can be combined. Options: (a) add
+  sources one step at a time on the same test clips (Swivuriso, then NCHLT auxiliary, then noise augmentation);
+  (b) one big run with everything. Agent recommended (a): shows what each source bought, keeps one change per run.
+- Founder: "we have aws credits for that" -> OK to spend credits on the data expansion; this reopens training after
+  D-0018. Step-wise plan (a) is the default unless he says otherwise.
+- Checked 2026-10-21: account budget "My Monthly Cost Budget" shows $0.00 actual (credits cover it); the GPU brake
+  mgaguli-gpu-monthly counts $17.13 of $20 for October (forecast $21.16), so a GPU run before 1 Nov would hit it.
+- Waiting on the founder: (1) accept the Swivuriso terms on Hugging Face (account Ntlakanipho; download returned
+  403 GatedRepoError today); (2) wait for the 1 Nov brake reset, or raise the brake.
+- Swivuriso isiXhosa is ~140 GB of parquet (train/dev/dev_test): too big for the laptop; fetch in the cloud into S3.
