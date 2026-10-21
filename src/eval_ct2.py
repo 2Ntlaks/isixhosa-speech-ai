@@ -4,7 +4,7 @@ clip by clip with the same model's GPU evaluation (src/baseline.py, fp16). Answe
   CT2_USE_MKL=0 .venv/Scripts/python src/eval_ct2.py --model data/models/R-0012-int8 \
       --reference runs/R-0012/eval_nchlt/predictions.jsonl --sample unseen:200 --out runs/R-0013
 Same feature extraction, prompt (<|sw|>, transcribe, no timestamps), greedy decoding and token limit (96) as the
-NCHLT test evaluation. Writes predictions.jsonl and metrics.json to --out.
+NCHLT test evaluation (greedy unless --beam-size > 1). Writes predictions.jsonl and metrics.json to --out.
 """
 import argparse
 import json
@@ -28,6 +28,7 @@ ap.add_argument("--root", default="data")
 ap.add_argument("--sample", default="unseen:200", help="seen|unseen|all : number of clips (seeded)")
 ap.add_argument("--max-new-tokens", type=int, default=96)
 ap.add_argument("--threads", type=int, default=8)
+ap.add_argument("--beam-size", type=int, default=1, help="1 = greedy, as every earlier evaluation")
 ap.add_argument("--seed", type=int, default=1)
 ap.add_argument("--out", required=True)
 a = ap.parse_args()
@@ -47,7 +48,7 @@ for i, c in enumerate(clips):
     audio, sr = sf.read(os.path.join(a.root, "nchlt_xho", "audio", spk, c["id"] + ".wav"), dtype="float32")
     assert sr == 16000
     feats = proc([audio], sampling_rate=16000, return_tensors="np").input_features
-    r = m.generate(ctranslate2.StorageView.from_array(np.ascontiguousarray(feats)), [prompt], beam_size=1,
+    r = m.generate(ctranslate2.StorageView.from_array(np.ascontiguousarray(feats)), [prompt], beam_size=a.beam_size,
                    max_length=a.max_new_tokens)
     hyp = proc.tokenizer.decode(r[0].sequences_ids[0], skip_special_tokens=True)
     out.append({"id": c["id"], "text": c["text"], "hyp": hyp, "gpu_hyp": c["hyp"],
@@ -67,6 +68,6 @@ metrics = {"model": a.model, "engine": f"ctranslate2 {ctranslate2.__version__} i
            "gpu_fp16_same_clips": {"wer": round(gpu["wer"], 2), "cer": round(gpu["cer"], 2)},
            "same_output_as_gpu": sum(o["same_as_gpu"] for o in out),
            "seconds_per_clip": round(secs / len(out), 2), "normalisation": NORMALISATION,
-           "mkl": os.environ.get("CT2_USE_MKL", "default")}
+           "mkl": os.environ.get("CT2_USE_MKL", "default"), "beam_size": a.beam_size}
 json.dump(metrics, open(os.path.join(a.out, "metrics.json"), "w"), indent=1)
 print(json.dumps(metrics))

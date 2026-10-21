@@ -220,3 +220,14 @@ Format:
   (bsdtar/libarchive or 7-Zip), on a cloud node.
 - Cost: ~$0.01; not blocking (R-0019 did not use it).
 - Lesson: a matching checksum proves the download, not that the archive is readable; test-unpack early.
+
+## P-0018 · 2026-10-21 · Concurrent sessions shared a run ID and CPU
+- What: the inference optimization plan initially used R-0022. Another session replaced that plan with its
+  decode audit and committed in the same checkout. Its inference process was also present during the thread
+  probe. There was no exception message: this was a coordination failure, not a Python failure.
+- Cause: the sessions shared a checkout, run-number namespace and laptop, without an exclusive reservation.
+- Fix: isolated the optimization in a managed worktree, moved its evidence to R-0025, and preserved the other
+  session's audit. Treat the thread timings as inconclusive and keep the thread default unchanged. The founder
+  confirmed that the paired benchmark could use the CPU after the audit finished.
+- Cost: $0 cloud. The discarded sweep contains 276.2 seconds of timed decoding, plus unmeasured setup overhead.
+- Lesson: separate checkouts prevent file collisions; CPU scheduling and sequential run IDs still need coordination.

@@ -307,3 +307,17 @@ Format:
   R-0019-int8; README updated.
 - Next: build the long-clip cutter for Swivuriso (forced alignment, listen-checked) and train R-0021; then a small
   model on the new data for the browser demo. October GPU spend is ~$23 of the $30 brake.
+
+## 2026-10-21: CPU inference optimization PR (Codex, R-0025)
+- Implemented bounded chunk batches, per-request feature reuse for compatible comparison models, serialized
+  feature preparation/loading, and lazy comparison-model loading. Added explicit thread/batch options and
+  a before-work architecture drawing in docs/inference-plan.png. Kept beam 5 and decoding limits unchanged.
+- Isolated work in a managed worktree after a concurrent session reused R-0022 and the shared branch (P-0018).
+  Only the beam-5 evidence/default and public-log privacy prerequisites accompany the optimization in this PR.
+- The six-clip thread probe scored WER 38.89% / CER 6.85% at every setting, but possible competing inference
+  makes timing inconclusive. No default thread change. No new accuracy or speed claims.
+- The founder asked to post the PR and let Claude benchmark after the audit. R-0025 contains a reproducible
+  32-clip paired benchmark and separate-process long-recording memory checks. These remain pending.
+- Validation completed: all 7 lightweight inference regression tests passed; git diff --check passed.
+- Cloud spend: $0. No training, AWS activity, or model publishing. Next: Claude runs the sequential validation,
+  records equal-output checks and measured latency/memory, and reviews the PR before merge.
