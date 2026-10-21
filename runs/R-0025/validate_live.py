@@ -13,7 +13,7 @@ import types
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = Path(os.environ.get("THETHA_ASSETS_ROOT", ROOT))
-BASELINE = "2dff2ea"
+BASELINE = "20b9468"  # same live.py as local 2dff2ea; retained as a PR ancestor for reproduction
 os.environ.setdefault("CT2_USE_MKL", "0")
 sys.path.insert(0, str(ROOT / "src"))
 
@@ -76,7 +76,10 @@ def main():
         return text, {"wall_seconds": wall, "model_seconds": model_seconds,
                       "peak_working_set_bytes": peak[0], "output_sha256": digest(text)}
 
-    config = {"baseline_commit": BASELINE, "model": name, "threads": 8, "beam_size": 5,
+    config = {"baseline_commit": BASELINE,
+              "candidate_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+              "candidate_source_sha256": hashlib.sha256((ROOT / "src/live.py").read_bytes()).hexdigest(),
+              "model": name, "threads": 8, "beam_size": 5,
               "max_length": 225, "seed": 22, "chunk_batch_size": 1}
     if args.long:
         parts, refs, duration = [], [], 0
