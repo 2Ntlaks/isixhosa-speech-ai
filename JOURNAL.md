@@ -246,3 +246,25 @@ Format:
   - Dead ends: Common Voice isiXhosa (30 clips, v25), Google WAXAL (no isiXhosa in its 19 ASR languages).
   - Free robustness step without new speech: noise/room augmentation of the existing clips.
 - Any download needs the founder to accept the licence terms; training is paused (D-0018). Cost: $0.
+
+## 2026-10-21 morning — More data: Swivuriso in S3, R-0019 training on AWS
+- Agent/session: Claude Code (isiXhosa Speech AI session, account2)
+- Founder accepted the Swivuriso terms on Hugging Face, raised the GPU brake to $30 (D-0025), then allowed machines up
+  to $5/h and going past the brake (D-0026, >$100 credits). Asked for all downloads to go to S3 in the cloud.
+- Downloads (cloud only, nothing on the laptop): Swivuriso isiXhosa 263 files / 140.1 GB at revision 9e95988ca334,
+  every file sha256-checked, in S3 datasets/swivuriso_xho/ (job fetch-swiv-1, c6in.large, ~16 min; the founder's HF
+  token was put in the job folder and deleted from S3 as soon as the node read it). NCHLT, FLEURS, Soapies re-fetched
+  (deleted 19 Oct; fetch-base-2). NCHLT auxiliary: first attempt stalled at 8.0 GB (P-0016), fixed and relaunched as
+  fetch-aux-2 (still running at the time of writing).
+- Swivuriso facts from its transcript files: train 62 786 clips / 427.4 h, 407 speakers; dev 25.2 h; dev_test 25.6 h.
+  Only 191.9 h of train are in clips <= 30 s (93.4 h read, 98.5 h unscripted); 30.9 h of those contain [?] (unclear
+  speech) and are dropped, so ~161 h are expected to be usable now. Audio is 48 kHz.
+- Code: src/swivuriso.py (prepare: parquet -> 16 kHz WAV + TSV + summary.json; tested on a synthetic parquet), train.py
+  (--swivuriso-tsv, --exclude-texts leak filter, 440-token limit, --train-longest memory check), baseline.py (Swivuriso
+  test set + scripted/unscripted breakdown). Drawings: docs/data-pipeline.png.
+- R-0019 (whisper-medium, R-0012 + Swivuriso, 4000 steps) and R-0018 (R-0012 on Swivuriso test) launched 09:08 SAST
+  on g6e.xlarge on-demand after 25 min of no L40S capacity. The account's G-instance limit is 8 vCPUs; increase to 32
+  requested (D-0026). Preflight passed; Swivuriso prep running at ~7 shards/min.
+- Cost so far today: download nodes ~$0.10; R-0019 expected ~4.3 h x $1.861 = ~$8 (cap 6 h).
+- Next: when the node finishes (expected ~13:30 SAST, self-terminates by 15:08 SAST at the latest): cloud/collect.sh
+  R-0019 and R-0018, fill results.md, run.md outcome, explain the numbers to the founder. Then NCHLT auxiliary.
