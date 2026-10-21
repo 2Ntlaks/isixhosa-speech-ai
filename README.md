@@ -141,6 +141,13 @@ $env:CT2_USE_MKL="0"; .venv\Scripts\python src\live.py
 
 Open http://127.0.0.1:7860, press record and speak. It only listens on your own computer.
 
+The live server warms only the default model; the first comparison loads its second model on demand.
+It processes one 30-second chunk at a time to bound feature and model working memory, and reuses compatible
+features when comparing models. It still decodes the complete uploaded recording into RAM.
+`--chunk-batch-size 2` trades more RAM for larger inference batches. `--threads 4` sets CPU parallelism explicitly;
+the default remains PyTorch's thread count. Beam 5, the language tag and token limits stay unchanged.
+Measurements and limitations: [R-0025](runs/R-0025/run.md).
+
 **Cloud runs.** These need the AWS CLI logged in, an S3 bucket and an EC2 instance role.
 
 ```bash

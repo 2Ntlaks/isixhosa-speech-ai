@@ -1,0 +1,56 @@
+{
+  "threads": 2,
+  "beam_size": 5,
+  "max_length": 225,
+  "seed": 22,
+  "scores": {
+    "wer": 38.88888888888889,
+    "cer": 6.8493150684931505,
+    "n": 6
+  },
+  "clips": [
+    {
+      "id": "nchlt_xho_505m_0007",
+      "audio_seconds": 4.68,
+      "feature_seconds": 0.014440700004342943,
+      "generate_seconds": 14.125457199988887,
+      "output_sha256": "33eda88e1733528f5c44a1e94b45909363f7dafdf65cf64762fbebd40a760173"
+    },
+    {
+      "id": "nchlt_xho_505m_0128",
+      "audio_seconds": 4.92,
+      "feature_seconds": 0.011262600019108504,
+      "generate_seconds": 13.526615900016623,
+      "output_sha256": "13250b3e5ffc788a00e7fc40cef76ce574ad28d989a28594ebb95a1385b26ee8"
+    },
+    {
+      "id": "nchlt_xho_505m_0171",
+      "audio_seconds": 2.4,
+      "feature_seconds": 0.006540300004417077,
+      "generate_seconds": 12.839250399993034,
+      "output_sha256": "07e09b7f6fb8461d8dcf80d19274a351c6e19474c868a47e54d85f8b8fb44ffa"
+    },
+    {
+      "id": "nchlt_xho_505m_0254",
+      "audio_seconds": 3.24,
+      "feature_seconds": 0.008989399997517467,
+      "generate_seconds": 11.895370100013679,
+      "output_sha256": "740ef9d4524a0e2c70b2d7e18b8faa3d7a460325ad148a2ea3265ebfc6eaf07d"
+    },
+    {
+      "id": "nchlt_xho_505m_0455",
+      "audio_seconds": 3.48,
+      "feature_seconds": 0.01440699998056516,
+      "generate_seconds": 11.453489999985322,
+      "output_sha256": "180a83c0945c44590135ff8278956ee17806c6c848ab9f3cd04f37b8644dec39"
+    },
+    {
+      "id": "nchlt_xho_506f_0176",
+      "audio_seconds": 4.672,
+      "feature_seconds": 0.009386599995195866,
+      "generate_seconds": 13.256350799987558,
+      "output_sha256": "7d7a9823341fe3ce191cd03c6479667978f665384a40a98ad6039d6b10c5fad5"
+    }
+  ],
+  "mean_generate_seconds": 12.849422399997517
+}
