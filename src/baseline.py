@@ -1,4 +1,5 @@
-"""Score a Whisper model (stock or fine-tuned) on a test set: NCHLT (--xml) or FLEURS (--fleurs-tsv + --fleurs-audio).
+"""Score a Whisper model (stock or fine-tuned) on a test set: NCHLT (--xml), FLEURS (--fleurs-tsv + --fleurs-audio)
+or Swivuriso (--swivuriso-tsv + --swivuriso-audio, prepared by src/swivuriso.py).
 
   python src/baseline.py --xml data/nchlt_xho/transcriptions/nchlt_xho.tst.xml --root data --out out \
       --model openai/whisper-small --language auto
@@ -21,6 +22,7 @@ import time
 sys.path.insert(0, os.path.dirname(__file__))
 import fleurs  # noqa: E402
 import nchlt  # noqa: E402
+import swivuriso  # noqa: E402
 from scoring import NORMALISATION, normalise, score  # noqa: E402
 
 
@@ -66,6 +68,8 @@ def main():
     ap.add_argument("--xml", help="NCHLT test transcription XML")
     ap.add_argument("--fleurs-tsv", help="FLEURS split .tsv (instead of --xml)")
     ap.add_argument("--fleurs-audio", help="folder holding that FLEURS split's .wav files")
+    ap.add_argument("--swivuriso-tsv", help="Swivuriso split .tsv from src/swivuriso.py (instead of --xml)")
+    ap.add_argument("--swivuriso-audio", help="folder that TSV's file paths are relative to")
     ap.add_argument("--root", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--model", default="openai/whisper-small")
@@ -83,9 +87,14 @@ def main():
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
-    if bool(a.xml) == bool(a.fleurs_tsv):
-        sys.exit("give exactly one of --xml or --fleurs-tsv")
-    clips = nchlt.load_split(a.xml, a.root) if a.xml else fleurs.load_split(a.fleurs_tsv, a.fleurs_audio or "")
+    if sum(map(bool, (a.xml, a.fleurs_tsv, a.swivuriso_tsv))) != 1:
+        sys.exit("give exactly one of --xml, --fleurs-tsv or --swivuriso-tsv")
+    if a.xml:
+        clips = nchlt.load_split(a.xml, a.root)
+    elif a.fleurs_tsv:
+        clips = fleurs.load_split(a.fleurs_tsv, a.fleurs_audio or "")
+    else:
+        clips = swivuriso.load_split(a.swivuriso_tsv, a.swivuriso_audio or "")
     too_long = [c for c in clips if c["duration"] > a.max_seconds]
     clips = [c for c in clips if c["duration"] <= a.max_seconds]
     if too_long:
@@ -138,7 +147,7 @@ def main():
         import transformers
         env["transformers"] = transformers.__version__
     metrics = {
-        "model": a.model, "language": a.language, "test_set": os.path.basename(a.xml or a.fleurs_tsv),
+        "model": a.model, "language": a.language, "test_set": os.path.basename(a.xml or a.fleurs_tsv or a.swivuriso_tsv),
         "clips": len(clips), "left_out_over_max_seconds": len(too_long), "max_new_tokens": a.max_new_tokens, "audio_hours": round(sum(c["duration"] for c in clips) / 3600, 3),
         "wer": round(total["wer"], 2), "cer": round(total["cer"], 2),
         "exact_match_pct": round(100 * sum(c["exact"] for c in clips) / len(clips), 2),
@@ -146,6 +155,7 @@ def main():
         "detected_languages": dict(collections.Counter(c["lang"] for c in clips).most_common()),
         "per_speaker": group("speaker"), "per_gender": group("gender"),
         **({"by_text_in_training": group("text_in_training")} if (a.train_xml or a.train_fleurs_tsv) else {}),
+        **({"per_type": group("type")} if a.swivuriso_tsv else {}),  # scripted (read) vs unscripted (own words)
         "normalisation": NORMALISATION, "seconds": round(secs, 1), "batch_size": a.batch_size,
         "env": {**env, "python": platform.python_version()},
     }
@@ -168,7 +178,7 @@ def main():
         f.write("| clip | speaker | Whisper's language | reference | Whisper's output | WER % | CER % |\n")
         f.write("|---|---|---|---|---|---|---|\n")
         for c in picks:
-            f.write(f"| {c['id']} | {c['speaker']} {c['gender'][0]} | {c['lang']} | {c['text']} | "
+            f.write(f"| {c['id']} | {c['speaker']} {(c['gender'] or '-')[0]} | {c['lang']} | {c['text']} | "
                     f"{c['hyp'].replace('|', '/')} | {c['wer']} | {c['cer']} |\n")
     print(json.dumps({k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "detected_languages", "seconds")}))
 

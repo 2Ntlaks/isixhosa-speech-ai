@@ -7,3 +7,4 @@ jiwer==3.0.5
 soundfile==0.12.1
 numpy==1.26.4
 scipy==1.14.1
+pyarrow==17.0.0
