@@ -1,0 +1,26 @@
+{
+ "mode": "context",
+ "clips": 32,
+ "mean_audio_seconds": 4.23,
+ "ctranslate2": "4.5.0",
+ "mkl": "0",
+ "settings": {
+  "full 30 s": {
+   "wer": 21.74,
+   "cer": 3.59,
+   "mean_seconds": 3.997
+  },
+  "audio + 2.0 s": {
+   "wer": 88.04,
+   "cer": 67.04,
+   "mean_seconds": 1.248,
+   "same_as_full": 14
+  },
+  "audio + 1.0 s": {
+   "wer": 170.65,
+   "cer": 147.09,
+   "mean_seconds": 1.493,
+   "same_as_full": 6
+  }
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "mode": "threads",
+ "clips": 32,
+ "mean_audio_seconds": 4.23,
+ "ctranslate2": "4.5.0",
+ "mkl": "0",
+ "encoder_mean_seconds": {
+  "4": 3.118,
+  "6": 3.052,
+  "8": 3.093,
+  "12": 3.45,
+  "16": 3.415
+ }
+}

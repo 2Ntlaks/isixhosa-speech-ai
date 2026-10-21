@@ -1,0 +1,14 @@
+{
+ "mode": "split",
+ "clips": 32,
+ "mean_audio_seconds": 4.23,
+ "ctranslate2": "4.5.0",
+ "mkl": "0",
+ "mean_seconds": {
+  "features": 0.006,
+  "encoder": 2.887,
+  "decode_beam5": 1.008,
+  "decode_greedy": 0.894,
+  "generate_beam5_total": 3.861
+ }
+}
