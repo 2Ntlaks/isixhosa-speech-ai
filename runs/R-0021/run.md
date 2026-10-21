@@ -9,3 +9,11 @@
 - **Machine:** founder's laptop, $0.
 - **Pass mark:** CER at least 0.2 points below R-0020's 5.01 with seconds per clip no more than 1.5x greedy (7.16 s).
   If it passes, test FLEURS-style long sentences next before switching the live page.
+
+## Outcome · 2026-10-21 · PASSED, small gain (laptop, $0)
+- Same 200 clips: **beam 5 CER 4.73 %, WER 27.65 %** vs greedy (R-0020) 5.01 / 28.16. Pass mark (-0.2 CER) met: -0.28.
+- Clip by clip: 14 better, 9 worse, 177 the same, so a small, not decisive gain on 200 clips (a sign test
+  would not call 14 vs 9 significant). Example fixed: "iya kubelek ilanga" (greedy "iya kubelekilela").
+- Speed: 6.84 s per clip vs 7.16 for greedy, so no measurable slowdown (the encoder dominates; the greedy run also
+  shared the laptop with other work).
+- Decision proposal: use beam 5 on the live page (no cost, small gain); confirm on longer FLEURS-style sentences later.
