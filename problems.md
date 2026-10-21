@@ -195,3 +195,17 @@ Format:
   transformers.js and its wasm from the Space itself, plus COOP/COEP headers in the Space config, made it ~7 s.
 - Cost: $0; ~1.5 hours.
 - Lesson: test the exact files in the target runtime (a real browser), not only in Python; export versions matter.
+
+## P-0016 · 2026-10-21 · NCHLT auxiliary download stalled at 8.0 GB; base datasets had to be re-fetched
+- What: job fetch-aux-1 (t3.small) downloaded xho-aux1.zip (9.39 GB) from SADiLaR at ~1 GB/min, then the log showed
+  "xho-aux1.zip: 8.0G so far" every minute from 06:22 to 06:28 UTC with no growth. curl had retries but no stall
+  timeout, so it would have waited until the 3 h shutdown cap.
+- Cause: the transfer hung without failing (server or network side; not investigated further). `curl --retry` only
+  retries after an error, never on a silent stall.
+- Fix: get() in cloud/node/fetch_bootstrap.sh now passes --speed-limit 10000 --speed-time 120 and loops up to 6 times
+  with -C - (resume), so a stall aborts after 2 min and continues where it stopped. Stopped the stuck node by hand and
+  relaunched as fetch-aux-2.
+- Also found: NCHLT, FLEURS and Soapies had been deleted from S3 on 2026-10-19 (project stopped, D-0018), so training
+  needed them re-fetched (job fetch-base-2, ~15 min, checksums verified as before).
+- Cost: ~$0.01 of node time; ~10 minutes.
+- Lesson: any long download needs a stall timeout, not just retries; check S3 for the inputs before planning a run.
