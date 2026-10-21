@@ -209,3 +209,14 @@ Format:
   needed them re-fetched (job fetch-base-2, ~15 min, checksums verified as before).
 - Cost: ~$0.01 of node time; ~10 minutes.
 - Lesson: any long download needs a stall timeout, not just retries; check S3 for the inputs before planning a run.
+
+## P-0017 · 2026-10-21 · NCHLT auxiliary zip will not unpack
+- What: fetch-aux-2 downloaded xho-aux1.zip in full (MD5 matches SADiLaR's published 09fa14f3...), then unzip failed:
+  "warning [xho-aux1.zip]: 5088485238 extra bytes at beginning or within zipfile ... error [xho-aux1.zip]: start of
+  central directory not found; zipfile corrupt."
+- Cause (likely, not yet confirmed): the 9.4 GB archive was written without proper ZIP64 records, so its directory
+  offsets wrap past 4 GB; the file is as published, the archive format is the problem.
+- Fix: not done yet. Next attempt: read it with a tool that walks the local headers instead of the central directory
+  (bsdtar/libarchive or 7-Zip), on a cloud node.
+- Cost: ~$0.01; not blocking (R-0019 did not use it).
+- Lesson: a matching checksum proves the download, not that the archive is readable; test-unpack early.

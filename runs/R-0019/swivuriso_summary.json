@@ -1,0 +1,51 @@
+{
+  "source": "s3://mgaguli-studio-render-188250416608/datasets/swivuriso_xho/xho/",
+  "min_seconds": 1.0,
+  "max_seconds": 30.0,
+  "rule": "keep 1-30 s, drop transcripts containing [?], text = scoring.normalise(transcript)",
+  "train": {
+    "clips": 62786,
+    "too_long": 19005,
+    "too_short": 0,
+    "unclear": 5244,
+    "empty": 1,
+    "unreadable": 0,
+    "kept": 38536,
+    "kept_hours": 160.96,
+    "kept_hours_by_type": {
+      "scripted": 93.39,
+      "unscripted": 67.57
+    },
+    "speakers": 407
+  },
+  "dev": {
+    "clips": 3768,
+    "too_long": 1124,
+    "too_short": 0,
+    "unclear": 354,
+    "empty": 0,
+    "unreadable": 0,
+    "kept": 2290,
+    "kept_hours": 8.2,
+    "kept_hours_by_type": {
+      "scripted": 5.88,
+      "unscripted": 2.32
+    },
+    "speakers": 24
+  },
+  "dev_test": {
+    "clips": 3639,
+    "too_long": 1169,
+    "too_short": 0,
+    "unclear": 325,
+    "empty": 0,
+    "unreadable": 0,
+    "kept": 2145,
+    "kept_hours": 9.4,
+    "kept_hours_by_type": {
+      "scripted": 5.56,
+      "unscripted": 3.84
+    },
+    "speakers": 24
+  }
+}
