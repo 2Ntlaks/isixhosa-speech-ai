@@ -327,3 +327,11 @@ Format:
   building an audio-linked correction interface. Other suggestions are hypotheses, with risks and proposed measures.
 - Cost: $0 cloud. No model loaded, inference/training launched, code edited, or AWS operation performed.
 - Next: founder chooses whether to authorize the proposed experiment. No training decision made.
+
+### 2026-10-21 (evening): Claude + Codex combined plan
+
+- Codex wrote `docs/codex-ideas-2026-10-21.md` independently, then compared it with Claude's. Combined plan: `docs/combined-plan-2026-10-21.md`, drawing `docs/thetha-plan.png`.
+- Fixed from Codex's review: `live.py --public` no longer logs transcripts. Beam 5 is now the live default (R-0021).
+- Output-cap check: no Swivuriso test clip comes near the 225-token live limit (longest 172 tokens).
+- Next (free, laptop): five-candidate audit, then a "my words" harm check with wrong lists, then fast-speech diagnosis. Paid step 4 (~$3-8) needs the founder's OK. Waiting on the founder: ~20 recorded sentences with what he said typed in.
+- $0 spent this evening.
