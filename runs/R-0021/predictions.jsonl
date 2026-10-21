@@ -1,0 +1,200 @@
+{"id": "nchlt_xho_500m_0267", "text": "rr i ngegazi", "hyp": "ingegazi", "gpu_hyp": "ingegazi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_502f_0706", "text": "imhongi se yibile", "hyp": "ihongi se yibile", "gpu_hyp": "ihongi se yibile", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_502f_0720", "text": "wobukrestu nokaziphatha komtshati", "hyp": "wobukrestu nokwaziphatha komtsade", "gpu_hyp": "wobukrestu nokwaziphatha komtshati", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0003", "text": "nizimisele njengoko nothixo", "hyp": "nizimisele njengoko nothiko", "gpu_hyp": "nizimisele njengoko nothiko", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0005", "text": "kohlo emgibeni womhadi", "hyp": "kuhlo emgibeni womhadi", "gpu_hyp": "kuhlo emgibeni womhadi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0006", "text": "yinto eqiniseke njengeentaba", "hyp": "yinto eqiniseke njengentaba", "gpu_hyp": "yinto eqiniseke njengentaba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0007", "text": "ngengalo ngunomvuyo ebuza", "hyp": "njengalo ngunomvuyo ebuza", "gpu_hyp": "njengalo ngunomvuyo ebuza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0010", "text": "kant imidushane wenna", "hyp": "kanti yimidushane wena", "gpu_hyp": "kanti yimidushane wena", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0012", "text": "njengokuba eyibukele nje", "hyp": "njengokuba eyibukene nje", "gpu_hyp": "njengokuba eyibukene nje", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0013", "text": "nto awunakuhexiswa naye", "hyp": "nto awunakuhyexiswa naye", "gpu_hyp": "nto awunakuhexiswa naye", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0014", "text": "wabaleka waya emacunwini", "hyp": "wabaneka waya emachonwini", "gpu_hyp": "wabaneka waya emachonwini", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0017", "text": "amanzi aya qina", "hyp": "amanzi aya qina", "gpu_hyp": "amanzi aya qina", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0018", "text": "nabeendawo", "hyp": "nabendawo", "gpu_hyp": "nabendawo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0028", "text": "umntu ohlala okanye", "hyp": "umntu ohlala okanye", "gpu_hyp": "umntu ohlala okanye", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0042", "text": "nethamsanqa [s] noxolo nenkululeko", "hyp": "nethamsanqa nocolo nenkululeko", "gpu_hyp": "nethamsanqa nocolu nenkululeko", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0046", "text": "usindiso iwethu lusisipho", "hyp": "usindiso iwethu lusisipho", "gpu_hyp": "usindiso iwethu lusisipho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0051", "text": "ingca ejikeleze elo", "hyp": "ingca ejikeleze elo", "gpu_hyp": "ingca ejikeleze elo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0053", "text": "nokunga thembeki kwayo", "hyp": "nokungathembeki kwayo", "gpu_hyp": "nokunga thembeki kwayo", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0061", "text": "ehleli noninalume umgqaliso", "hyp": "ehleli noninalume umqaliso", "gpu_hyp": "ehleli noninalume umqaliso", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0063", "text": "iintlanganiso zabalimi zithetha", "hyp": "iintlanganiso zabalimi zithetha", "gpu_hyp": "iintlanganiso zabalimi zithetha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0066", "text": "ngumfazi ivunywe ukuba", "hyp": "ngumfazi ovunywe ukuba", "gpu_hyp": "ngumfazi ovunywe ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0068", "text": "ukuthi umvuzo ohlawulwa", "hyp": "ukuthi umvuzo uhlawulwa", "gpu_hyp": "ukuthi umvuzo uhlawulwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0074", "text": "besi thi uyadelela", "hyp": "basethi uyadelela", "gpu_hyp": "basethi uya de lena", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0076", "text": "isincoko ndisifanisa nezi", "hyp": "izincocco ndizifanisa nezi", "gpu_hyp": "izincocco ndizifanisa nezi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0080", "text": "lizwe layithabatha imingeni", "hyp": "lizwe layithabatha iminqweni", "gpu_hyp": "lizwe layithabatha iminqweni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0081", "text": "nomthathi yona mithi", "hyp": "nomthathi yona mithi", "gpu_hyp": "nomthathi yona mithi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0085", "text": "iphindiwe intetho yabuzwa", "hyp": "iphindiwe intetho yabuzwa", "gpu_hyp": "iphindiwe intetho yabuzwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0086", "text": "kunyusa abantu bakuthi", "hyp": "kunyusa abantu bakuthi", "gpu_hyp": "kunyusa abantu bakuthi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0095", "text": "ubungqina baba bafundi", "hyp": "ubungqina baba bafundi", "gpu_hyp": "ubungqina baba bafundi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0098", "text": "incwadi yokugqibela ambhalele", "hyp": "incwadi yokugqibela imbalele", "gpu_hyp": "incwadi yokugqibela imbalele", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0117", "text": "ngenxa yobuhlanga babafundi", "hyp": "ngenxa yobuhlanga babafundi", "gpu_hyp": "ngenxa yobuhlanga babafundi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0120", "text": "ithole ledolophu limthe", "hyp": "ithole ledolophu limthe", "gpu_hyp": "ithole ledolophu limthe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0121", "text": "yaba ngundaba mlonyeni", "hyp": "yaba ngudaba mlonyeni", "gpu_hyp": "yaba ngudaba mlonyeni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0122", "text": "na womfumana lowo", "hyp": "nawo mfumana lowo", "gpu_hyp": "nawo mfumana lowo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0125", "text": "engene ehlathini kunye", "hyp": "engene ehlathini kunye", "gpu_hyp": "engene ehlathini kunye", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0128", "text": "kungavumela ibhunga noluntu", "hyp": "kungavumela ibhunga noluntu", "gpu_hyp": "kungavumela ibhunga noluntu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0131", "text": "ingonyama elimgqumo mkhulu", "hyp": "ingonyama elimqumrhu mkhulu", "gpu_hyp": "ingonyama elimqhubi mkhulu", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0132", "text": "boomthina ukuba singanced", "hyp": "bomthina ukuba singamncedi", "gpu_hyp": "bomthina ukuba singamncedi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0134", "text": "iya kubelek ilanga", "hyp": "iya kubelek ilanga", "gpu_hyp": "iya kubelekilela", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0142", "text": "ntusa", "hyp": "mthusa", "gpu_hyp": "mthusa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0147", "text": "wena ukusukela ngoku", "hyp": "wena ukusukela ngoku", "gpu_hyp": "wena ukusukela ngoku", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0153", "text": "hlala ngapha kathi", "hyp": "hlala ngapha kathi", "gpu_hyp": "hlala ngapha kathi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0157", "text": "lithabatheni", "hyp": "nethabatheleni", "gpu_hyp": "nethabatheleni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0161", "text": "sifune ukwazi usipha", "hyp": "sifuna ukwazi isipha", "gpu_hyp": "sifuna ukwazi isipha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0163", "text": "wayezigqibile izifundo zakhe", "hyp": "wayezigqibile izifundo zakhe", "gpu_hyp": "wayezigqibile izifundo zakhe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0167", "text": "yoluntu", "hyp": "yoluntu", "gpu_hyp": "yoluntu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0169", "text": "zafa ndilinde ntoni", "hyp": "zafa ndilinde ntoni", "gpu_hyp": "zafa ndilinde ntoni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0171", "text": "ukum phumza ngo", "hyp": "uku mphuza ngu", "gpu_hyp": "ukumphuza ngo", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0172", "text": "zivuyiswe ngawe iinto", "hyp": "zivuyiswe ngawe iinto", "gpu_hyp": "zivuyiswe ngawe iinto", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0182", "text": "zathi ze niqonde", "hyp": "zathi ze niqonde", "gpu_hyp": "zathi ze niqonde", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0186", "text": "naye wabona ukuba", "hyp": "naye wabona ukuba", "gpu_hyp": "naye wabona ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0189", "text": "okanye aphelelwe ngumsebenzi", "hyp": "okanye aphelelwe ngumsebenzi", "gpu_hyp": "okanye aphelelwe ngumsebenzi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0196", "text": "ayi endaweni ka", "hyp": "hayi endaweni ka", "gpu_hyp": "hayi endaweni ka", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0197", "text": "unexesha lokuhlupha into", "hyp": "unexesha lokukhupha into", "gpu_hyp": "unexesha lokukhupha into", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0206", "text": "zitsho ngeengoma ezimnandi", "hyp": "zitsho ngeenkoma ezimnandi", "gpu_hyp": "zitsho ngeenkoma ezimnandi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0212", "text": "likarhulumente liphazemisana nokusebenza", "hyp": "likarhulumente liphazamisana nokusebenza", "gpu_hyp": "likarhulumente liphazamisana nokusebenza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0218", "text": "intlanganiso leyo yabekelwa", "hyp": "intlanganiso leyo yabekelwa", "gpu_hyp": "intlanganiso leyo yabekelwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0224", "text": "yam njengomzali malunga", "hyp": "yam njengomzali malunga", "gpu_hyp": "yam njengomzali malunga", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0229", "text": "lomdala lokugqalisela ukushumayela", "hyp": "lomdala lokuqandisela ukushumayela", "gpu_hyp": "lomdala lokuqandisela ukushumayela", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0232", "text": "esikolweni axele ulwimi", "hyp": "esikolweni acela ulwimi", "gpu_hyp": "esikolweni acela ulwimi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0239", "text": "intethe le ifela", "hyp": "intethe le ifela", "gpu_hyp": "intethe le ifela", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0253", "text": "apho uthanda ufik", "hyp": "apho uthanda ufike", "gpu_hyp": "apho uthanda ufike", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0254", "text": "koko ngenxa yokudinga", "hyp": "kokunke nxa yokudinga", "gpu_hyp": "kokunke nxa yokudinga", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0265", "text": "kungekho nto kho", "hyp": "kungekho nto kho", "gpu_hyp": "kungekho nto kho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0267", "text": "saseindiya", "hyp": "saseindiya", "gpu_hyp": "saseindiya", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0272", "text": "bagalelekile abantu ukuza", "hyp": "banganelekile abantu ukuza", "gpu_hyp": "banganelekile abantu ukuza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0275", "text": "kwaza ngelijwa kwathi", "hyp": "kwaza ngelitywa kwathi", "gpu_hyp": "kwaza ngelitywa kwathi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0281", "text": "ndisaza kumzisela ukumkani", "hyp": "ndisaza kumzisela ukumkani", "gpu_hyp": "ndisaza ukumzisela ukumkani", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0282", "text": "zezi umsebenzi walo", "hyp": "zezi umsebenzi walo", "gpu_hyp": "zezi umsebenzi walo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0285", "text": "bokwakhana kuye kwathethwa", "hyp": "bokwakhana kuyi kwathethwa", "gpu_hyp": "bokwakha nakuye kwathethwa", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0287", "text": "ithethwayo kwantsusa apha", "hyp": "ithethwayo kwasuka apha", "gpu_hyp": "ithethwayo kwasuka apha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0290", "text": "sazo ke saziphakamisa", "hyp": "sazo ke sizaphakamisa", "gpu_hyp": "sazo ke sizaphakamisa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0292", "text": "amxelele umphuthumi ukuba", "hyp": "amxelele umphuthumi ukuba", "gpu_hyp": "amxelele umphuthumi ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0293", "text": "yayibambe ithole yalitya", "hyp": "yayibambi ithole yalitsha", "gpu_hyp": "yayibambi ithole yalitsha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0298", "text": "ubizelwe kuye ngomaziyo", "hyp": "ubizelwa kuye ngomaziyo", "gpu_hyp": "ubizelwa kuye ngomaziyo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0304", "text": "andiku veli ntweni", "hyp": "andikuveli ntweni", "gpu_hyp": "andikuveli ntweni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0312", "text": "amanye amanyathelo ukwenza", "hyp": "amanye amanyathelo ukuwenza", "gpu_hyp": "amanye amanyathelo ukuwenza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0313", "text": "ngokukwaba ku dala", "hyp": "ngoku kwaba kudala", "gpu_hyp": "ngoku kwaba kudala", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0319", "text": "loo nkungu yabonakala", "hyp": "loo kungu yabonakala", "gpu_hyp": "loo kungu yabonakala", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0323", "text": "nolawulo lwesininzi kwimimandla", "hyp": "nalawulwesininzi kwimimandla", "gpu_hyp": "nalawo lwesininzi kwimimandla", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0325", "text": "omkhulu untakana waziwa", "hyp": "omkhulu ntakana waziwa", "gpu_hyp": "omkhulu ntakana waziwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0331", "text": "ufanele ukumkhathalela bonke", "hyp": "ufanele ukumkhathalela bonke", "gpu_hyp": "ufanele ukumkhathalela bonke", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0334", "text": "nweni benza ntoni", "hyp": "lweni benza ntoni", "gpu_hyp": "lweni benza ntoni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0338", "text": "kuthe kwa bulawa", "hyp": "kuthe kwabulawa", "gpu_hyp": "kuthe kwabulawa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0341", "text": "olu daba iwalubika", "hyp": "olu daba iwalubika", "gpu_hyp": "olu daba iwalubika", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0348", "text": "ngameva nokuba kungezilanda", "hyp": "ngemiva nokuba kungezilanda", "gpu_hyp": "ngemiva nokuba kungezilanda", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0351", "text": "bazalelwa kwezo meko", "hyp": "bazalelwa kwezo meko", "gpu_hyp": "bazalelwa kwezo meko", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0352", "text": "afundisela kuyo uthembeka", "hyp": "afundisela kuyo uthembeka", "gpu_hyp": "afundisela kuyo uthembeka", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0360", "text": "waqonda ke ukuba", "hyp": "waqonda ke ukuba", "gpu_hyp": "waqonda ke ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0362", "text": "abe isonka sahanjiswa", "hyp": "abe isonka sahanjiswa", "gpu_hyp": "abe isonka sahanjiswa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0374", "text": "thenji", "hyp": "thenji", "gpu_hyp": "thenji", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0378", "text": "lwe ngalo untsusa", "hyp": "lwe ngalo untsusa", "gpu_hyp": "lwe ngalo untsusa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0382", "text": "kucenga iilofu neebotolo", "hyp": "kucenga ilofu nebhotolo", "gpu_hyp": "kucenga ilofu nebhotolo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0383", "text": "singabuyi nanto sesifile", "hyp": "singabuyi nanto sesifili", "gpu_hyp": "singabuyi nanto sesifili", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0385", "text": "nto yenza ukuba", "hyp": "nto yenza ukuba", "gpu_hyp": "nto yenza ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0386", "text": "lo msebenzi ke", "hyp": "lo msebenzi ke", "gpu_hyp": "lo msebenzi ke", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0387", "text": "sichith iimali ezingqindilili", "hyp": "sitshithi imali ezingqindilili", "gpu_hyp": "sitshithimali eziqindilili", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0392", "text": "bukweni apho zada", "hyp": "bakweni apho zada", "gpu_hyp": "bakweni apho zada", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0395", "text": "ma kalinde ade", "hyp": "ma kalinde ade", "gpu_hyp": "ma kalinde ade", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0396", "text": "kodwa emva kokuzalwa", "hyp": "kodwa emva kukuzalwa", "gpu_hyp": "kodwa emva kukuzalwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0398", "text": "liba le ndoda", "hyp": "liba le ndoda", "gpu_hyp": "liba le ndoda", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0399", "text": "sanika imizekelo yezo", "hyp": "sanika imizekelo yezo", "gpu_hyp": "sanika imizekelo yezo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0404", "text": "bathethela phantsi ke", "hyp": "bethethelelwa phantsi ke", "gpu_hyp": "bethethelelwa phantsi ke", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0406", "text": "fanele ukuba akukho", "hyp": "fanele ukuba akukho", "gpu_hyp": "fanele ukuba akukho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0410", "text": "ekubuyeni kwakhe esiza", "hyp": "ekubuyeni kwakhe esiza", "gpu_hyp": "ekubuyeni kwakhe esiza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0411", "text": "zococeko ziya kwenza", "hyp": "zococeko ziya kwenza", "gpu_hyp": "zococeko ziya kwenza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0413", "text": "isandi seenyosi neseentaka", "hyp": "isandi senyosi nesentaka", "gpu_hyp": "isandi senyus nesentaka", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0417", "text": "bona ekhaya kuba", "hyp": "bona ekhaya ukuba", "gpu_hyp": "bona ekhaya ukuba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0422", "text": "akaba namlomo nomzi", "hyp": "akaba namlomo nomzi", "gpu_hyp": "akaba namlomo nomzi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0431", "text": "ntetho ke uyenze", "hyp": "ntetho ke uyenze", "gpu_hyp": "ntetho ke uyenze", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0432", "text": "nguye yonke into", "hyp": "nguye yonke into", "gpu_hyp": "nguye yonke into", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0438", "text": "eyaziwayo ukuba amaziko", "hyp": "uyasizwayo ukuba amaziko", "gpu_hyp": "uyasizwayo ukuba amaziko", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0445", "text": "apho ulwazi iwakho", "hyp": "apho ulwazi liwakho", "gpu_hyp": "apho ulwazi liwakho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0453", "text": "akukho namnye unokusindiswa", "hyp": "akukho namnye onokusindiswa", "gpu_hyp": "akukho namnye onokusindiswa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0455", "text": "emasimini abe mdaka", "hyp": "emasimini abe mdaka", "gpu_hyp": "emasimini abe mdaka", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0457", "text": "yinyambalala abantu bomngewabo", "hyp": "yinyambalala abantu bomngewabo", "gpu_hyp": "yinyambalala abantu bomngewabo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0458", "text": "selengcambaza endleleni apho", "hyp": "selincambaza endleleni apho", "gpu_hyp": "selincambaza endleleni apho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0464", "text": "kwanokuthi ithululwa kangaphi", "hyp": "kwanokuthi ithululwa kangaphi", "gpu_hyp": "kwanokuthi ithululwa kangaphi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0473", "text": "nomntu othethelela thina", "hyp": "nomntu othethelela thina", "gpu_hyp": "nomntu othethelela thina", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0485", "text": "yokwindla", "hyp": "yokwindla", "gpu_hyp": "yokwindla", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0486", "text": "kuzifumana azisebenzise wonwabe", "hyp": "kuzifumana azisebenzise wonwabi", "gpu_hyp": "kuzifumana azisebenzise wonwabi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0494", "text": "wayewaxelela ngobubi balo", "hyp": "wayebaxelela ngobubi balo", "gpu_hyp": "wayebaxelela ngobubi balo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0497", "text": "kumntu olivila umutu", "hyp": "kumntu olivila umntu", "gpu_hyp": "kumntu olivila umntu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0502", "text": "na nenenene kuye", "hyp": "nanene nene kuye", "gpu_hyp": "naneneene uye", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0503", "text": "somnyaka umzi ufelue", "hyp": "somnyaka umzi ofelu", "gpu_hyp": "somnyaka umzi ofelu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0507", "text": "yidla unkovu lowo", "hyp": "yidla unkuvu lowo", "gpu_hyp": "yidla unkuvu lowo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0517", "text": "kwaxhosa bekusa kuba", "hyp": "kwaxhosa bekusa kuba", "gpu_hyp": "kwaxhosa bekusa ukuba", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_505m_0526", "text": "kwiiprojekthi ezilawulwa ngokufanelekileyo", "hyp": "weziprojekthi ezilawulwa ngokufanelekileyo", "gpu_hyp": "weziprojekthi ezilawulwa ngokufanelekileyo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0001", "text": "onyule amalunga alishumi", "hyp": "onyule amalungu alishumi", "gpu_hyp": "onyule amalungu alishumi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0005", "text": "ngcaciso ilandelayo iyakwanela", "hyp": "ngaciso ilandelayo iyakwanela", "gpu_hyp": "ngcaciso ilandelayo iyakwanela", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0022", "text": "basentshona asia [s] akunye", "hyp": "basentshona eziya akunye", "gpu_hyp": "basentshona eziya akunye", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0028", "text": "yokutshintsha kwemo yezulu", "hyp": "yokushintsha kwemo yezulu", "gpu_hyp": "yokushintsha kwemo yezulu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0033", "text": "watsala idrawer wakhupha", "hyp": "watsala idrowa wakhupha", "gpu_hyp": "watsala idrowa wakhupha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0041", "text": "yokuqaba iinzipho ayivumelekanga", "hyp": "yokuqaba iinzipho ayivumelekanga", "gpu_hyp": "yokuqaba iinzipho ayivumelekanga", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0051", "text": "amgxhothileyo ngokweemfuno zomqeshi", "hyp": "amgxothileyo ngokweemfuno zomqeshi", "gpu_hyp": "amgxothileyo ngokweemfuno zomqeshi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0053", "text": "ngendaba yobulwelwe bukazenzile", "hyp": "ngendaba yobulwele bukazenzile", "gpu_hyp": "ngendaba yobulwele bukazenzile", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0055", "text": "wamaxhosa ndee zinzi", "hyp": "wamaxhosa nezinzi", "gpu_hyp": "wamaxhosa nezinzi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0060", "text": "zokuthenga eziphucukileyo njengasezidolophini", "hyp": "zokuthenga eziphucukileyo njengasezidolophini", "gpu_hyp": "zokuthenga eziphucukileyo njengasezidolophini", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0064", "text": "states census bureau", "hyp": "states census birria", "gpu_hyp": "states census birria", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0066", "text": "ndiyaniva ntonje ndiniva", "hyp": "ndiya niva nto ndlela ndiniva", "gpu_hyp": "ndiyaniva nto ndlelandiniva", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0077", "text": "ngokufundisa ukwazisa nokucebisa", "hyp": "wokufundisa ukwazisa nokucebisa", "gpu_hyp": "wokufundisa ukwazisa nokucebisa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0087", "text": "elineyaniso elithembekileyo elikhutheleyo", "hyp": "elineyaniso elithembekileyo elikhutheleyo", "gpu_hyp": "elineyaniso elithembekileyo elikhutheleyo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0088", "text": "inkcukumiso kutsho kuqhawuke", "hyp": "inkcukumiso kutsho kuqhawuke", "gpu_hyp": "inkcukumiso kutsho kuqhawuke", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0104", "text": "zeengozizaye zivelelwe zihlolwe", "hyp": "zeengozi zaye zivelelwe zihlolwe", "gpu_hyp": "zeengozi zaye zivelelwe zihlolwe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0118", "text": "adibeneyo ngokucindezela okukhethekileyo", "hyp": "adibene ngokucindezela okukhethekileyo", "gpu_hyp": "adibene ngokucindezela okukhethekileyo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0128", "text": "zemihla ngemihla rhoqo", "hyp": "zemihla ngemihla rhoqo", "gpu_hyp": "zemihla ngemihla rhoqo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0130", "text": "nabanina olixhoba lobugebenga", "hyp": "nabanina olixhobo lobugebenga", "gpu_hyp": "nabanina olixhobo lobugebenga", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0140", "text": "yempikiswano bubulumko kumthengi", "hyp": "yempikiswano bubulumko kumthengi", "gpu_hyp": "yempikiswano bubulumko kumthengi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0148", "text": "bagcwalise ixhwebhu eliqulathe", "hyp": "bagcwalise ixwebhu eliqulathe", "gpu_hyp": "bagcwalise ixwebhu eliqulathe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0153", "text": "kwiithemometha isilinganiso soxinzelelo", "hyp": "kwithemometha isilinganiso soxinzelelo", "gpu_hyp": "kwitemometha isilinganiso soxinzelelo", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0158", "text": "yocwangcwiso lwegunya [s] kwezothutho", "hyp": "yocwangciso lwegunya lwezothutho", "gpu_hyp": "yocwangciso lwegunya lwezothutho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0163", "text": "abafuundi abantsundu abazidubi", "hyp": "abafundi abantsundu abazidubi", "gpu_hyp": "abafundi abantsundu abazidubi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0167", "text": "lamapolisa ndingabala litshone", "hyp": "lamapolisa ndingabalalitshoni", "gpu_hyp": "lamapolisa ndingabalalitshoni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0168", "text": "esinephunga elingayiwayo [s] wayesihombise", "hyp": "esiniphunga elingayiwayo wayesihombise", "gpu_hyp": "esinephunga elingayiwayo wayesihombise", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0171", "text": "zibize ngapantsi kwesixa", "hyp": "zibize ngaphantsi kwesixa", "gpu_hyp": "zibize ngaphantsi kwesixa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0172", "text": "angenamiyolelo umsindleko owodwa", "hyp": "angenamimiyolelo umsindleko owodwa", "gpu_hyp": "angenamiyolelo umsindleko ohodwa", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0176", "text": "anobuchwepheshe bokumelana neentshukumo", "hyp": "anobuchwepheshe bokumelana nentshukumo", "gpu_hyp": "anobuchwepheshe bokumelana nentshukumo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0198", "text": "nokuwubona nomahluko ekusebenzieni", "hyp": "nokuwubona nomahluko ekusebenziseni", "gpu_hyp": "nokuwubona nomahluko ekusebenziseni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0199", "text": "ukungabikho zingqondweni izihlandlo", "hyp": "ukungabikho zinqondweni izihlandlo", "gpu_hyp": "ukungabikho zinqondweni izihlandlo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0200", "text": "art ubethe zesize", "hyp": "athi ubuthe zisize", "gpu_hyp": "athi ubuthe zisize", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0201", "text": "[s] neeemp azikayifumani ingenelo", "hyp": "neempazi kayifumani ingenelo", "gpu_hyp": "neempazi kayifumani ingenelo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0206", "text": "aziphuhlisileyo ezinokumnceda ayigqibe", "hyp": "aziphuhlisileyo ezinokumnceda ayigqibe", "gpu_hyp": "aziphuhlisileyo ezinokumnceda ayigqibe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0210", "text": "akunakukwazi ukubatshintsha [s] bangazisebenzeli", "hyp": "akunakukwazi ukubashintshashintsha bangazisebenzile", "gpu_hyp": "akunakukwazi ukubashintshatshintsha bangazisebenzile", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0218", "text": "kumatye afunxa [s] nakhupha", "hyp": "kumatye afunxanwa nakhupha", "gpu_hyp": "kumatye afunxanwa nakhupha", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0229", "text": "ukuthintela [s] ukosulelwa yintsholongwane", "hyp": "ukuthintela ukukosulelwa yintsholongwane", "gpu_hyp": "ukuthintela ukukosulelwa yintsholongwane", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0233", "text": "othile aye kuvavanyelwa", "hyp": "othile aye kuvavanyelwa", "gpu_hyp": "othile aye kuvavanyelwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0236", "text": "zokuza neenguqu nezokuqinisekisa", "hyp": "zokuza neenguqu nezokuqinisekisa", "gpu_hyp": "zokuza neenguqu nezokuqinisekisa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0238", "text": "okuyo usebenzele ukuyoyisa", "hyp": "okuye usebenzele ukuyoyisa", "gpu_hyp": "okuye usebenzele ukuyoyisa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0248", "text": "ofumaneka kwimithetho ewiswe", "hyp": "ofumaneka kwimithetho emiswe", "gpu_hyp": "ofumaneka kwimithetho emiswe", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0250", "text": "simelwe kukulungiselela ngokwanelisayo", "hyp": "zimelwe kukulungiselelwa ngokwanelisayo", "gpu_hyp": "zimelwe kukulungiselelwa ngokwanelisayo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0269", "text": "elibhalisiweyo elisamisiweyo ebugqirheni", "hyp": "elibhalisiweyo elisamisiweyo ebugqirheni", "gpu_hyp": "elibhalisiweyo elisamisiweyo ebugqirheni", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0274", "text": "yohlalutyo luvakalelo lwaloo", "hyp": "yohlalutyo luvakalelo lwaloo", "gpu_hyp": "yohlalutyo luvakalelo lwaloo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0276", "text": "ngokombono wommi ingxam", "hyp": "ngokombono wommi ingxam", "gpu_hyp": "ngokombono wommi ingxam", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0296", "text": "ngezulu ndiqinisekile uyalazi", "hyp": "ngezulu ndiqinisekile uyalazi", "gpu_hyp": "ngezulu ndiqinisekile uyalazi", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0300", "text": "kuhlanganisa imammogram ukususwa", "hyp": "kuhlanganisa imammogram ukususwa", "gpu_hyp": "kuhlanganisa imammogram ukususwa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0310", "text": "akoyisakali neam ungumzekelo", "hyp": "akuyisakali neam ungumzekelo", "gpu_hyp": "akuyisakali neam ungumzekelo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0351", "text": "[s] ukungahlangani ngokobugcisa kwanokuzuza", "hyp": "ukungahlangani ngokobugcisa kwanokuza", "gpu_hyp": "ukungahlangani ngokobugcisa kwanokuza", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0353", "text": "yemiphunga eyosulelayo banokuyifumana", "hyp": "yemiphunga esulelayo banokuyifumana", "gpu_hyp": "yemiphunga esulelayo banokuyifumana", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0366", "text": "ngokweendlela zokuvelisa zemvelo", "hyp": "ngokweendlela zokuvelisa zemvelo", "gpu_hyp": "ngokweendlela zizokuvelisa zemvelo", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0367", "text": "kwamadoda abasoloko belulamele", "hyp": "kwamadoda abasoloko belulamele", "gpu_hyp": "kwamadoda abasoloko belulamele", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0368", "text": "current prime minister", "hyp": "karen prime minister", "gpu_hyp": "karen prime minister", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0377", "text": "yezifo zasemsebenzini kwinqanaba", "hyp": "yezifo zasemsebenzini kwinqanaba", "gpu_hyp": "yezifo zasemsebenzini kwinqanaba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0381", "text": "lonxibelelwano olumajelo ambaxa", "hyp": "lonxibelelwano olumajele ambaxa", "gpu_hyp": "lonxibelelwano olumajele ambaxa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0393", "text": "ungowokuba sisebenzisane sibumba", "hyp": "ungowokuba sisebenzisani sibumba", "gpu_hyp": "ungowokuba sisebenzisani sibumba", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0401", "text": "ngesihlobo sikamthobeli ncakasana", "hyp": "ngesihlobo sikamthobeli cakasana", "gpu_hyp": "ngesihlobo sikamthobeli ncakasana", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0456", "text": "ekuphuculeni ushishino lwezolimo", "hyp": "ekuphuculeni ushishino lwezolimo", "gpu_hyp": "ekuphuculeni ushishino lwezolimo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0460", "text": "nokubanokuphendula kwanolawulo olunentsingiselo", "hyp": "nokuba nokuphendula kwanolawulo kolunentsingiselo", "gpu_hyp": "nokuba nokuphendula kwanolawulo kolunentsingiselo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0511", "text": "emigaqweni ukulungisa imingxunya", "hyp": "emigaqweni ukulungisa imingxunya", "gpu_hyp": "emigaqweni ukulungisa imingxunya", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0581", "text": "igosa elilawulayo eliyintloko", "hyp": "igosa elilawulayo eliyintloko", "gpu_hyp": "igosa elilawulayo eliyintloko", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_506f_0618", "text": "wavala ifestile yagrungqa", "hyp": "wavala ifestile yarhoqa", "gpu_hyp": "wavala ifestile yarhoqa", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0064", "text": "science fiction themes", "hyp": "science fiction themes", "gpu_hyp": "science fiction themes", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0232", "text": "olufikelelekayo ngokwamaxabiso oluntsulungeko", "hyp": "olufikelelekayo ngokwamaxabiso oluntsulungeko", "gpu_hyp": "olufikelelekayo ngokwamaxabiso oluntsulungeko", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0342", "text": "zemiboongo yomthonyama singangqina", "hyp": "zemibongo yomthonyama singangqina", "gpu_hyp": "zemibongo yomthonyama singangqina", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0367", "text": "ibhodi yotywala yentshona", "hyp": "ibhodi yotywala yantshona", "gpu_hyp": "ibhodi yotywala yantshona", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0438", "text": "sesikhalazo sihlolwa ngokugcinwa", "hyp": "sesikhalazo sihlolwa ngokugcina", "gpu_hyp": "sesikhalazo sihlolwa ngokugcina", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0452", "text": "ezinjengezi sekela nqununu", "hyp": "ezinjenge zisekela nqununu", "gpu_hyp": "ezinjenge zisekela nqununu", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0469", "text": "lalaa labhorathri [s] inoqinisekiso", "hyp": "lalaa labhoratri inoqinisekiso", "gpu_hyp": "lalalapho ratri inoqinisekiso", "same_as_gpu": false, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0502", "text": "balungele ubunyaniso boqoqsho", "hyp": "balungele ubunyaniso boqoqosho", "gpu_hyp": "balungele ubunyaniso boqoqosho", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0505", "text": "usenokukhetha ulwirni [s] olutekezelayo", "hyp": "usenokukhetha ulwimi olutikezelayo", "gpu_hyp": "usenokukhetha ulwimi olutikezelayo", "same_as_gpu": true, "text_in_training": "unseen"}
+{"id": "nchlt_xho_507m_0510", "text": "unikezela ngegunya lokutshintshwa", "hyp": "unikezela ngegunya lokutshintshwa", "gpu_hyp": "unikezela ngegunya lokutshintshwa", "same_as_gpu": true, "text_in_training": "unseen"}
