@@ -80,7 +80,7 @@ def decode(data):
 
 
 def transcribe(audio, name):
-    """-> (text, seconds). Same prompt (<|sw|>, transcribe, no timestamps) and greedy decoding as the test evaluations."""
+    """-> (text, seconds). Same prompt (<|sw|>, transcribe, no timestamps) as the test evaluations; int8 models use beam 5 (R-0021)."""
     proc, m = model(name)
     pieces = [audio[i:i + CHUNK] for i in range(0, len(audio), CHUNK)]
     feats = proc(pieces, sampling_rate=SR, return_tensors="pt").input_features
@@ -92,7 +92,7 @@ def transcribe(audio, name):
             import ctranslate2
             prompt = proc.tokenizer.convert_tokens_to_ids(["<|startoftranscript|>", "<|sw|>", "<|transcribe|>", "<|notimestamps|>"])
             res = m.generate(ctranslate2.StorageView.from_array(np.ascontiguousarray(feats.numpy())), [prompt] * len(pieces),
-                             beam_size=1, max_length=225)
+                             beam_size=5, max_length=225)  # R-0021: CER 5.01 -> 4.73, no slowdown
             out = [r.sequences_ids[0] for r in res]
         secs = round(time.time() - t, 2)
     return " ".join(t.strip() for t in proc.batch_decode(out, skip_special_tokens=True)).strip(), secs
