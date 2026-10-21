@@ -1,0 +1,20 @@
+{
+ "model": "data/models/R-0019-int8",
+ "engine": "ctranslate2 4.5.0 int8 CPU (8 threads)",
+ "reference": "runs/R-0019/eval_nchlt/predictions.jsonl",
+ "sample": "unseen:200",
+ "seed": 1,
+ "clips": 200,
+ "int8_cpu": {
+  "wer": 28.16,
+  "cer": 5.01
+ },
+ "gpu_fp16_same_clips": {
+  "wer": 27.65,
+  "cer": 4.95
+ },
+ "same_output_as_gpu": 184,
+ "seconds_per_clip": 7.16,
+ "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+ "mkl": "0"
+}

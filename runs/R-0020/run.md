@@ -8,3 +8,10 @@
 - **Command:** `CT2_USE_MKL=0 .venv/Scripts/python src/eval_ct2.py --model data/models/R-0019-int8 --reference runs/R-0019/eval_nchlt/predictions.jsonl --sample unseen:200 --out runs/R-0020`
 - **Machine:** founder's laptop, $0. Only this heavy job on the laptop while it runs (P-0013).
 - **Pass mark:** int8 CER within 0.3 points of the GPU CER on the same clips.
+
+## Outcome · 2026-10-21 · PASSED (laptop, $0)
+- 200 unseen-sentence NCHLT test clips (same seed and clips as R-0013). **int8 CPU: CER 5.01 %, WER 28.16 %. GPU fp16
+  (R-0019's own evaluation, same clips): CER 4.95 %, WER 27.65 %.** 184 of 200 outputs identical. Pass mark met.
+- Same clips, previous laptop model (R-0013, R-0012-int8): CER 5.67 / WER 31.74.
+- Speed 7.16 s per clip (8 threads, CT2_USE_MKL=0, other work on the laptop at the same time); size 742 MB.
+- Decision for the live page: R-0019-int8 can replace R-0012-int8 as the default (founder to try it first).
