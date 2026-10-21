@@ -225,3 +225,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Waiting on the founder: (1) accept the Swivuriso terms on Hugging Face (account Ntlakanipho; download returned
   403 GatedRepoError today); (2) wait for the 1 Nov brake reset, or raise the brake.
 - Swivuriso isiXhosa is ~140 GB of parquet (train/dev/dev_test): too big for the laptop; fetch in the cloud into S3.
+
+## D-0025 · 2026-10-21 · GPU brake raised from $20 to $30 a month
+- Founder: "done......move up limit to $30" (Swivuriso terms accepted; download access confirmed the same day).
+- Changed: budget mgaguli-gpu-monthly limit 20.0 -> 30.0 USD (EC2 compute, before credits). Its action is unchanged:
+  at 100 % of the limit it applies mgaguli-deny-gpu-launch to ntlak-admin, so new GPU launches stop at $30, not $20.
+  Alerts at 50 %, 80 % and forecast 100 % now fire at $15, $24 and $30. October at change time: $17.13 used,
+  so ~$12.87 of GPU room is left this month.
+- Supersedes the "$20 brake" in AGENTS.md; the $20 account alert (My Monthly Cost Budget) is unchanged.
