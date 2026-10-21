@@ -307,3 +307,13 @@ Format:
   R-0019-int8; README updated.
 - Next: build the long-clip cutter for Swivuriso (forced alignment, listen-checked) and train R-0021; then a small
   model on the new data for the browser demo. October GPU spend is ~$23 of the $30 brake.
+
+## 2026-10-21 evening — Fewer word errors without retraining (beam search, context words)
+- Founder asked Claude and Codex to reason on fewer word errors (e.g. "Thetha" -> "tether"). Codex's answer goes to
+  docs/codex-ideas-2026-10-21.md; Claude's own, written first: docs/claude-ideas-2026-10-21.md.
+- R-0021 (laptop, $0): beam 5 instead of greedy, same 200 clips: CER 5.01 -> 4.73, WER 28.16 -> 27.65; 14 clips better,
+  9 worse; no slowdown. Small, safe gain.
+- One-clip probe (not a run; founder's recording 20261021-140009-284018): giving R-0019-int8 previous-text context
+  words. No context: "tether" (greedy and beam). Context " Thetha": "thetha" but "model" -> "modeli". Context
+  " Thetha model twitter": greedy still "tether", beam 5 = founder's transcript exactly. So context words work even
+  without prompt training, but fragile; needs a 200-clip harm check and more founder recordings before any UI.
