@@ -25,6 +25,6 @@ rows.forEach(([name, sub, before, after, change], i) => {
 });
 
 sk.line(60, 840, 1340, 840, { color: MUTED, w: 2 });
-sk.text(700, 890, "before = R-0012 (today's Thetha) · now = R-0019 (+146 h of Swivuriso, one change)", { size: 24, color: MUTED });
+sk.text(700, 890, "before = R-0012 (previous Thetha) · now = R-0019 (+146 h of Swivuriso, one change)", { size: 24, color: MUTED });
 sk.text(700, 935, "~3 hours on one cloud GPU, about $5.50 of credits", { size: 24, color: MUTED });
 render(sk, "C:/Users/ntlak/Downloads/isiXhosa Speech AI/docs/r0019-results.png");
