@@ -15,7 +15,9 @@ W=/data; mkdir -p "$W" && cd "$W"
 get() {  # url file -> downloads with resume and retries, then adds a manifest line
   echo "--- $(date -u +%T) $2"
   ( while sleep 60; do echo "--- $(date -u +%T) $2: $(du -h "$2" 2>/dev/null | cut -f1) so far"; done ) & local meter=$!
-  curl -fL --retry 5 --retry-delay 10 -C - -sS -o "$2" "$1"; local rc=$?
+  local rc=1 try; for try in 1 2 3 4 5 6; do   # a stalled transfer (<10 kB/s for 2 min) aborts and resumes
+    curl -fL --retry 5 --retry-delay 10 --speed-limit 10000 --speed-time 120 -C - -sS -o "$2" "$1" && { rc=0; break; }
+    echo "--- $(date -u +%T) $2: stalled or failed (try $try), resuming"; sleep 10; done
   kill $meter; [ $rc -eq 0 ] || return 1
   printf "%s  %s  %s  %s\n" "$(stat -c %s "$2")" "$(sha256sum "$2" | cut -d' ' -f1)" "$2" "$1" >> MANIFEST.txt
 }
