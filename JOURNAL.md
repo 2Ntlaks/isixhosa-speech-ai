@@ -219,3 +219,8 @@ Format:
   finished with batched deletes, 87 145 files). Kept models/ R-0004, R-0007, R-0012 (5.0 GB, ~$0.12/month). Left
   jobs/R-0001..R-0012 and fetch-* (55 GB) to the bucket's own rule "expire-jobs" (30 days, verified enabled), so they
   disappear around 16-17 November. Datasets can be fetched again with cloud/fetch_data.sh if training resumes.
+
+## 2026-10-21 — Reception on X
+- Founder reports the project post on X did better than expected: followers went from 14 to 44 (founder's own count;
+  no screenshot yet). First outside signal of interest in the work.
+- Cost: $0.
