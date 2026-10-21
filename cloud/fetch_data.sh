@@ -7,11 +7,13 @@
 set -euo pipefail
 export AWS_DEFAULT_REGION=us-east-1
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-JOB=""; DATASETS=""; MAXH=2; TYPE=t3.small
+JOB=""; DATASETS=""; MAXH=2; TYPE=t3.small; DISK=40
 while [ $# -gt 0 ]; do case "$1" in
-  --job) JOB=$2;; --datasets) DATASETS=$2;; --max-hours) MAXH=$2;; --type) TYPE=$2;;
+  --job) JOB=$2;; --datasets) DATASETS=$2;; --max-hours) MAXH=$2;; --type) TYPE=$2;; --disk) DISK=$2;;
   *) echo "unknown arg $1"; exit 1;; esac; shift 2; done
-[ -n "$JOB" ] && [ -n "$DATASETS" ] || { echo "need --job and --datasets (fleurs,nchlt,nchlt_eng,soapies)"; exit 1; }
+[ -n "$JOB" ] && [ -n "$DATASETS" ] || {
+  echo "need --job and --datasets (fleurs,nchlt,nchlt_eng,soapies,nchlt_aux,swivuriso)"; exit 1; }
+[ "$DISK" -le 100 ] || { echo "--disk is capped at 100 GB"; exit 1; }
 [ "$MAXH" -le 3 ] || { echo "--max-hours is capped at 3 for downloads (cost guard)"; exit 1; }
 case "$TYPE" in g*|p*) echo "downloads don't need a GPU"; exit 1;; esac
 
@@ -20,6 +22,11 @@ BUCKET="mgaguli-studio-render-$ACCT"; S3="s3://$BUCKET/jobs/$JOB"
 TMP="$(mktemp -d)"; P() { cygpath -m "$1" 2>/dev/null || echo "$1"; }
 aws s3 rm "$S3/DONE" --only-show-errors 2>/dev/null || true
 aws s3 rm "$S3/FAILED" --only-show-errors 2>/dev/null || true
+if [[ ",$DATASETS," == *,swivuriso,* ]]; then  # gated on Hugging Face: file list, pinned revision and token for the node
+  "$ROOT/.venv/Scripts/python" "$ROOT/cloud/swivuriso_files.py" "$(P "$TMP")" || exit 1
+  for f in files.tsv revision.txt hf_token; do aws s3 cp "$(P "$TMP/$f")" "$S3/$f" --only-show-errors; done
+  rm -f "$TMP/hf_token"
+fi
 
 sed -e 's/\r$//' -e "s/__BUCKET__/$BUCKET/" -e "s/__JOB__/$JOB/" -e "s/__MAXMIN__/$((MAXH * 60))/" \
     -e "s/__DATASETS__/$DATASETS/" "$ROOT/cloud/node/fetch_bootstrap.sh" > "$TMP/userdata.sh"
@@ -28,7 +35,7 @@ AMI=$(aws ec2 describe-images --owners amazon --filters "Name=name,Values=al2023
 ID=$(aws ec2 run-instances --image-id "$AMI" --instance-type "$TYPE" \
   --iam-instance-profile Name=mgaguli-render-node --user-data "file://$(P "$TMP/userdata.sh")" \
   --instance-initiated-shutdown-behavior terminate \
-  --block-device-mappings '[{"DeviceName":"/dev/xvda","Ebs":{"VolumeSize":40,"VolumeType":"gp3","DeleteOnTermination":true}}]' \
+  --block-device-mappings '[{"DeviceName":"/dev/xvda","Ebs":{"VolumeSize":'"$DISK"',"VolumeType":"gp3","DeleteOnTermination":true}}]' \
   --metadata-options HttpTokens=required,HttpEndpoint=enabled \
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=xhosa-$JOB},{Key=project,Value=isixhosa-speech}]" \
   --query 'Instances[0].InstanceId' --output text)

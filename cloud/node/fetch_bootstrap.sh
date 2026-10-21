@@ -86,11 +86,68 @@ soapies() {  # Soap opera code-switched speech, English-isiXhosa set, RESEARCH O
   publish soapies_engxho
 }
 
+nchlt_aux() {  # NCHLT isiXhosa Auxiliary Speech Corpus, CC BY 3.0, SADiLaR handle 20.500.12185/514 (D-0024).
+  # Recordings from the NCHLT campaign left out of the 2014 release; quality unknown until checked.
+  done_already nchlt_aux_xho && return 0
+  mkdir -p "$W/nchlt_aux_xho" && cd "$W/nchlt_aux_xho" && : > MANIFEST.txt
+  local B=https://repo.sadilar.org/server/api/core/bitstreams
+  get $B/d731e8a0-c531-4937-acd6-9dc566cc4854/content xho-aux1.zip || return 1
+  md5ok xho-aux1.zip 09fa14f3e39bbffa6fee4bf200c8dca5 || return 1
+  unzip -q xho-aux1.zip -d extracted/aux1 && rm xho-aux1.zip || return 1   # disk: the zip goes before aux2 arrives
+  get $B/aebb8868-bced-46d9-ad06-8a459c376b92/content xho-aux2.zip || return 1
+  md5ok xho-aux2.zip 133f9c2b48312fab5561f7b7d6a3cbc7 || return 1
+  unzip -q xho-aux2.zip -d extracted/aux2 && rm xho-aux2.zip || return 1
+  find extracted -maxdepth 3 | head -20
+  publish nchlt_aux_xho
+}
+
+swivuriso() {  # South Africa African Next Voices (Swivuriso), isiXhosa part, CC BY 4.0, gated on Hugging Face (D-0024).
+  # Speech recognition only: no TTS or voice cloning. The founder accepted the terms; the launcher leaves his token
+  # in this job's S3 folder, and it is deleted from S3 as soon as it is read. Files stay as published (parquet),
+  # each one checked against Hugging Face's sha256 and streamed to S3, so the disk only holds a few at a time.
+  local NAME=swivuriso_xho
+  done_already $NAME && return 0
+  mkdir -p "$W/$NAME/tmp" && cd "$W/$NAME" && : > MANIFEST.txt
+  aws s3 cp "$S3/files.tsv" files.tsv --only-show-errors && aws s3 cp "$S3/revision.txt" revision.txt --only-show-errors \
+    && aws s3 cp "$S3/hf_token" /root/.hf_token --only-show-errors || return 1
+  aws s3 rm "$S3/hf_token" --only-show-errors || echo "!!! could not delete the token from S3"
+  aws s3 ls "$DS/$NAME/" --recursive | awk '{print $3"\t"$4}' > have.tsv    # resume: size and key of files already there
+  export REV; REV=$(cat revision.txt); export BUCKET NAME W TOTAL; TOTAL=$(wc -l < files.tsv)
+  one() {  # path size sha256 -> download, verify, upload, manifest line
+    local p=$1 size=$2 sha=$3 key="datasets/$NAME/$1" tmp
+    if grep -qxF "$size"$'	'"$key" have.tsv; then echo "$size  $sha  $p  (already in S3)" >> MANIFEST.txt; return 0; fi
+    tmp=$(mktemp -p "$W/$NAME/tmp")
+    for try in 1 2 3; do
+      curl -fsSL --retry 5 --retry-delay 10 -H "Authorization: Bearer $(cat /root/.hf_token)" -o "$tmp" \
+        "https://huggingface.co/datasets/dsfsi-anv/za-african-next-voices/resolve/$REV/$p" \
+        && [ "$(stat -c %s "$tmp")" = "$size" ] && { [ "$sha" = - ] || [ "$(sha256sum "$tmp" | cut -d' ' -f1)" = "$sha" ]; } \
+        && break
+      echo "retry $try: $p"; sleep 10
+      [ $try = 3 ] && { rm -f "$tmp"; echo "!!! FAILED $p"; return 1; }
+    done
+    aws s3 cp "$tmp" "s3://$BUCKET/$key" --only-show-errors || { rm -f "$tmp"; echo "!!! upload FAILED $p"; return 1; }
+    rm -f "$tmp"
+    echo "$size  $sha  $p  https://huggingface.co/datasets/dsfsi-anv/za-african-next-voices/resolve/$REV/$p" >> MANIFEST.txt
+    echo "--- $(date -u +%T) $(wc -l < MANIFEST.txt)/$TOTAL $p"
+  }
+  export -f one
+  tr '\t' ' ' < files.tsv | xargs -P 6 -L 1 bash -c 'one "$@"' _ ; local rc=$?
+  rm -f /root/.hf_token
+  local n; n=$(wc -l < MANIFEST.txt)
+  [ $rc -eq 0 ] && [ "$n" -eq "$TOTAL" ] || { echo "only $n of $TOTAL files verified (xargs rc $rc)"; return 1; }
+  { echo "# $NAME · fetched $(date -u +%F) by job $JOB · dsfsi-anv/za-african-next-voices @ $REV"
+    echo "# CC BY 4.0, credit the South Africa NextVoices team; ASR only, no TTS or voice cloning"
+    echo "# bytes  sha256  file  source"; sort -k3 MANIFEST.txt; } > M && mv M MANIFEST.txt
+  aws s3 cp MANIFEST.txt "$DS/$NAME/MANIFEST.txt" --only-show-errors || return 1
+  date -u +%FT%TZ | aws s3 cp - "$DS/$NAME/COMPLETE"
+  echo "=== $(date -u +%T) $NAME uploaded: $n files"
+}
+
 STATUS=DONE
 IFS=',' read -ra LIST <<< "$DATASETS"
 for d in "${LIST[@]}"; do
   echo "=== $(date -u +%T) dataset: $d"
-  case "$d" in fleurs|nchlt|nchlt_eng|soapies) "$d" || { echo "=== $d FAILED"; STATUS=FAILED; } ;;
+  case "$d" in fleurs|nchlt|nchlt_eng|soapies|nchlt_aux|swivuriso) "$d" || { echo "=== $d FAILED"; STATUS=FAILED; } ;;
     *) echo "unknown dataset $d"; STATUS=FAILED ;; esac
   cd "$W"
 done
