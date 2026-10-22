@@ -76,3 +76,5 @@ and `Downloads\siyamthanda-thetha-test`. One cloud CPU node (as R-0032's `job.sh
 See docs/ideas.png. Parked, not planned: (1) paper + public isiXhosa scoreboard (read, everyday, mixed), (2) mixed-speech
 Thetha from consented donated sentences, (3) isiZulu with the same recipe, (4) isiXhosa subtitles tool, (5) live
 offline captions on a phone (the wearable's first step).
+- Note (22 Oct, pause): the private copy of Siya's code was deleted (D-0030). The Siyamthanda follow-ups above would
+  start by making a fresh copy, with Siya's OK.

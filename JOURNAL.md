@@ -388,8 +388,12 @@ Format:
 - Next: founder's choice. Still owed by the founder: the "ukuya" check, ~20 everyday recordings, two sentence endings.
 
 ## 2026-10-22 (night): project paused (D-0030)
-- Two follow-up Siyamthanda tests parked as future work (D-0029); five bigger directions sketched (docs/ideas.png) and
+- Two follow-up Siyamthanda tests parked as future work (D-0029; their private copy was deleted at the pause, so they would start by re-copying Siya's code with Siya's OK); five bigger directions sketched (docs/ideas.png) and
   parked in TODO.md. Checked: no isiXhosa voice exists in Meta's MMS-TTS; Lwazi III isiXhosa TTS corpus (~6 h,
   CC BY-NC-SA) would be the route if a voice is ever wanted (Swivuriso forbids TTS). Not needed by the founder.
 - Founder paused the project for the rest of 2026. No AWS machines running; S3 ~197 GB (~$4.50/month), cleanup
   options put to the founder. $0 spent this evening.
+- Cleanup (founder: "delete both"): deleted S3 datasets/swivuriso_xho/ (raw parquet, 140 GB; re-fetch with
+  cloud/fetch_data.sh if the long-clip cutter must be rerun, the prepared 16k copy and the pieces are kept), S3
+  private/siyamthanda-copy/ and the laptop copy Downloads\siyamthanda-thetha-test (Siya's original untouched). Bucket
+  versioning is off, so the space is freed. S3 now ~57 GB (~$1.30/month).
