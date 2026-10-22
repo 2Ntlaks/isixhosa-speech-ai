@@ -31,7 +31,8 @@ NUMBERS = {"before": 11.8, "now": 5.1, "what": "letters wrong in every 100, peop
 
 audio, sr = sf.read(REC, dtype="float32")
 assert sr == 16000
-sf.write(os.path.join(HERE, "public", "teaser_voice.wav"), audio, sr, subtype="PCM_16")
+loud = audio * (0.89 / np.abs(audio).max())  # the phone recording peaks at 0.29: raise the level only, nothing else
+sf.write(os.path.join(HERE, "public", "teaser_voice.wav"), loud, sr, subtype="PCM_16")
 
 import torch  # noqa: E402
 import torchaudio  # noqa: E402

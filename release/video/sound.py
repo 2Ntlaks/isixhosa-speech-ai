@@ -192,3 +192,18 @@ fade[i1:] = 0
 out = np.tanh(out * fade * 1.1) * 0.85
 sf.write(os.path.join(HERE, "public", "music_teaser.wav"), out.astype("float32"), SR, subtype="PCM_16")
 print(f"music_teaser.wav {len(out) / SR:.1f} s")
+
+# ---- keyboard sounds for the black-and-white teaser (src/TeaserBW.tsx): four key variants, space bar, backspace ----
+def key(f_click, f_body, dec, gain):
+    t = tt(0.06)
+    click = np.diff(rng.standard_normal(t.size + 1)) * np.exp(-t * 900)
+    body = np.sin(2 * np.pi * f_body * t) * np.exp(-t * 160)
+    ring = np.sin(2 * np.pi * f_click * t) * np.exp(-t * dec)
+    return (click * 0.5 + body * 0.6 + ring * 0.15) * gain
+
+
+for i, (fc, fb) in enumerate([(2400, 180), (2100, 200), (2700, 165), (2250, 190)]):
+    sf.write(os.path.join(HERE, "public", f"key{i}.wav"), key(fc, fb, 500, 0.5).astype("float32"), SR, subtype="PCM_16")
+sf.write(os.path.join(HERE, "public", "key_space.wav"), key(1500, 120, 300, 0.6).astype("float32"), SR, subtype="PCM_16")
+sf.write(os.path.join(HERE, "public", "key_back.wav"), key(1800, 140, 380, 0.55).astype("float32"), SR, subtype="PCM_16")
+print("keyboard sounds written")
