@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/opt/work/src/eval_soapies.py", line 50, in <module>
+    proc = WhisperProcessor.from_pretrained(a.model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 944, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 990, in _get_arguments_from_pretrained
+    args.append(attribute_class.from_pretrained(pretrained_model_name_or_path, **kwargs))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/feature_extraction_utils.py", line 383, in from_pretrained
+    feature_extractor_dict, kwargs = cls.get_feature_extractor_dict(pretrained_model_name_or_path, **kwargs)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/feature_extraction_utils.py", line 509, in get_feature_extractor_dict
+    resolved_feature_extractor_file = cached_file(
+                                      ^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 374, in cached_file
+    raise EnvironmentError(
+OSError: models/R-0019-int8 does not appear to have a file named preprocessor_config.json. Checkout 'https://huggingface.co/models/R-0019-int8/tree/main' for available files.

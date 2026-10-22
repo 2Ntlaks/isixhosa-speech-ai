@@ -1,0 +1,23 @@
+Shutdown scheduled for Thu 2026-10-22 13:53:44 UTC, use 'shutdown -c' to cancel.
+=== 11:53:44 node up Â· R-0031 Â· commit fde5e59
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
+
+=== 11:53:45 installing Python packages
+downloading uv 0.5.11 x86_64-unknown-linux-gnu
+torch 2.5.1+cu124 cuda False
+=== 11:54:09 running runs/R-0031/job.sh
+32
+               total        used        free      shared  buff/cache   available
+Mem:              61           1          54           0           6          60
+744M	models/R-0029-int8
+config.json
+model.bin
+tokenizer.json
+vocabulary.json
+744M	models/R-0019-int8
+config.json
+model.bin
+tokenizer.json
+vocabulary.json
+=== 11:56:05 scoring (3 jobs side by side)
+tail: option used in invalid context -- 1
