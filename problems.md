@@ -231,3 +231,15 @@ Format:
   confirmed that the paired benchmark could use the CPU after the audit finished.
 - Cost: $0 cloud. The discarded sweep contains 276.2 seconds of timed decoding, plus unmeasured setup overhead.
 - Lesson: separate checkouts prevent file collisions; CPU scheduling and sequential run IDs still need coordination.
+
+## P-0019 · 2026-10-22 · "No machine running" checks looked in the wrong AWS region
+- Stage / run: R-0029 launch (and earlier status checks in this session)
+- Symptom: right after cloud/run_job.sh reported "launched i-0566789315112197a", `aws ec2 describe-instances
+  --instance-ids i-0566789315112197a` answered "InvalidInstanceID.NotFound ... does not exist".
+- Cause: the laptop's AWS CLI default region is af-south-1; the project's scripts set AWS_DEFAULT_REGION=us-east-1
+  themselves, but ad-hoc checks typed by the agent did not. Such checks silently show nothing in us-east-1, so a
+  "no machines running" claim made that way proves nothing. (Earlier claims in this session were also confirmed by the
+  jobs' DONE markers and self-termination, so no machine was in fact left running.)
+- Fix: always pass `--region us-east-1` (or use the cloud/ scripts). Checked both regions: us-east-1 has only R-0029;
+  af-south-1 has one stopped t4g.micro "CrazyEC2Lab" (ManagedBy: Codex, Aug 2026), not this project; left untouched.
+- Cost: $0; ~5 minutes. Lesson: an empty answer from the cloud is only evidence if you asked the right place.
