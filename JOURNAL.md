@@ -388,7 +388,7 @@ Format:
 - Next: founder's choice. Still owed by the founder: the "ukuya" check, ~20 everyday recordings, two sentence endings.
 
 ## 2026-10-22 (night): project paused (D-0030)
-- Two follow-up Siyamthanda tests parked as future work (D-0029; their private copy was deleted at the pause, so they would start by re-copying Siya's code with Siya's OK); five bigger directions sketched (docs/ideas.png) and
+- Two follow-up Siyamthanda tests parked as future work (D-0029); five bigger directions sketched (docs/ideas.png) and
   parked in TODO.md. Checked: no isiXhosa voice exists in Meta's MMS-TTS; Lwazi III isiXhosa TTS corpus (~6 h,
   CC BY-NC-SA) would be the route if a voice is ever wanted (Swivuriso forbids TTS). Not needed by the founder.
 - Founder paused the project for the rest of 2026. No AWS machines running; S3 ~197 GB (~$4.50/month), cleanup
