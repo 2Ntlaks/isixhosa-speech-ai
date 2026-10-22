@@ -20,3 +20,4 @@ runs/**/gate_r0019/predictions.jsonl
 runs/**/gate_r0019/samples.md
 runs/R-0030/*/predictions.jsonl
 runs/R-0030/samples.md
+runs/R-0031/soapies_*/predictions.jsonl
