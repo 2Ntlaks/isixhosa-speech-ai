@@ -1,0 +1,33 @@
+{
+  "train_clips": 98663,
+  "train_hours": 309.68,
+  "train_speakers": 603,
+  "dev_speakers": [
+    "005",
+    "023",
+    "066",
+    "077",
+    "173",
+    "192"
+  ],
+  "dev_clips_scored": 600,
+  "dropped_over_max_seconds": 6,
+  "fleurs_train_clips": 3434,
+  "fleurs_dropped_over_max_seconds": 32,
+  "fleurs_train_hours": 13.03,
+  "fleurs_dev_clips_scored": 200,
+  "swivuriso_train_clips": 52960,
+  "swivuriso_train_hours": 245.44,
+  "swivuriso_dropped_test_sentences": 6139,
+  "swivuriso_dropped_over_440_tokens": 0,
+  "swivuriso_train_speakers": 407,
+  "english_train_clips": 0,
+  "english_train_hours": 0.0,
+  "stitched_clips": 0,
+  "stitched_hours": 0.0,
+  "soapies_dev_clips_scored": 0,
+  "model": "openai/whisper-medium",
+  "batch_size": 8,
+  "grad_accum": 4,
+  "gradient_checkpointing": false
+}
