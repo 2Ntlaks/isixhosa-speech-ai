@@ -51,3 +51,22 @@ Where we are: stage 3 is done. Best model **R-0012** (whisper-medium): 8.0 % let
 - **isiXhosa -> English translation** (D-0015): train Whisper itself on FLEURS isiXhosa audio + the official English
   text, after stage 4. ~$4 GPU run. Measure against FLEURS's English before showing it; launch it labelled
   "English, experimental" next to transcription, never instead of it.
+
+## Future work: Siyamthanda follow-ups (if there's time)
+
+Context: R-0032 put Thetha (R-0019) into a copy of Siya's translator. It hears isiXhosa better than Meta 1B (WER 36.0 ->
+30.4) but the English barely moves (BLEU 18.1 -> 18.8, not significant) and the English starts 0.6 s later. Siya is
+fine with the testing (D-0029). The private copy is kept for these tests: `s3://$BUCKET/private/siyamthanda-copy/R-0032.tar.gz`
+and `Downloads\siyamthanda-thetha-test`. One cloud CPU node (as R-0032's `job.sh`), about $0.50 for both.
+
+- [ ] **Bigger translator (NLLB 1.3B).** Same 100 FLEURS clips, `--mt-model nllb-1.3b`, Thetha R-0019 and Meta 1B.
+      Convert first with Siya's `bench/convert_nllb.py --model nllb-1.3b` (needs torch on the node). Add Siya's
+      "perfect hearing" ceiling: `bench/eval_af_translation.py --language xh --sources reference
+      reference-normalized+restored --models nllb-600m nllb-1.3b`. Question: does better hearing show up in the English
+      once the translator is better?
+- [ ] **Everyday speech: Thetha vs Meta on the Swivuriso test.** Hearing only (no English reference). Not home ground
+      for FLEURS-style recordings, so it is the fair test before saying "better than Meta" anywhere. Meta via Siya's
+      `CtcRecognizer("omni-ctc-1b-v2-int8")` + `greedy_ids`/`ids_to_text` (with the Latin-letter mask, as in their
+      pipeline), Thetha R-0019-int8 via faster-whisper; both scored with `src/scoring.py`. Predictions gitignored
+      (Swivuriso transcripts never go public).
+- [ ] When both are done (or dropped): delete the private copy in S3 and on the laptop.

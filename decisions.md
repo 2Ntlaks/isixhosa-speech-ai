@@ -262,3 +262,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Done: Ntlakanipho/whisper-small-isixhosa = R-0027 (commit 24d2a1e1ed; weights, ct2-int8/, onnx/, new card crediting
   Swivuriso and its terms), previous version kept as tag R-0007; demo Space worker.js pinned to revision R-0027 so cached
   browsers fetch the new files; GitHub main pushed. Live check passed (R-0028).
+
+## D-0029 · 2026-10-22 · Siya is fine with the tests; the two follow-up tests become future work
+- Context: R-0032 tested Thetha inside a private copy of Siya's Siyamthanda translator. Agent recommended telling Siya
+  before any more runs on their code, then two cloud tests (~$0.50): NLLB 1.3B, and Thetha vs Meta on Swivuriso test.
+- Founder: "yes Siya is fine", then "label this as future work if there's time".
+- Done: both tests written up under "Future work" in TODO.md. The private copy (S3 private/siyamthanda-copy/, laptop
+  Downloads\siyamthanda-thetha-test) is kept for them, to be deleted when they are done or dropped. Nothing shared,
+  published or switched: R-0019 stays Thetha's default; R-0029 stays unpublished (it failed its ship rule).

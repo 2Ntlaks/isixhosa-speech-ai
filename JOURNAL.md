@@ -369,3 +369,20 @@ Format:
 - Ready to publish (waiting for the founder's OK): release/publish_r0027.py (HF small model, old one kept at tag R-0007),
   demo pinned to revision R-0027 (release/publish_web.py), GitHub push. October GPU spend about $26.
 - Next: the medium model with the same pieces (one change vs R-0019), then the teaser video.
+
+## 2026-10-22 (afternoon/evening): medium + long-clip pieces, fast copy, Thetha inside Siyamthanda
+- R-0029 (g6e.2xlarge, ~$5.70): whisper-medium + the R-0027 long-clip pieces (one change vs R-0019). Swivuriso test CER
+  4.14 vs 4.12: **failed its ship rule by 0.02** (one runaway clip adds 770 letter errors; 3.90 without it). Unscripted
+  3.6 vs 4.1, FLEURS 6.16 vs 6.24, NCHLT 2.32 vs 2.31. Not published; R-0019 stays the default.
+- R-0031 (CPU node, ~$0.30): int8 copies of R-0029 and R-0019 in S3 (laptop memory too short to convert, so done in the
+  cloud). int8 check passed (CER 4.71 vs GPU 4.53, 181/200 identical). Soapies mixed speech: R-0029 CER 28.1 vs R-0019
+  29.6. P-0020: converter drops the processor files.
+- R-0032 (CPU node, ~$0.25; founder's choice B): Thetha as a drop-in engine (integrations/siyamthanda/) in a private copy
+  of Siya's translator, on their 100 FLEURS isiXhosa test clips. Meta re-run matched Siya's own record. WER: Meta 35.97,
+  R-0019 30.36 (paired -5.6, CI -8.2 to -3.1), R-0029 30.80, R-0027 37.91. English BLEU unchanged within noise (NLLB 600M
+  is the limit); English starts 0.6 s later (2.66 vs 2.08 s). Caveat: Thetha trained on FLEURS train (same style).
+  Drawing: docs/siyamthanda-test.png.
+- D-0029: Siya is fine with the tests; the two follow-ups (NLLB 1.3B; Thetha vs Meta on Swivuriso) are future work in
+  TODO.md. Private copy kept for them.
+- Spend today ~$6.25; October GPU spend about $32. No AWS machines running.
+- Next: founder's choice. Still owed by the founder: the "ukuya" check, ~20 everyday recordings, two sentence endings.
