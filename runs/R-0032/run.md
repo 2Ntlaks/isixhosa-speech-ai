@@ -21,3 +21,8 @@
   (14.6 GB total, ~1 GB free with the founder's other apps open; the R-0029 benchmark process held 1.4 GB). The
   leftover Python process was stopped by hand; no results were written. Waiting for the founder to free memory or
   choose to run it elsewhere.
+- **Founder's choice (14:45 SAST): B**, run it in the cloud: a copy of the Siyamthanda code (translator/, bench/,
+  requirements-meta.txt), its NLLB/Piper models and the isiXhosa test set go to the private S3 path
+  private/siyamthanda-copy/ (not this repo, not public). Node: c7i.4xlarge spot (16 vCPU, close to the laptop's 8-core
+  Ryzen 7), ~$0.30-0.40/h, about 1 h. Speeds are the node's, not the laptop's; accuracy is the same either way.
+  `FALLBACK_TYPES="c6i.4xlarge c7i.8xlarge" cloud/run_job.sh --run R-0032 --type c7i.4xlarge --market spot --max-hours 2`
