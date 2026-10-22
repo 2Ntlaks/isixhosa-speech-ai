@@ -70,3 +70,9 @@ and `Downloads\siyamthanda-thetha-test`. One cloud CPU node (as R-0032's `job.sh
       pipeline), Thetha R-0019-int8 via faster-whisper; both scored with `src/scoring.py`. Predictions gitignored
       (Swivuriso transcripts never go public).
 - [ ] When both are done (or dropped): delete the private copy in S3 and on the laptop.
+
+## Future work: bigger directions (founder: "not achievable now", 22 Oct)
+
+See docs/ideas.png. Parked, not planned: (1) paper + public isiXhosa scoreboard (read, everyday, mixed), (2) mixed-speech
+Thetha from consented donated sentences, (3) isiZulu with the same recipe, (4) isiXhosa subtitles tool, (5) live
+offline captions on a phone (the wearable's first step).
