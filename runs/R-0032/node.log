@@ -1,0 +1,44 @@
+Shutdown scheduled for Thu 2026-10-22 17:02:13 UTC, use 'shutdown -c' to cancel.
+=== 15:02:13 node up Â· R-0032 Â· commit f9b5d8f
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
+
+=== 15:02:15 installing Python packages
+downloading uv 0.5.11 x86_64-unknown-linux-gnu
+torch 2.5.1+cu124 cuda False
+=== 15:02:44 running runs/R-0032/job.sh
+32
+               total        used        free      shared  buff/cache   available
+Mem:              61           1          54           0           6          60
+Model name:                              Intel(R) Xeon(R) Platinum 8488C
+BIOS Model name:                         Intel(R) Xeon(R) Platinum 8488C  CPU @ 2.4GHz
+=== 15:02:53 the project's pinned packages (requirements-meta.txt, minus torch and the Windows/serial extras)
+{'faster-whisper': '1.2.1', 'ctranslate2': '4.8.2', 'onnxruntime': '1.30.0', 'transformers': '4.57.3', 'sacrebleu': '2.6.0', 'piper-tts': '1.8.0'}
+/opt/hf/hub/models--csukuangfj2--sherpa-onnx-omnilingual-asr-1600-languages-1B-ctc-v2-int8-2026-02-05/snapshots/5243e02858d1428b8fbeeb5f7f1cc6fccf4d9433/model.int8.onnx
+/opt/hf/hub/models--csukuangfj2--sherpa-onnx-omnilingual-asr-1600-languages-1B-ctc-v2-int8-2026-02-05/snapshots/5243e02858d1428b8fbeeb5f7f1cc6fccf4d9433/tokens.txt
+=== 15:03:07 Thetha R-0029
+100/100   3757.8 ms  The most readily available beneficial ingredients in plants are the pr
+{
+}
+=== 15:08:01 Thetha R-0019
+100/100   3581.0 ms  The most readily available nutrients in plants are the proteins found 
+{
+}
+=== 15:12:55 Thetha R-0027
+100/100   2329.9 ms  The most readily available nutrients in plants are the proteins found 
+{
+}
+=== 15:16:01 Meta 1B
+100/100   3405.7 ms  The most readily available nutrients in plants are the proteins found 
+{
+}
+total 328
+drwxr-xr-x  2 root root  4096 Oct 22 15:20 .
+drwxr-xr-x 13 root root  4096 Oct 22 15:02 ..
+-rw-r--r--  1 root root 74950 Oct 22 15:20 e2e_xh_meta.csv
+-rw-r--r--  1 root root  1913 Oct 22 15:20 e2e_xh_meta.summary.json
+-rw-r--r--  1 root root 75383 Oct 22 15:12 e2e_xh_thetha-R-0019.csv
+-rw-r--r--  1 root root  1895 Oct 22 15:12 e2e_xh_thetha-R-0019.summary.json
+-rw-r--r--  1 root root 75857 Oct 22 15:16 e2e_xh_thetha-R-0027.csv
+-rw-r--r--  1 root root  1895 Oct 22 15:16 e2e_xh_thetha-R-0027.summary.json
+-rw-r--r--  1 root root 75579 Oct 22 15:08 e2e_xh_thetha-R-0029.csv
+-rw-r--r--  1 root root  1895 Oct 22 15:08 e2e_xh_thetha-R-0029.summary.json

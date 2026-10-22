@@ -1,0 +1,95 @@
+{
+  "clips": 100,
+  "bootstrap_samples": 1000,
+  "baseline": "meta",
+  "systems": {
+    "meta": {
+      "empty_outputs": 0,
+      "bleu": {
+        "score": 18.08,
+        "confidence_95_half_width": 2.59,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0"
+      },
+      "chrf2": {
+        "score": 46.35,
+        "confidence_95_half_width": 2.1,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0"
+      }
+    },
+    "R-0029": {
+      "empty_outputs": 0,
+      "bleu": {
+        "score": 18.09,
+        "confidence_95_half_width": 2.69,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0"
+      },
+      "chrf2": {
+        "score": 47.06,
+        "confidence_95_half_width": 2.12,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0"
+      }
+    },
+    "R-0019": {
+      "empty_outputs": 0,
+      "bleu": {
+        "score": 18.76,
+        "confidence_95_half_width": 2.95,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0"
+      },
+      "chrf2": {
+        "score": 47.3,
+        "confidence_95_half_width": 2.12,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0"
+      }
+    },
+    "R-0027": {
+      "empty_outputs": 0,
+      "bleu": {
+        "score": 17.07,
+        "confidence_95_half_width": 2.51,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0"
+      },
+      "chrf2": {
+        "score": 44.88,
+        "confidence_95_half_width": 2.13,
+        "signature": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0"
+      }
+    }
+  },
+  "paired_vs_baseline": {
+    "R-0029": {
+      "BLEU": {
+        "score": 18.09,
+        "p_value": 0.4245754245754246
+      },
+      "chrF2": {
+        "score": 47.06,
+        "p_value": 0.12887112887112886
+      }
+    },
+    "R-0019": {
+      "BLEU": {
+        "score": 18.76,
+        "p_value": 0.19480519480519481
+      },
+      "chrF2": {
+        "score": 47.3,
+        "p_value": 0.06793206793206794
+      }
+    },
+    "R-0027": {
+      "BLEU": {
+        "score": 17.07,
+        "p_value": 0.13786213786213786
+      },
+      "chrF2": {
+        "score": 44.88,
+        "p_value": 0.03396603396603397
+      }
+    }
+  },
+  "paired_signatures": {
+    "BLEU": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0",
+    "chrF2": "nrefs:1|bs:1000|seed:12345|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0"
+  }
+}
