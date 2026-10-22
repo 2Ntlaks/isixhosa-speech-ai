@@ -270,3 +270,12 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Done: both tests written up under "Future work" in TODO.md. The private copy (S3 private/siyamthanda-copy/, laptop
   Downloads\siyamthanda-thetha-test) is kept for them, to be deleted when they are done or dropped. Nothing shared,
   published or switched: R-0019 stays Thetha's default; R-0029 stays unpublished (it failed its ship rule).
+
+## D-0030 · 2026-10-22 · Project paused for the rest of 2026
+- Context: after R-0032 the agent offered bigger directions (docs/ideas.png) and an English-voice add-on; the founder said
+  they are not achievable now and the voice is not needed.
+- Founder: "for this year this is where I am pausing with this project".
+- State at pause: published models R-0019 (medium) and R-0027 (small, free demo) unchanged; no AWS machines running.
+  S3 holds ~197 GB (~$4.50/month): datasets 182 GB (raw Swivuriso parquet 140 GB, prepared 16k copy 20.6 GB, long-clip
+  pieces 11.4 GB, NCHLT 6.5, FLEURS 3.1, Soapies 0.4), models 13.9 GB, private Siyamthanda copy 0.74 GB. Deleting
+  anything waits for the founder's word. Do not launch runs until he reopens the project.
