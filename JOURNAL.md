@@ -355,3 +355,17 @@ Format:
 - Validation completed: all 7 lightweight inference regression tests passed; git diff --check passed.
 - Cloud spend: $0. No training, AWS activity, or model publishing. Next: Claude runs the sequential validation,
   records equal-output checks and measured latency/memory, and reviews the PR before merge.
+
+## 2026-10-21 late evening to 2026-10-22 morning: speed test, long-clip cutter, new small model for the demo
+- R-0026 (laptop, $0): the encoder is 75 % of Thetha's time; a 10 s encoder window is 3x faster but costs +1.2 WER on
+  NCHLT test and +3.1 on dev (rule +0.3): FAILED, Thetha unchanged. Fix would be training with short windows (needs GPU).
+- Founder: "let's improve it by training it on more Swivuriso data". Built src/swivuriso_long.py (MMS forced alignment,
+  cut at pauses below 28 s); laptop check on joined NCHLT clips: 328/328 words in the right piece.
+- R-0027 (g6.xlarge L4, no L40S capacity; 3.9 h, ~$3.15): 98.9 h of new pieces from 8,787 long clips (quality gate
+  sample CER 3.46); whisper-small on 309.7 h. Swivuriso test CER 9.88 -> 5.25 (unscripted 11.8 -> 5.1), FLEURS 10.16 ->
+  8.89, NCHLT 2.91 -> 3.37 (loss only on memorised prompt sentences). Passed the demo ship rule.
+- R-0028 (laptop, $0): browser ONNX copy CER 6.07 vs 5.91 (175/200 identical); CTranslate2 copy 5.95; works in headless
+  Chrome with the demo's own worker. Export recipe now saved as src/export_onnx.py (it was never committed in R-0017).
+- Ready to publish (waiting for the founder's OK): release/publish_r0027.py (HF small model, old one kept at tag R-0007),
+  demo pinned to revision R-0027 (release/publish_web.py), GitHub push. October GPU spend about $26.
+- Next: the medium model with the same pieces (one change vs R-0019), then the teaser video.
