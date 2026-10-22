@@ -160,3 +160,35 @@ add(impact * 0.5, 17)
 out = np.tanh(out * 1.1) * 0.85
 sf.write(os.path.join(HERE, "public", "music_twister.wav"), out.astype("float32"), SR, subtype="PCM_16")
 print(f"music_twister.wav {len(out) / SR:.1f} s")
+
+# ---- R-0027 teaser (src/Teaser.tsx): 48 beats. Hook 0-3, the founder's voice 3-28 (score stays low), riser into
+# "what changed" at 28, groove to the end, hits on the number (34, 35.5) and the end card (40), fade over the last 3 ----
+out = np.zeros(int(SR * BEAT * 48) + SR)
+add(tongue_click(), 0, 0.9)
+add(tone([55], BEAT * 4, 0.16, attack=1.2, release=1.0), 0)
+add(tone([110, 164.8], BEAT * 25, 0.025, attack=2.0, release=2.0), 3)  # a warm bed under the voice
+for b_ in range(4, 28, 2):
+    add(kick(110, 40, 0.25), b_, 0.35)
+t = tt(BEAT * 2)
+p = t / t[-1]
+add((np.diff(rng.standard_normal(t.size), prepend=0) * p * 0.3 + np.sin(2 * np.pi * np.cumsum(200 + 900 * p ** 2) / SR) * 0.25) * p ** 2, 26)
+t = tt(2.5)
+add(kick(95, 30, 0.9, 2.5) + np.diff(rng.standard_normal(t.size + 1)) * np.exp(-t * 4) * 0.25, 28, 1.0)
+for b_ in range(29, 46):
+    add(kick(), b_, 0.75)
+    add(hat(), b_ + 0.5, 0.6)
+for bar, b_ in enumerate(range(28, 48, 4)):
+    r, ch = roots[bar % 4], chords[bar % 4]
+    bt = tt(BEAT * 4)
+    add((np.sin(2 * np.pi * r * bt) + 0.4 * np.sin(2 * np.pi * 2 * r * bt)) * np.minimum(1, bt / 0.02) * np.exp(-bt / 1.6), b_, 0.35)
+    add(tone(ch, BEAT * 4, 0.035, attack=0.4, release=0.6), b_)
+for b_ in (34, 35.5):
+    add(kick(90, 35, 0.45, 0.8), b_, 0.7)
+add(impact * 0.6, 40)
+fade = np.ones_like(out)
+i0, i1 = at(45), at(48)
+fade[i0:i1] = np.linspace(1, 0, i1 - i0)
+fade[i1:] = 0
+out = np.tanh(out * fade * 1.1) * 0.85
+sf.write(os.path.join(HERE, "public", "music_teaser.wav"), out.astype("float32"), SR, subtype="PCM_16")
+print(f"music_teaser.wav {len(out) / SR:.1f} s")
