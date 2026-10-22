@@ -1,15 +1,16 @@
-// Runs the model off the main thread, inside the visitor's browser (transformers.js, ONNX 8-bit, R-0017).
+// Runs the model off the main thread, inside the visitor's browser (transformers.js, ONNX 8-bit; R-0027 since 22 Oct, R-0028).
 import { pipeline, env } from "./transformers.min.js";  // served from this site so its threads may start (3.0.2)
 
 env.allowLocalModels = false;
 env.backends.onnx.wasm.wasmPaths = new URL("./", self.location.href).href;
-const MODEL = "Ntlakanipho/whisper-small-isixhosa";
+const MODEL = "Ntlakanipho/whisper-small-isixhosa", REVISION = "R-0027";  // pinned: browsers that cached R-0007 fetch the new files
 const SR = 16000, CHUNK = 30 * SR;  // Whisper hears 30 s at a time; longer audio goes in 30 s pieces
 let asr = null;
 
 async function load() {
   if (!asr) {
     asr = await pipeline("automatic-speech-recognition", MODEL, {
+      revision: REVISION,
       dtype: { encoder_model: "q8", decoder_model_merged: "q8" },
       device: "wasm",
       progress_callback: p => self.postMessage({ type: "progress", ...p }),

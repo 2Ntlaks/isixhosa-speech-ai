@@ -1,6 +1,6 @@
 """Thetha: talk to the model. A small speech-to-text API and recording page on this laptop (D-0014).
 
-  CT2_USE_MKL=0 .venv/Scripts/python src/live.py [--models R-0019-int8,R-0007-int8] [--port 7860]
+  CT2_USE_MKL=0 .venv/Scripts/python src/live.py [--models R-0019-int8,R-0027-int8] [--port 7860]
 Then open http://127.0.0.1:7860. Runs on the CPU; listens on this computer only (127.0.0.1).
 Models are folders in data/models/: a transformers checkpoint (model.safetensors, loaded in --dtype) or a CTranslate2
 copy (model.bin, int8: ct2-transformers-converter --quantization int8; same answers, faster, R-0013). The first model
@@ -8,7 +8,7 @@ in --models is the default and is warmed at startup. Other models load on first 
 --threads controls CPU parallelism; --chunk-batch-size bounds the number of 30 s chunks sent to a model at once.
 
 API (what the page uses; any program can call it the same way):
-  POST /transcribe?model=R-0019-int8&also=R-0007-int8&keep=1
+  POST /transcribe?model=R-0019-int8&also=R-0027-int8&keep=1
        body: audio in any format ffmpeg reads (browser webm, WhatsApp ogg/opus, m4a, mp3, wav), up to 100 MB
        -> {"id", "text", "model", "audio_seconds", "compute_seconds", "also": {"model", "text", "compute_seconds"}}
   POST /correct   {"id": ..., "said": "what was really said"}   -> {"ok": true}
@@ -226,7 +226,7 @@ def positive_int(value):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--models", default="R-0019-int8,R-0007-int8",
+    ap.add_argument("--models", default="R-0019-int8,R-0027-int8",
                     help="comma-separated folder names in data/models/; the first is the default")
     ap.add_argument("--port", type=int, default=7860)
     ap.add_argument("--models-dir", default=MODELS, help="folder holding the model folders (default data/models)")

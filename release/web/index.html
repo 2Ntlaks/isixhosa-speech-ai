@@ -119,7 +119,7 @@ function loadModel() {
 (async () => {
   let cached = false;
   try { const c = await caches.open("transformers-cache"); cached = !!(await c.match(
-    "https://huggingface.co/Ntlakanipho/whisper-small-isixhosa/resolve/main/onnx/decoder_model_merged_quantized.onnx")); } catch (e) {}
+    "https://huggingface.co/Ntlakanipho/whisper-small-isixhosa/resolve/R-0027/onnx/decoder_model_merged_quantized.onnx")); } catch (e) {}
   if (cached) loadModel(); else status(`tap the circle to load the model · about ${MODEL_MB} MB, once`);
 })();
 
