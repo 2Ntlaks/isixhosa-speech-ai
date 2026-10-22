@@ -1,0 +1,514 @@
+[
+  {
+    "id": "nchlt_xho_505m_0006",
+    "audio_seconds": 4.92,
+    "baseline": {
+      "wall_seconds": 4.878019199997652,
+      "model_seconds": 4.86,
+      "peak_working_set_bytes": 1518649344,
+      "output_sha256": "4c454ed37bc56c9fe7bdf8a9b08e009860700c082f74c4b25c0323a20616851d"
+    },
+    "candidate": {
+      "wall_seconds": 4.864015600003768,
+      "model_seconds": 4.84,
+      "peak_working_set_bytes": 1519419392,
+      "output_sha256": "4c454ed37bc56c9fe7bdf8a9b08e009860700c082f74c4b25c0323a20616851d"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0007",
+    "audio_seconds": 4.68,
+    "candidate": {
+      "wall_seconds": 4.890219799999613,
+      "model_seconds": 4.88,
+      "peak_working_set_bytes": 1521938432,
+      "output_sha256": "33eda88e1733528f5c44a1e94b45909363f7dafdf65cf64762fbebd40a760173"
+    },
+    "baseline": {
+      "wall_seconds": 4.2663445999787655,
+      "model_seconds": 4.25,
+      "peak_working_set_bytes": 1520152576,
+      "output_sha256": "33eda88e1733528f5c44a1e94b45909363f7dafdf65cf64762fbebd40a760173"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0018",
+    "audio_seconds": 2.52,
+    "baseline": {
+      "wall_seconds": 3.70777179999277,
+      "model_seconds": 3.7,
+      "peak_working_set_bytes": 1522098176,
+      "output_sha256": "8f9edc3aad941c85a86475722513d8aeb347112849629b27b3c983a55ca8e8f0"
+    },
+    "candidate": {
+      "wall_seconds": 3.5737923000124283,
+      "model_seconds": 3.57,
+      "peak_working_set_bytes": 1522122752,
+      "output_sha256": "8f9edc3aad941c85a86475722513d8aeb347112849629b27b3c983a55ca8e8f0"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0066",
+    "audio_seconds": 3.36,
+    "candidate": {
+      "wall_seconds": 3.8613304999889806,
+      "model_seconds": 3.85,
+      "peak_working_set_bytes": 1523548160,
+      "output_sha256": "9484fa0a0320aaee551ae05b4ede9c93b91a7b2c92a33915b15c987b7bcca547"
+    },
+    "baseline": {
+      "wall_seconds": 3.7933557000069413,
+      "model_seconds": 3.77,
+      "peak_working_set_bytes": 1520992256,
+      "output_sha256": "9484fa0a0320aaee551ae05b4ede9c93b91a7b2c92a33915b15c987b7bcca547"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0095",
+    "audio_seconds": 4.08,
+    "baseline": {
+      "wall_seconds": 3.8018186000117566,
+      "model_seconds": 3.79,
+      "peak_working_set_bytes": 1521479680,
+      "output_sha256": "0e396dfc31dc56e86921489d52bfd2381443a58fe8e281511a3be0a15a624692"
+    },
+    "candidate": {
+      "wall_seconds": 3.7721047999802977,
+      "model_seconds": 3.76,
+      "peak_working_set_bytes": 1519452160,
+      "output_sha256": "0e396dfc31dc56e86921489d52bfd2381443a58fe8e281511a3be0a15a624692"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0117",
+    "audio_seconds": 4.2,
+    "candidate": {
+      "wall_seconds": 3.923689999995986,
+      "model_seconds": 3.91,
+      "peak_working_set_bytes": 1520889856,
+      "output_sha256": "84896c89eb1d96b320186a307b90877dfc2faf2bbe5eef0b41854c9109832c6a"
+    },
+    "baseline": {
+      "wall_seconds": 3.8726869999954943,
+      "model_seconds": 3.87,
+      "peak_working_set_bytes": 1518735360,
+      "output_sha256": "84896c89eb1d96b320186a307b90877dfc2faf2bbe5eef0b41854c9109832c6a"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0128",
+    "audio_seconds": 4.92,
+    "baseline": {
+      "wall_seconds": 3.821092199999839,
+      "model_seconds": 3.81,
+      "peak_working_set_bytes": 1521926144,
+      "output_sha256": "13250b3e5ffc788a00e7fc40cef76ce574ad28d989a28594ebb95a1385b26ee8"
+    },
+    "candidate": {
+      "wall_seconds": 4.300231400004122,
+      "model_seconds": 4.28,
+      "peak_working_set_bytes": 1519140864,
+      "output_sha256": "13250b3e5ffc788a00e7fc40cef76ce574ad28d989a28594ebb95a1385b26ee8"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0167",
+    "audio_seconds": 2.16,
+    "candidate": {
+      "wall_seconds": 4.438555300002918,
+      "model_seconds": 4.43,
+      "peak_working_set_bytes": 1520861184,
+      "output_sha256": "d7dfe6d9ab089c887a1b4b56e9faeb041d39c15d85aa9af57e2233a6a345cb51"
+    },
+    "baseline": {
+      "wall_seconds": 4.508004899980733,
+      "model_seconds": 4.5,
+      "peak_working_set_bytes": 1522634752,
+      "output_sha256": "d7dfe6d9ab089c887a1b4b56e9faeb041d39c15d85aa9af57e2233a6a345cb51"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0169",
+    "audio_seconds": 3.72,
+    "baseline": {
+      "wall_seconds": 4.433481199987,
+      "model_seconds": 4.42,
+      "peak_working_set_bytes": 1523863552,
+      "output_sha256": "d454ece58bb8ecea9a024c60099ab96346864c6a33fda110dc038db3e882139d"
+    },
+    "candidate": {
+      "wall_seconds": 4.483300499996403,
+      "model_seconds": 4.47,
+      "peak_working_set_bytes": 1519153152,
+      "output_sha256": "d454ece58bb8ecea9a024c60099ab96346864c6a33fda110dc038db3e882139d"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0171",
+    "audio_seconds": 2.4,
+    "candidate": {
+      "wall_seconds": 4.487504200020339,
+      "model_seconds": 4.48,
+      "peak_working_set_bytes": 1523085312,
+      "output_sha256": "07e09b7f6fb8461d8dcf80d19274a351c6e19474c868a47e54d85f8b8fb44ffa"
+    },
+    "baseline": {
+      "wall_seconds": 4.666964400006691,
+      "model_seconds": 4.66,
+      "peak_working_set_bytes": 1518731264,
+      "output_sha256": "07e09b7f6fb8461d8dcf80d19274a351c6e19474c868a47e54d85f8b8fb44ffa"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0172",
+    "audio_seconds": 3.84,
+    "baseline": {
+      "wall_seconds": 4.85609439999098,
+      "model_seconds": 4.84,
+      "peak_working_set_bytes": 1522098176,
+      "output_sha256": "2997161e82ab7a39b2a2453d798fc24b8aa6d141fab55020d8030ed7bd3b36a9"
+    },
+    "candidate": {
+      "wall_seconds": 4.782625299994834,
+      "model_seconds": 4.77,
+      "peak_working_set_bytes": 1519009792,
+      "output_sha256": "2997161e82ab7a39b2a2453d798fc24b8aa6d141fab55020d8030ed7bd3b36a9"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0232",
+    "audio_seconds": 3.96,
+    "candidate": {
+      "wall_seconds": 4.697749799990561,
+      "model_seconds": 4.68,
+      "peak_working_set_bytes": 1521782784,
+      "output_sha256": "867311bb7eec3b4ab2d6138348baa0b4dcde18f2656b1969f039b0b9a7d02d37"
+    },
+    "baseline": {
+      "wall_seconds": 4.576405500003602,
+      "model_seconds": 4.56,
+      "peak_working_set_bytes": 1518436352,
+      "output_sha256": "867311bb7eec3b4ab2d6138348baa0b4dcde18f2656b1969f039b0b9a7d02d37"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0254",
+    "audio_seconds": 3.24,
+    "baseline": {
+      "wall_seconds": 4.4111484000168275,
+      "model_seconds": 4.4,
+      "peak_working_set_bytes": 1522700288,
+      "output_sha256": "740ef9d4524a0e2c70b2d7e18b8faa3d7a460325ad148a2ea3265ebfc6eaf07d"
+    },
+    "candidate": {
+      "wall_seconds": 4.511848900001496,
+      "model_seconds": 4.5,
+      "peak_working_set_bytes": 1519013888,
+      "output_sha256": "740ef9d4524a0e2c70b2d7e18b8faa3d7a460325ad148a2ea3265ebfc6eaf07d"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0281",
+    "audio_seconds": 6.96,
+    "candidate": {
+      "wall_seconds": 4.653739700006554,
+      "model_seconds": 4.64,
+      "peak_working_set_bytes": 1521106944,
+      "output_sha256": "f6cf07543ac1be9a06782238288742d66914b27b26727b9511b7dc171487a1e8"
+    },
+    "baseline": {
+      "wall_seconds": 4.6265585999935865,
+      "model_seconds": 4.61,
+      "peak_working_set_bytes": 1519079424,
+      "output_sha256": "f6cf07543ac1be9a06782238288742d66914b27b26727b9511b7dc171487a1e8"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0282",
+    "audio_seconds": 4.08,
+    "baseline": {
+      "wall_seconds": 4.412138599989703,
+      "model_seconds": 4.4,
+      "peak_working_set_bytes": 1522712576,
+      "output_sha256": "749dcc3f124e4a1105c0694fb0076599efc2644d8ba673a38d242a015133ba0d"
+    },
+    "candidate": {
+      "wall_seconds": 4.368522500008112,
+      "model_seconds": 4.36,
+      "peak_working_set_bytes": 1519984640,
+      "output_sha256": "749dcc3f124e4a1105c0694fb0076599efc2644d8ba673a38d242a015133ba0d"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0323",
+    "audio_seconds": 5.52,
+    "candidate": {
+      "wall_seconds": 4.675169199996162,
+      "model_seconds": 4.66,
+      "peak_working_set_bytes": 1521233920,
+      "output_sha256": "280c6f6b84d2bb2610f18cc65392ca09e5fb5da3ae6b6521d472485cc7847b4e"
+    },
+    "baseline": {
+      "wall_seconds": 4.567137499980163,
+      "model_seconds": 4.56,
+      "peak_working_set_bytes": 1520095232,
+      "output_sha256": "280c6f6b84d2bb2610f18cc65392ca09e5fb5da3ae6b6521d472485cc7847b4e"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0331",
+    "audio_seconds": 5.04,
+    "baseline": {
+      "wall_seconds": 4.724325399991358,
+      "model_seconds": 4.71,
+      "peak_working_set_bytes": 1521127424,
+      "output_sha256": "19010df02bd40b819597f226307ee26a5b557d74ec92dd75dd28a755d8506120"
+    },
+    "candidate": {
+      "wall_seconds": 4.5136630999913905,
+      "model_seconds": 4.5,
+      "peak_working_set_bytes": 1519169536,
+      "output_sha256": "19010df02bd40b819597f226307ee26a5b557d74ec92dd75dd28a755d8506120"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0360",
+    "audio_seconds": 2.64,
+    "candidate": {
+      "wall_seconds": 4.330351300013717,
+      "model_seconds": 4.32,
+      "peak_working_set_bytes": 1522769920,
+      "output_sha256": "e0f2c336a0e0668b1a290b6eb26fe720954f6bf313aca275a0cb74010e7a150d"
+    },
+    "baseline": {
+      "wall_seconds": 4.379881800006842,
+      "model_seconds": 4.37,
+      "peak_working_set_bytes": 1519788032,
+      "output_sha256": "e0f2c336a0e0668b1a290b6eb26fe720954f6bf313aca275a0cb74010e7a150d"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0417",
+    "audio_seconds": 2.64,
+    "baseline": {
+      "wall_seconds": 5.021247600001516,
+      "model_seconds": 5.01,
+      "peak_working_set_bytes": 1521192960,
+      "output_sha256": "81109840e79039b2f177c4aa8b2483725c1f02c4f28c1e1c107b3ae984c8de57"
+    },
+    "candidate": {
+      "wall_seconds": 4.487188099999912,
+      "model_seconds": 4.48,
+      "peak_working_set_bytes": 1518841856,
+      "output_sha256": "81109840e79039b2f177c4aa8b2483725c1f02c4f28c1e1c107b3ae984c8de57"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0432",
+    "audio_seconds": 3.12,
+    "candidate": {
+      "wall_seconds": 4.548790800006827,
+      "model_seconds": 4.54,
+      "peak_working_set_bytes": 1521184768,
+      "output_sha256": "862182b507ae848c5abd7f8b57cc60eab809dc5935edefe6056bba4b9a8554a8"
+    },
+    "baseline": {
+      "wall_seconds": 4.3298037000058684,
+      "model_seconds": 4.32,
+      "peak_working_set_bytes": 1518944256,
+      "output_sha256": "862182b507ae848c5abd7f8b57cc60eab809dc5935edefe6056bba4b9a8554a8"
+    }
+  },
+  {
+    "id": "nchlt_xho_505m_0455",
+    "audio_seconds": 3.48,
+    "baseline": {
+      "wall_seconds": 4.3444635000196286,
+      "model_seconds": 4.33,
+      "peak_working_set_bytes": 1521885184,
+      "output_sha256": "180a83c0945c44590135ff8278956ee17806c6c848ab9f3cd04f37b8644dec39"
+    },
+    "candidate": {
+      "wall_seconds": 4.237359699996887,
+      "model_seconds": 4.23,
+      "peak_working_set_bytes": 1519693824,
+      "output_sha256": "180a83c0945c44590135ff8278956ee17806c6c848ab9f3cd04f37b8644dec39"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0087",
+    "audio_seconds": 7.104,
+    "candidate": {
+      "wall_seconds": 4.734561699995538,
+      "model_seconds": 4.72,
+      "peak_working_set_bytes": 1522028544,
+      "output_sha256": "f3ad731c5f6754b55e54e69773b015442c891fceab59693ff97cdbe20207b358"
+    },
+    "baseline": {
+      "wall_seconds": 4.835692299995571,
+      "model_seconds": 4.82,
+      "peak_working_set_bytes": 1521098752,
+      "output_sha256": "f3ad731c5f6754b55e54e69773b015442c891fceab59693ff97cdbe20207b358"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0140",
+    "audio_seconds": 3.008,
+    "baseline": {
+      "wall_seconds": 5.04812029999448,
+      "model_seconds": 5.03,
+      "peak_working_set_bytes": 1523666944,
+      "output_sha256": "78904d19c2be17e36f3cf8f6503542fb2b4b9a5f5967baacdaf5426a6c5b5c58"
+    },
+    "candidate": {
+      "wall_seconds": 5.466860099986661,
+      "model_seconds": 5.45,
+      "peak_working_set_bytes": 1520160768,
+      "output_sha256": "78904d19c2be17e36f3cf8f6503542fb2b4b9a5f5967baacdaf5426a6c5b5c58"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0153",
+    "audio_seconds": 4.032,
+    "candidate": {
+      "wall_seconds": 4.858094600000186,
+      "model_seconds": 4.84,
+      "peak_working_set_bytes": 1523351552,
+      "output_sha256": "03e243cfac63d25769468ce9899769b4af209d0c839c94bc9fd9768fe84d5f14"
+    },
+    "baseline": {
+      "wall_seconds": 4.87882409998565,
+      "model_seconds": 4.86,
+      "peak_working_set_bytes": 1520594944,
+      "output_sha256": "03e243cfac63d25769468ce9899769b4af209d0c839c94bc9fd9768fe84d5f14"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0158",
+    "audio_seconds": 5.824,
+    "baseline": {
+      "wall_seconds": 4.999299499992048,
+      "model_seconds": 4.98,
+      "peak_working_set_bytes": 1524801536,
+      "output_sha256": "965e16835246cbef00389a061a764bb5881c22b578a9c1b3eea95484da6817c9"
+    },
+    "candidate": {
+      "wall_seconds": 4.78617320000194,
+      "model_seconds": 4.77,
+      "peak_working_set_bytes": 1520377856,
+      "output_sha256": "965e16835246cbef00389a061a764bb5881c22b578a9c1b3eea95484da6817c9"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0168",
+    "audio_seconds": 6.848,
+    "candidate": {
+      "wall_seconds": 4.931084100011503,
+      "model_seconds": 4.91,
+      "peak_working_set_bytes": 1524097024,
+      "output_sha256": "91ad55e17fa55577fa2a44e976ab86a0f3ea01339f47ad1b889dc3e873fb4172"
+    },
+    "baseline": {
+      "wall_seconds": 4.838689500000328,
+      "model_seconds": 4.82,
+      "peak_working_set_bytes": 1521463296,
+      "output_sha256": "91ad55e17fa55577fa2a44e976ab86a0f3ea01339f47ad1b889dc3e873fb4172"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0176",
+    "audio_seconds": 4.672,
+    "baseline": {
+      "wall_seconds": 4.570100999990245,
+      "model_seconds": 4.55,
+      "peak_working_set_bytes": 1523347456,
+      "output_sha256": "7d7a9823341fe3ce191cd03c6479667978f665384a40a98ad6039d6b10c5fad5"
+    },
+    "candidate": {
+      "wall_seconds": 4.336269299994456,
+      "model_seconds": 4.32,
+      "peak_working_set_bytes": 1521168384,
+      "output_sha256": "7d7a9823341fe3ce191cd03c6479667978f665384a40a98ad6039d6b10c5fad5"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0236",
+    "audio_seconds": 4.096,
+    "candidate": {
+      "wall_seconds": 4.3061800000141375,
+      "model_seconds": 4.29,
+      "peak_working_set_bytes": 1524342784,
+      "output_sha256": "efd9ae14b0ddc820cb9a5db3a4a4b0a2f3881dc6effd6ac3c3ead6eb08e3f8d7"
+    },
+    "baseline": {
+      "wall_seconds": 4.162250299996231,
+      "model_seconds": 4.15,
+      "peak_working_set_bytes": 1522343936,
+      "output_sha256": "efd9ae14b0ddc820cb9a5db3a4a4b0a2f3881dc6effd6ac3c3ead6eb08e3f8d7"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0310",
+    "audio_seconds": 3.968,
+    "baseline": {
+      "wall_seconds": 4.055696499999613,
+      "model_seconds": 4.04,
+      "peak_working_set_bytes": 1524592640,
+      "output_sha256": "4dddc4544e3997322f03ac209ed1db45e770f11326d730bba680ea82703b03f5"
+    },
+    "candidate": {
+      "wall_seconds": 3.9860914000018965,
+      "model_seconds": 3.97,
+      "peak_working_set_bytes": 1523556352,
+      "output_sha256": "4dddc4544e3997322f03ac209ed1db45e770f11326d730bba680ea82703b03f5"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0367",
+    "audio_seconds": 6.784,
+    "candidate": {
+      "wall_seconds": 4.296904499991797,
+      "model_seconds": 4.28,
+      "peak_working_set_bytes": 1524367360,
+      "output_sha256": "a4bbaddc967a44b734960d32a43179d549175ec6517cb3dfe4fb7c519aa0f995"
+    },
+    "baseline": {
+      "wall_seconds": 4.542295299994294,
+      "model_seconds": 4.53,
+      "peak_working_set_bytes": 1521520640,
+      "output_sha256": "a4bbaddc967a44b734960d32a43179d549175ec6517cb3dfe4fb7c519aa0f995"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0456",
+    "audio_seconds": 3.584,
+    "baseline": {
+      "wall_seconds": 4.444224100006977,
+      "model_seconds": 4.42,
+      "peak_working_set_bytes": 1320677376,
+      "output_sha256": "dacccdee20d03c25432155d4f9cf878c5460bd7e46e2638a352b6b4c2eff5ee7"
+    },
+    "candidate": {
+      "wall_seconds": 4.400312500016298,
+      "model_seconds": 4.39,
+      "peak_working_set_bytes": 1318907904,
+      "output_sha256": "dacccdee20d03c25432155d4f9cf878c5460bd7e46e2638a352b6b4c2eff5ee7"
+    }
+  },
+  {
+    "id": "nchlt_xho_506f_0618",
+    "audio_seconds": 3.904,
+    "candidate": {
+      "wall_seconds": 4.026474099984625,
+      "model_seconds": 4.01,
+      "peak_working_set_bytes": 1323069440,
+      "output_sha256": "c9a938fb2434e65e4ab893f84c51afab0e118dfbb4cc0b86a6b4d435554472d5"
+    },
+    "baseline": {
+      "wall_seconds": 3.9712189999991097,
+      "model_seconds": 3.95,
+      "peak_working_set_bytes": 1319477248,
+      "output_sha256": "c9a938fb2434e65e4ab893f84c51afab0e118dfbb4cc0b86a6b4d435554472d5"
+    }
+  }
+]

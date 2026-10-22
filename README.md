@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img alt="status: active" src="https://img.shields.io/badge/status-active-059669">
+  <img alt="status: paused until 2027" src="https://img.shields.io/badge/status-paused%20until%202027-5d6b7d">
   <img alt="model: whisper-medium" src="https://img.shields.io/badge/model-whisper--medium-142a47">
   <img alt="FLEURS CER: 6.2%" src="https://img.shields.io/badge/FLEURS%20CER-6.2%25-f4715f">
-  <img alt="cloud cost: about $16" src="https://img.shields.io/badge/cloud%20cost-~%2416-059669">
+  <img alt="cloud cost: about $32" src="https://img.shields.io/badge/cloud%20cost-~%2432-059669">
   <img alt="licence: MIT" src="https://img.shields.io/badge/licence-MIT-142a47">
   <br>
   <a href="https://ntlakanipho-thetha.static.hf.space/index.html"><img alt="Try the demo" src="https://img.shields.io/badge/%F0%9F%8E%99%EF%B8%8F%20try%20the%20demo-Thetha-f4715f"></a>
@@ -32,9 +32,14 @@ end to end, from raw corpora to a model you can talk to, not just to ship a chec
 > **Use it:** [whisper-medium-isixhosa](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) (more accurate) or [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa) (faster) on Hugging Face.
 
 > [!NOTE]
-> **Training resumed on 21 October 2026** ([D-0024](decisions.md)) with a second, larger corpus: Swivuriso, ~146 hours
-> of read and unscripted isiXhosa from 407 speakers. The best model is now **R-0019**. On people speaking in their own
-> words, its letter errors fell from 10.8 % to 4.1 % ([R-0019](runs/R-0019)), and on FLEURS from 8.0 % to 6.2 %.
+> **Paused for the rest of 2026** ([D-0030](decisions.md)). The models and the demo stay online. Where it stopped:
+> - **Medium: [R-0019](runs/R-0019)**, trained with Swivuriso (~146 h of read and unscripted isiXhosa, 407 speakers).
+>   On people speaking in their own words its letter errors fell from 10.8 % to 4.1 %; on FLEURS from 8.0 % to 6.2 %.
+> - **Small, in the free demo: [R-0027](runs/R-0027)**, with 245 h of Swivuriso including long recordings cut at
+>   pauses. Everyday-speech letter errors fell from 11.8 % to 5.1 %.
+> - **Mixed isiXhosa–English speech** improved with the new data, without any dedicated mixed-speech training: 38 → 29 % (medium) and
+>   42 → 33 % (small) ([R-0030](runs/R-0030)). Still the weakest spot.
+> - Ideas for when it restarts: [docs/ideas.png](docs/ideas.png) and the future-work list in [TODO.md](TODO.md).
 
 ## Hear the difference
 
@@ -66,8 +71,9 @@ The same FLEURS test sentences, which none of the models saw in training:
 | **2 · First fine-tune** | whisper-small on 51 hours of NCHLT read speech, about $1.85 of GPU. It learned the corpus's short prompts so well that it glued words together on longer sentences. | NCHLT CER 46 → 3 % ([R-0004](runs/R-0004)) |
 | **3 · Improve** | Adding 13 hours of varied FLEURS sentences fixed the word-gluing. Moving from small to medium helped on every test set. An 8-bit copy runs on a laptop at the same accuracy. | FLEURS CER 8 % ([R-0012](runs/R-0012), [R-0013](runs/R-0013)) |
 | **3b · More data** | Added Swivuriso (South Africa African Next Voices): 146 h of read and unscripted speech from 407 new speakers, with every test and dev sentence kept out. Same model and recipe otherwise. | FLEURS CER 6.2 %, unscripted speech 10.8 → 4.1 % ([R-0019](runs/R-0019)) |
-| **4 · Mixed speech** | Tested on real isiXhosa–English TV dialogue. The model hears English words but spells them the isiXhosa way: "stubborn" comes out as "istabhunga". Fix designed, not run. | CER 38 % ([R-0014](runs/R-0014)) |
-| **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017)). | [demo](https://ntlakanipho-thetha.static.hf.space/index.html) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
+| **3c · Long recordings** | Cut 8 787 long unscripted Swivuriso recordings at pauses into 98.9 h of extra training pieces (`src/swivuriso_long.py`). The small model trained on them halved its everyday-speech errors and became the demo model; the medium gained less, missed its ship rule by 0.02 and stays at R-0019. | small: unscripted CER 11.8 → 5.1 % ([R-0027](runs/R-0027)); medium: tie ([R-0029](runs/R-0029)) |
+| **4 · Mixed speech** | Tested on real isiXhosa–English TV dialogue. At first the model heard English words but spelled them the isiXhosa way ("stubborn" came out as "istabhunga"). The Swivuriso data fixed much of that without dedicated mixed-speech training (dedicated training is designed, not run). | CER 38 → 29 % ([R-0014](runs/R-0014), [R-0030](runs/R-0030)) |
+| **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the small model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017), [R-0028](runs/R-0028)). | [demo](https://ntlakanipho-thetha.static.hf.space/index.html) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
 
 ## Use the model
 
@@ -91,11 +97,15 @@ letter fails a whole word; CER is the fairer headline.
 | whisper-small, NCHLT ([R-0004](runs/R-0004)) | 2.98 / 16.6 | 29.8 / 94.9 | – |
 | whisper-small, NCHLT + FLEURS ([R-0007](runs/R-0007)) | 2.91 / 16.8 | 10.2 / 44.4 | 42.1 / 88.0 |
 | whisper-medium, NCHLT + FLEURS ([R-0012](runs/R-0012)) | 2.33 / 12.7 | 8.03 / 37.8 | 38.4 / 79.6 |
-| **whisper-medium, + Swivuriso ([R-0019](runs/R-0019))** | **2.31 / 13.7** | **6.24 / 30.3** | not measured yet |
+| whisper-small, + Swivuriso 245 h ([R-0027](runs/R-0027), the demo) | 3.37 / 21.6 | 8.89 / 38.2 | 32.8 / 71.5 |
+| **whisper-medium, + Swivuriso 147 h ([R-0019](runs/R-0019))** | **2.31 / 13.7** | **6.24 / 30.3** | **29.3 / 66.6** |
+| whisper-medium, + Swivuriso 245 h ([R-0029](runs/R-0029), not published) | 2.32 / 14.2 | 6.16 / 29.8 | 28.1 / 64.3 |
 
 <sub>Each cell is CER / WER in %. Every run, including the failed ones, is in <a href="results.md">results.md</a>.
 On the Swivuriso test (2 145 clips of 1–30 s, 24 speakers of its own), R-0019 scores 4.12 / 19.1 against R-0012's
-9.00 / 37.3 (<a href="runs/R-0018">R-0018</a>).</sub>
+9.00 / 37.3 (<a href="runs/R-0018">R-0018</a>); R-0027 5.25 / 24.0 against R-0007's 9.88 / 42.5; R-0029 4.14 / 18.1, which
+missed R-0019's CER by 0.02 because of one runaway output. Soapies scores come from the 8-bit copies on CPU
+(<a href="runs/R-0030">R-0030</a>; R-0029 in <a href="runs/R-0031">R-0031</a>, where R-0019 scored 29.6 / 66.9).</sub>
 
 > [!IMPORTANT]
 > **Reading these numbers honestly**
@@ -120,7 +130,7 @@ On the Swivuriso test (2 145 clips of 1–30 s, 24 speakers of its own), R-0019 
 - **The training choices**: whole speakers are held out as a dev set, the checkpoint with the lowest dev CER is kept,
   and a run resumes if the machine dies. One light text normalisation is shared by every score, so results stay
   comparable.
-- **Everything is written down.** 17 problems ([problems.md](problems.md)), 26 decisions
+- **Everything is written down.** 21 problems ([problems.md](problems.md)), 30 decisions
   ([decisions.md](decisions.md)) and a session-by-session [JOURNAL](JOURNAL.md).
 
 <details>
@@ -130,7 +140,7 @@ On the Swivuriso test (2 145 clips of 1–30 s, 24 speakers of its own), R-0019 
 
 **Thetha, the talk-to-it page (laptop, CPU only).** This needs Python 3.12 and ffmpeg. The models are not in this repo:
 copy the `ct2-int8/` folder of each Hugging Face model into `data/models/` as `R-0019-int8` (medium) and
-`R-0007-int8` (small).
+`R-0027-int8` (small).
 
 ```powershell
 python -m venv .venv
