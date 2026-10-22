@@ -1,0 +1,51 @@
+{
+ "max_cer": 8.0,
+ "min_hours": 20.0,
+ "bands": [
+  {
+   "score_min_from": 0.0,
+   "clips": 120,
+   "cer": 5.6,
+   "wer": 24.18
+  },
+  {
+   "score_min_from": 0.329,
+   "clips": 120,
+   "cer": 4.09,
+   "wer": 20.64
+  },
+  {
+   "score_min_from": 0.533,
+   "clips": 120,
+   "cer": 3.22,
+   "wer": 17.64
+  },
+  {
+   "score_min_from": 0.66,
+   "clips": 120,
+   "cer": 2.26,
+   "wer": 13.49
+  },
+  {
+   "score_min_from": 0.766,
+   "clips": 120,
+   "cer": 1.47,
+   "wer": 10.29
+  }
+ ],
+ "score_min_threshold": 0.0,
+ "sample": 600,
+ "kept_sample": 600,
+ "kept_sample_cer": 3.46,
+ "kept_sample_wer": 17.95,
+ "first_word_right_pct": 83.7,
+ "last_word_right_pct": 80.8,
+ "pieces": 20563,
+ "pieces_kept": 20563,
+ "hours_kept": 98.86,
+ "hours_by_type": {
+  "scripted": 15.18,
+  "unscripted": 83.68
+ },
+ "pass": true
+}

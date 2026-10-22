@@ -1,0 +1,13 @@
+{
+  "rule": "train split, longer than 30.0 s, no [?], a-z spelling, no test/dev sentence of 3+ words",
+  "clips": 62786,
+  "short": 43781,
+  "unclear": 8594,
+  "empty": 0,
+  "spelling": 1498,
+  "leak": 126,
+  "unreadable": 0,
+  "long_clips_kept": 8787,
+  "long_hours_kept": 104.3,
+  "speakers": 405
+}

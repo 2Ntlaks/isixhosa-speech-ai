@@ -1,0 +1,9 @@
+{
+  "clips": 8787,
+  "failed": 0,
+  "pieces": 20563,
+  "hours": 98.86,
+  "max_seconds": 28.0,
+  "median_seconds": 17.35,
+  "device": "cuda"
+}
