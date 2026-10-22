@@ -18,3 +18,5 @@ runs/**/eval_swivuriso/predictions.jsonl
 runs/**/eval_swivuriso/samples.md
 runs/**/gate_r0019/predictions.jsonl
 runs/**/gate_r0019/samples.md
+runs/R-0030/*/predictions.jsonl
+runs/R-0030/samples.md
