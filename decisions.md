@@ -251,3 +251,14 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   ct2-int8, new card crediting Swivuriso and its no-TTS/voice-cloning terms); the previous version kept as tag R-0012.
   src/live.py defaults to R-0019-int8,R-0007-int8; README updated (status active, R-0019 results, honest notes).
 - Not changed: the in-browser demo still runs the small model R-0007 (a small model on the new data is a later run).
+
+## D-0028 · 2026-10-22 · R-0027 becomes the published small model and the free demo's model
+- Context: the founder promised improvements on X and chose to wait for the free demo's update before announcing it;
+  he asked to "improve it by training it on more Swivuriso data" (R-0027, long-clip pieces).
+- Options: keep R-0007 in the demo, or ship R-0027. Agent recommended shipping: it met the pre-set ship rule (better on
+  FLEURS 10.16 -> 8.89 and Swivuriso test 9.88 -> 5.25 CER; NCHLT CER +0.46, within the +0.5 limit, only on memorised
+  prompt sentences), and its browser and CTranslate2 copies were checked (R-0028).
+- Founder: "yes publish all three" (Hugging Face model, demo, GitHub).
+- Done: Ntlakanipho/whisper-small-isixhosa = R-0027 (commit 24d2a1e1ed; weights, ct2-int8/, onnx/, new card crediting
+  Swivuriso and its terms), previous version kept as tag R-0007; demo Space worker.js pinned to revision R-0027 so cached
+  browsers fetch the new files; GitHub main pushed. Live check passed (R-0028).

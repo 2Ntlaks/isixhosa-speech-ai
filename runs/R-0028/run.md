@@ -24,3 +24,10 @@
   CER 7.3 ("leemodelethe tha", "ibeluncedo"). One recording: an illustration, not a score.
 - CTranslate2 int8 copy for the laptop page and the model repo's ct2-int8/ (`data/models/R-0027-int8`, 240 MB): same
   200 clips CER 5.95 / WER 35.32 vs GPU 5.91 / 35.49, 188/200 identical, 2.44 s per clip.
+
+## Live check after publishing · 2026-10-22 (D-0028)
+- Public Space https://ntlakanipho-thetha.static.hf.space/index.html in a fresh headless Chrome (empty cache), its own
+  worker.js (revision R-0027): crossOriginIsolated true, 16 threads; first model download + load 252 s on the laptop's
+  connection (~300 MB); NCHLT clip "ingekazi" in 7.3 s; founder's recording in 9.0 s, the same text as the local test.
+- Hugging Face files checked by sha256 against the local ones (model.safetensors, ct2-int8/model.bin,
+  onnx/decoder_model_merged_quantized.onnx): identical. Tags: R-0027 -> 24d2a1e1ed (main), R-0007 -> 365a5dc46d.
