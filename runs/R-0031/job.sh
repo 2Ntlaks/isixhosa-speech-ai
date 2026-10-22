@@ -14,6 +14,7 @@ for r in R-0029 R-0019; do
   aws s3 sync "s3://$BUCKET/models/$r/" models/$r/ --only-show-errors --exclude training_args.bin
   ct2-transformers-converter --model models/$r --output_dir models/$r-int8 --quantization int8 2>&1 | tail -2
   python -c "import sys; from transformers import WhisperTokenizerFast as T; T.from_pretrained(sys.argv[1]).backend_tokenizer.save(sys.argv[2] + '/tokenizer.json')" models/$r models/$r-int8
+  cp models/$r/{added_tokens.json,generation_config.json,merges.txt,normalizer.json,preprocessor_config.json,special_tokens_map.json,tokenizer_config.json,vocab.json} models/$r-int8/   # the converter keeps only the weights (P-0020)
   rm -rf models/$r
   du -sh models/$r-int8; ls models/$r-int8
   aws s3 sync models/$r-int8/ "s3://$BUCKET/models/$r-int8/" --only-show-errors
@@ -32,4 +33,4 @@ for r in R-0029 R-0019; do
   python src/eval_soapies.py --model models/$r-int8 --lang sw --threads 10 --out out/soapies_$r > out/soapies_$r.log 2>&1 &
 done
 wait
-tail -1 out/nchlt_check.log out/soapies_*.log
+tail -n 1 out/nchlt_check.log out/soapies_*.log

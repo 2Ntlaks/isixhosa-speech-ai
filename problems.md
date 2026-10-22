@@ -243,3 +243,14 @@ Format:
 - Fix: always pass `--region us-east-1` (or use the cloud/ scripts). Checked both regions: us-east-1 has only R-0029;
   af-south-1 has one stopped t4g.micro "CrazyEC2Lab" (ManagedBy: Codex, Aug 2026), not this project; left untouched.
 - Cost: $0; ~5 minutes. Lesson: an empty answer from the cloud is only evidence if you asked the right place.
+
+## P-0020 · 2026-10-22 · R-0031: the int8 copies had no audio/tokenizer settings files
+- **Error:** `OSError: models/R-0029-int8 does not appear to have a file named preprocessor_config.json.` (all three
+  scoring jobs, 2 minutes into the job; plus `tail: option used in invalid context -- 1` from `tail -1` with several files).
+- **Cause:** `ct2-transformers-converter` (ctranslate2 4.5.0) writes only config.json, model.bin and vocabulary.json.
+  The laptop's int8 folders have the processor and tokenizer files because they were copied there by hand in R-0013 and
+  R-0020; that step was never written down, so the cloud job missed it.
+- **Fix:** the job copies the 8 processor/tokenizer files from the full model into the int8 folder (not config.json,
+  which differs); `tail -n 1`. Relaunched as the same run.
+- **Lost:** ~4 min of a spot c7i.8xlarge (~$0.04).
+- **Lesson:** an int8 copy = converter output + the full model's processor/tokenizer files (+ tokenizer.json for faster-whisper).

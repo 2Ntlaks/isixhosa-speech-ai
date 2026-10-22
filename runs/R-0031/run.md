@@ -13,3 +13,5 @@
 - **Command:** `FALLBACK_TYPES="c7i.4xlarge c6i.8xlarge" cloud/run_job.sh --run R-0031 --type c7i.8xlarge --market spot --max-hours 2`
   (CPU node with the same GPU image; nvidia-smi fails harmlessly). 32 vCPU, spot ~ $0.5-0.6/h, about 1 h.
 - Soapies predictions stay local (gitignored, D-0016); only scores go in git.
+- **Attempt 1 (13:53-13:57 SAST) failed:** int8 folders lacked preprocessor_config.json and the tokenizer files (P-0020).
+  Job fixed to copy them; relaunched.
