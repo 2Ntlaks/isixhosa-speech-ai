@@ -62,5 +62,17 @@ for key, (run, hyp) in OUTPUTS.items():
     words, errors = marked(hyp)
     data["outputs"][key] = {"run": run, "words": words, "errors": errors, "of": len(said)}
     print(key, run, f"{errors} errors of {len(said)} words:", " ".join(w["w"] if w["ok"] else w["w"].upper() for w in words))
+# the "listening test" cut (src/TeaserTest.tsx) uses the second part of the sentence, from "siphuhlise" on, where the old
+# model's mistakes are; score = words of that part each version got right
+FROM = said.index("siphuhlise")
+seg_t0 = times[FROM][0]
+test = {"from_word": FROM, "start": round(max(0.0, seg_t0 - 0.35), 2), "end": round(min(len(audio) / sr, times[-1][1] + 0.35), 2),
+        "said": said[FROM:], "versions": {}}
+for key, v in data["outputs"].items():
+    ws = [w for w in v["words"] if w["t"] > times[FROM - 1][1] + 0.01]
+    part = jiwer.process_words(" ".join(said[FROM:]), " ".join(w["w"] for w in ws))
+    test["versions"][key] = {"run": v["run"], "words": ws, "right": part.hits, "of": len(said) - FROM}
+    print("test", key, f"{part.hits}/{len(said) - FROM} right:", " ".join(w["w"] if w["ok"] else w["w"].upper() for w in ws))
+data["test"] = test
 json.dump(data, open(os.path.join(HERE, "src", "teaser.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 print("speech", data["said_times"][0][0], "-", data["said_times"][-1][1], "s of", data["seconds"])

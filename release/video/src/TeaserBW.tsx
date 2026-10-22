@@ -6,14 +6,14 @@ import { AbsoluteFill, Audio, Sequence, interpolate, random, staticFile, useCurr
 import { loadFont } from "@remotion/google-fonts/IBMPlexMono";
 import t from "./teaser.json";
 
-const font = loadFont("normal", { weights: ["400", "500"], subsets: ["latin"] }).fontFamily;
+export const font = loadFont("normal", { weights: ["400", "500"], subsets: ["latin"] }).fontFamily;
 const FPS = 30, INK = "#f4f4f2", GREY = "#8c8c88", DIM = "#4a4a48", BG = "#0b0b0b";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /* ---------- typing engine: ops -> keystroke events with a human rhythm ---------- */
-type Op = string | { back: number } | { pause: number };
+export type Op = string | { back: number } | { pause: number };
 type Ev = { at: number; ch?: string; back?: boolean };
-const plan = (ops: Op[], seed: string, pace = 0.5): { evs: Ev[]; end: number } => {
+export const plan = (ops: Op[], seed: string, pace = 0.5): { evs: Ev[]; end: number } => {
   const evs: Ev[] = [];
   let f = 0, n = 0;
   for (const op of ops) {
@@ -34,24 +34,24 @@ const plan = (ops: Op[], seed: string, pace = 0.5): { evs: Ev[]; end: number } =
   }
   return { evs, end: f };
 };
-const textAt = (evs: Ev[], f: number) => {
+export const textAt = (evs: Ev[], f: number) => {
   let s = "";
   for (const e of evs) { if (e.at > f) break; s = e.back ? s.slice(0, -1) : s + e.ch; }
   return s;
 };
-const Keys: React.FC<{ evs: Ev[]; seed: string; v?: number }> = ({ evs, seed, v = 0.55 }) => (
+export const Keys: React.FC<{ evs: Ev[]; seed: string; v?: number }> = ({ evs, seed, v = 0.55 }) => (
   <>{evs.map((e, k) => {
     const src = e.back ? "key_back.wav" : e.ch === " " || e.ch === "\n" ? "key_space.wav" : `key${Math.floor(random(`${seed}k${k}`) * 4)}.wav`;
     return <Sequence key={k} from={e.at} durationInFrames={4} layout="none">
       <Audio src={staticFile(src)} volume={v * (0.75 + 0.5 * random(`${seed}v${k}`))} /></Sequence>;
   })}</>
 );
-const Cursor: React.FC<{ typing: boolean; f: number }> = ({ typing, f }) =>
+export const Cursor: React.FC<{ typing: boolean; f: number }> = ({ typing, f }) =>
   <span style={{ display: "inline-block", width: "0.55em", height: "1.05em", marginLeft: 4, verticalAlign: "-0.15em", background: INK,
     opacity: typing || Math.floor(f / 16) % 2 === 0 ? 1 : 0 }} />;
 
 /* a screen of typed text */
-const Typed: React.FC<{ ops: Op[]; seed: string; size: number; top?: number; pace?: number }> = ({ ops, seed, size, top = 640, pace }) => {
+export const Typed: React.FC<{ ops: Op[]; seed: string; size: number; top?: number; pace?: number }> = ({ ops, seed, size, top = 640, pace }) => {
   const f = useCurrentFrame(), { evs } = plan(ops, seed, pace), s = textAt(evs, f);
   const typing = evs.some(e => e.at <= f && e.at > f - 5) || (evs[0] && f < evs[0].at + 2 && f >= 0);
   return (

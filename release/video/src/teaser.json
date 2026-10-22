@@ -684,5 +684,139 @@
    "errors": 2,
    "of": 16
   }
+ },
+ "test": {
+  "from_word": 5,
+  "start": 5.62,
+  "end": 14.22,
+  "said": [
+   "siphuhlise",
+   "le",
+   "model",
+   "thetha",
+   "ukuze",
+   "ibe",
+   "luncedo",
+   "kuluntu",
+   "lwase",
+   "south",
+   "africa"
+  ],
+  "versions": {
+   "old": {
+    "run": "R-0007",
+    "words": [
+     {
+      "w": "siphuhlise",
+      "ok": true,
+      "t": 6.95
+     },
+     {
+      "w": "leemodelethe",
+      "ok": false,
+      "t": 7.39
+     },
+     {
+      "w": "tha",
+      "ok": false,
+      "t": 8.09
+     },
+     {
+      "w": "ukuze",
+      "ok": true,
+      "t": 10.27
+     },
+     {
+      "w": "ibeluncedo",
+      "ok": false,
+      "t": 10.61
+     },
+     {
+      "w": "kuluntu",
+      "ok": true,
+      "t": 12.36
+     },
+     {
+      "w": "lwase",
+      "ok": true,
+      "t": 12.76
+     },
+     {
+      "w": "south",
+      "ok": true,
+      "t": 13.3
+     },
+     {
+      "w": "africa",
+      "ok": true,
+      "t": 14.04
+     }
+    ],
+    "right": 6,
+    "of": 11
+   },
+   "new": {
+    "run": "R-0027",
+    "words": [
+     {
+      "w": "siphuhlise",
+      "ok": true,
+      "t": 6.95
+     },
+     {
+      "w": "le",
+      "ok": true,
+      "t": 7.39
+     },
+     {
+      "w": "model",
+      "ok": true,
+      "t": 8.09
+     },
+     {
+      "w": "theatre",
+      "ok": false,
+      "t": 9.05
+     },
+     {
+      "w": "ukuze",
+      "ok": true,
+      "t": 10.27
+     },
+     {
+      "w": "ibe",
+      "ok": true,
+      "t": 10.61
+     },
+     {
+      "w": "luncedo",
+      "ok": true,
+      "t": 11.36
+     },
+     {
+      "w": "kuluntu",
+      "ok": true,
+      "t": 12.36
+     },
+     {
+      "w": "lwase",
+      "ok": true,
+      "t": 12.76
+     },
+     {
+      "w": "south",
+      "ok": true,
+      "t": 13.3
+     },
+     {
+      "w": "africa",
+      "ok": true,
+      "t": 14.04
+     }
+    ],
+    "right": 10,
+    "of": 11
+   }
+  }
  }
 }

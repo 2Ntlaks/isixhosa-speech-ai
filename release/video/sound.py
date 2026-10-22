@@ -207,3 +207,23 @@ for i, (fc, fb) in enumerate([(2400, 180), (2100, 200), (2700, 165), (2250, 190)
 sf.write(os.path.join(HERE, "public", "key_space.wav"), key(1500, 120, 300, 0.6).astype("float32"), SR, subtype="PCM_16")
 sf.write(os.path.join(HERE, "public", "key_back.wav"), key(1800, 140, 380, 0.55).astype("float32"), SR, subtype="PCM_16")
 print("keyboard sounds written")
+
+# ---- the "listening test" teaser (src/TeaserTest.tsx): a red pen on paper, and a sheet sliding onto a desk ----
+def scratch(sec, strokes, gain):
+    t = tt(sec)
+    n = rng.standard_normal(t.size)
+    hp = np.diff(n, prepend=0)                                        # bright paper noise
+    band = hp - np.convolve(hp, np.ones(6) / 6, "same")
+    am = 0.35 + 0.65 * np.abs(np.sin(np.pi * strokes * t / sec)) ** 1.5  # the pen's back-and-forth
+    env = np.minimum(1, t / 0.02) * np.minimum(1, (sec - t) / 0.05)
+    return band * am * env * gain
+
+
+sf.write(os.path.join(HERE, "public", "pen_circle.wav"), scratch(0.55, 3, 0.22).astype("float32"), SR, subtype="PCM_16")
+sf.write(os.path.join(HERE, "public", "pen_tick.wav"), scratch(0.22, 2, 0.24).astype("float32"), SR, subtype="PCM_16")
+sf.write(os.path.join(HERE, "public", "pen_write.wav"), scratch(1.1, 9, 0.18).astype("float32"), SR, subtype="PCM_16")
+t = tt(0.7)
+slide = np.convolve(rng.standard_normal(t.size), np.ones(40) / 40, "same") * np.sin(np.pi * t / t[-1]) ** 1.5 * 1.6
+slide += kick(80, 50, 0.08, 0.7) * 0.15 * (t > 0.55)
+sf.write(os.path.join(HERE, "public", "paper_slide.wav"), slide.astype("float32"), SR, subtype="PCM_16")
+print("pen and paper sounds written")
