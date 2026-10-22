@@ -17,3 +17,7 @@
 - **Command:** `bash runs/R-0032/run.sh` (laptop, $0; one recognizer at a time, laptop memory is short).
 - **Smoke test (3 clips, R-0029):** works; recognizer ~10 s per 12 s clip on battery vs Meta ~4 s: Whisper always
   encodes a full 30 s window, CTC only the audio. Speed may decide the live use; hence the small model too.
+- **Attempt 1 (14:35 SAST) stopped:** Claude Code stopped the run because the laptop was critically low on memory
+  (14.6 GB total, ~1 GB free with the founder's other apps open; the R-0029 benchmark process held 1.4 GB). The
+  leftover Python process was stopped by hand; no results were written. Waiting for the founder to free memory or
+  choose to run it elsewhere.
