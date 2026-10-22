@@ -1,0 +1,8 @@
+  50/391 clips, 135 s
+  100/391 clips, 267 s
+  150/391 clips, 400 s
+  200/391 clips, 531 s
+  250/391 clips, 644 s
+  300/391 clips, 758 s
+  350/391 clips, 873 s
+{"model": "models/R-0019-int8", "lang": "sw", "langs_used": {"sw": 391}, "test_set": "soapies engxho tst", "clips": 391, "speakers": 5, "audio_minutes": 14.3, "wer": 66.92, "cer": 29.56, "cer_no_spaces": 28.25, "word_hits": {"eng": {"hit": 559, "words": 1149, "pct": 48.7}, "xho": {"hit": 411, "words": 1502, "pct": 27.4}}, "exact": 9, "engine": "ctranslate2 4.5.0 int8 CPU (10 threads)", "seconds_per_clip": 2.47, "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace", "mkl": "0"}

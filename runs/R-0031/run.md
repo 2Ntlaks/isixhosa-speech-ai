@@ -15,3 +15,25 @@
 - Soapies predictions stay local (gitignored, D-0016); only scores go in git.
 - **Attempt 1 (13:53-13:57 SAST) failed:** int8 folders lacked preprocessor_config.json and the tokenizer files (P-0020).
   Job fixed to copy them; relaunched.
+
+## Outcome (2026-10-22, 14:19 SAST): int8 copy PASSED; on mixed speech R-0029 beats R-0019
+
+- **Node:** c7i.8xlarge spot (32 vCPU), 13:59-14:19 SAST, ~20 min at ~$0.63-0.73/h; with attempt 1 **~$0.30** in all.
+- **int8 copies:** S3 models/R-0029-int8/ and models/R-0019-int8/, 744 MB each, with processor/tokenizer files and
+  tokenizer.json (ready for faster-whisper).
+- **int8 check (NCHLT test, 200 unseen-sentence clips, greedy):** int8 CPU WER 27.82 / CER 4.71 vs the same model on GPU
+  26.62 / 4.53; 181/200 outputs identical. CER gap 0.18 <= 0.3: **PASSED** (R-0020 for R-0019: gap 0.06, 184/200).
+- **Soapies (391 clips, R-0030 settings, same node):**
+
+| Model | CER % | WER % | English words heard | isiXhosa words heard |
+|---|---|---|---|---|
+| R-0019-int8 (current medium) | 29.56 | 66.92 | 48.7 % | 27.4 % |
+| **R-0029-int8 (new medium)** | **28.14** | **64.32** | **51.0 %** | **30.2 %** |
+
+  R-0019 on the laptop (R-0030) was 29.29 / 66.62: the node's CPU shifts results by ~0.3, so only same-node numbers
+  are compared. No runaway outputs in either model here (none longer than 1.5x the reference; the 96-token limit caps
+  them anyway). 2.47 s per clip each with 10 threads.
+- **What it means:** on the speech closest to real use (mixed, unscripted), R-0029 is a little better than R-0019:
+  1.4 fewer letter errors in 100, more of both languages' words heard. With R-0029's Swivuriso unscripted gain (4.1 ->
+  3.6) this supports trying it in the Siyamthanda test next to R-0019; the ship rule's failure (R-0029) stands, so it
+  does not replace R-0019 anywhere without the founder's decision.
