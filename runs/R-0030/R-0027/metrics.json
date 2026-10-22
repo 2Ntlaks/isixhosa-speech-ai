@@ -1,0 +1,31 @@
+{
+ "model": "data/models/R-0027-int8",
+ "lang": "sw",
+ "langs_used": {
+  "sw": 391
+ },
+ "test_set": "soapies engxho tst",
+ "clips": 391,
+ "speakers": 5,
+ "audio_minutes": 14.3,
+ "wer": 71.48,
+ "cer": 32.8,
+ "cer_no_spaces": 31.6,
+ "word_hits": {
+  "eng": {
+   "hit": 441,
+   "words": 1149,
+   "pct": 38.4
+  },
+  "xho": {
+   "hit": 370,
+   "words": 1502,
+   "pct": 24.6
+  }
+ },
+ "exact": 8,
+ "engine": "ctranslate2 4.5.0 int8 CPU (8 threads)",
+ "seconds_per_clip": 1.47,
+ "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+ "mkl": "0"
+}
