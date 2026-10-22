@@ -14,3 +14,13 @@
   (R-0017: 163/200). 2.99 s per clip in Python on the laptop CPU.
 - For comparison, R-0007's browser copy on its own 200 clips scored 6.63 / 37.71 (R-0017).
 - Browser check: see below.
+
+## Browser check · 2026-10-22 ~08:00 SAST (laptop, $0)
+- Headless Chrome, the demo's own `worker.js` (transformers.js 3.0.2, checksum-verified from npm) pointed at the local
+  files instead of Hugging Face, served with COOP/COEP headers: `crossOriginIsolated` true, 16 threads.
+- Model load 5.9 s from disk. NCHLT clip nchlt_xho_500m_0267 (3 s): "ingekazi" in 6.9 s, the same as the Python ONNX run
+  above. Founder's recording 20261021-140009 (14.2 s): 9.4 s, WER 12.5 / CER 6.4 against his transcript
+  ("kuthwita" for kutwitter, "theatre" for Thetha). R-0007-int8 (demo today, greedy) on the same recording: WER 37.5 /
+  CER 7.3 ("leemodelethe tha", "ibeluncedo"). One recording: an illustration, not a score.
+- CTranslate2 int8 copy for the laptop page and the model repo's ct2-int8/ (`data/models/R-0027-int8`, 240 MB): same
+  200 clips CER 5.95 / WER 35.32 vs GPU 5.91 / 35.49, 188/200 identical, 2.44 s per clip.
