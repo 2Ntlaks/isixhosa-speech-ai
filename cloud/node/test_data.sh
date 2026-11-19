@@ -6,6 +6,10 @@
 # downloaded from Hugging Face google/fleurs at a pinned revision, checked against the published SHA-256 of each
 # archive, and saved back to S3 (same layout as cloud/node/fetch_bootstrap.sh made, plus COMPLETE and MANIFEST.txt).
 # The pinned revision gives exactly R-0019's 1034 FLEURS test clips and texts (checked on the laptop, 2026-11-19).
+# Downloads go through fetch(): a stalled transfer (< 10 kB/s for 2 min) is aborted and resumed (P-0016), as in
+# cloud/node/fetch_bootstrap.sh. An archive already on disk with the right SHA-256 is not fetched again.
+
+export AWS_DEFAULT_REGION=us-east-1   # P-0019: never rely on the node's default region
 
 FLEURS_REV=70bb2e84b976b7e960aa89f1c648e09c59f894dd
 declare -A FLEURS_SHA=(
@@ -17,6 +21,18 @@ F=data/fleurs_xh_za
 S=data/swivuriso_16k
 T=data/nchlt_xho/transcriptions
 
+fetch() {  # url file: resume and retry, abort a stalled transfer; prints the size every 60 s
+  echo "--- $(date -u +%T) $2"
+  ( while sleep 60; do echo "--- $(date -u +%T) $2: $(du -h "$2" 2>/dev/null | cut -f1) so far"; done ) & local meter=$!
+  local rc=1 try; for try in 1 2 3 4 5 6; do
+    curl -fL --retry 5 --retry-delay 10 --connect-timeout 30 --speed-limit 10000 --speed-time 120 -C - -sS -o "$2" "$1"       && { rc=0; break; }
+    echo "--- $(date -u +%T) $2: stalled or failed (try $try), resuming"; sleep 10; done
+  kill $meter 2>/dev/null || true
+  return $rc
+}
+
+fleurs_ok() { [ -f $F/audio/$1.tar.gz ] && echo "${FLEURS_SHA[$1]}  $F/audio/$1.tar.gz" | sha256sum -c --quiet 2>/dev/null; }
+
 get_fleurs() {  # get_fleurs <split>...
   local SC="s3://$BUCKET/datasets/fleurs_xh_za" H="https://huggingface.co/datasets/google/fleurs/resolve/$FLEURS_REV/data/xh_za"
   mkdir -p $F/audio
@@ -24,15 +40,15 @@ get_fleurs() {  # get_fleurs <split>...
     echo "=== $(date -u +%T) FLEURS: S3 copy"
     aws s3 cp "$SC/MANIFEST.txt" $F/ --only-show-errors
     for s in train dev test; do aws s3 cp "$SC/$s.tsv" $F/ --only-show-errors; done
-    for s in "$@"; do aws s3 cp "$SC/audio/$s.tar.gz" $F/audio/ --only-show-errors; done
+    for s in "$@"; do fleurs_ok $s || aws s3 cp "$SC/audio/$s.tar.gz" $F/audio/ --only-show-errors; done
   else
     echo "=== $(date -u +%T) FLEURS: from Hugging Face google/fleurs @ $FLEURS_REV"
-    for s in train dev test; do curl -sSfL --retry 5 -o $F/$s.tsv "$H/$s.tsv"; done
-    for s in "$@"; do curl -sSfL --retry 5 -o $F/audio/$s.tar.gz "$H/audio/$s.tar.gz"; done
+    for s in train dev test; do [ -s $F/$s.tsv ] || fetch "$H/$s.tsv" $F/$s.tsv || return 1; done
+    for s in "$@"; do fleurs_ok $s || fetch "$H/audio/$s.tar.gz" $F/audio/$s.tar.gz || return 1; done
   fi
   for s in "$@"; do
-    echo "${FLEURS_SHA[$s]}  $F/audio/$s.tar.gz" | sha256sum -c --quiet || { echo "FLEURS $s.tar.gz checksum mismatch"; return 1; }
-    tar xzf $F/audio/$s.tar.gz -C $F/audio/
+    fleurs_ok $s || { echo "FLEURS $s.tar.gz checksum mismatch"; return 1; }
+    [ -f $F/audio/.extracted_$s ] || { tar xzf $F/audio/$s.tar.gz -C $F/audio/ && touch $F/audio/.extracted_$s; }
   done
   if ! aws s3 ls "$SC/COMPLETE" >/dev/null 2>&1 && [ "$#" -eq 3 ]; then  # all three archives here: restore the S3 copy
     { echo "google/fleurs xh_za @ $FLEURS_REV (CC BY 4.0), fetched $(date -u +%FT%TZ)";
@@ -77,9 +93,9 @@ declare -A SET_ARGS=(
 SEEN="--train-xml $T/nchlt_xho.trn.xml --train-fleurs-tsv $F/train.tsv"   # seen/unseen split, as R-0019's evaluations
 
 setup_ct2() {  # faster-whisper on the job's venv, pinned; the GPU needs cuDNN 9 and cuBLAS 12 from torch's pip wheels
-  uv pip install -q faster-whisper==1.2.1 ctranslate2==4.5.0
+  timeout 900 uv pip install -q faster-whisper==1.2.1 ctranslate2==4.5.0
   local libs
   libs=$(python -c "import nvidia.cublas.lib as b, nvidia.cudnn.lib as c; print(b.__path__[0] + ':' + c.__path__[0])")
-  export LD_LIBRARY_PATH="$libs:${LD_LIBRARY_PATH:-}"
+  export LD_LIBRARY_PATH="$libs:${LD_LIBRARY_PATH:-}"   # for this venv only: runs/R-0034/omni.sh clears it (F-02)
   python -c "import ctranslate2, faster_whisper; print('faster-whisper', faster_whisper.__version__, 'ctranslate2', ctranslate2.__version__, 'CUDA devices', ctranslate2.get_cuda_device_count())"
 }
