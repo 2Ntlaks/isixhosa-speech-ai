@@ -1,5 +1,7 @@
-"""Score a Whisper model (stock or fine-tuned) on a test set: NCHLT (--xml), FLEURS (--fleurs-tsv + --fleurs-audio)
-or Swivuriso (--swivuriso-tsv + --swivuriso-audio, prepared by src/swivuriso.py).
+"""Score a Whisper model (stock or fine-tuned) on a test set: NCHLT (--xml), FLEURS (--fleurs-tsv + --fleurs-audio),
+Swivuriso (--swivuriso-tsv + --swivuriso-audio, prepared by src/swivuriso.py) or Soapies (--soapies-root).
+Greedy decoding with transformers, batched, no reliability rules: the decoding behind every score up to R-0032.
+src/eval_guarded.py scores the same clips with Whisper's reliability rules (R-0033).
 
   python src/baseline.py --xml data/nchlt_xho/transcriptions/nchlt_xho.tst.xml --root data --out out \
       --model openai/whisper-small --language auto
@@ -11,19 +13,14 @@ or Swivuriso (--swivuriso-tsv + --swivuriso-audio, prepared by src/swivuriso.py)
 Writes to --out: predictions.jsonl, metrics.json, samples.md.
 """
 import argparse
-import collections
 import json
 import os
 import platform
-import random
 import sys
 import time
 
 sys.path.insert(0, os.path.dirname(__file__))
-import fleurs  # noqa: E402
-import nchlt  # noqa: E402
-import swivuriso  # noqa: E402
-from scoring import NORMALISATION, normalise, score  # noqa: E402
+import testsets  # noqa: E402  (test-set loading and reporting shared with eval_guarded.py and eval_omni.py)
 
 
 def whisper_transcriber(model_name, language, max_new_tokens):
@@ -65,44 +62,16 @@ def whisper_transcriber(model_name, language, max_new_tokens):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--xml", help="NCHLT test transcription XML")
-    ap.add_argument("--fleurs-tsv", help="FLEURS split .tsv (instead of --xml)")
-    ap.add_argument("--fleurs-audio", help="folder holding that FLEURS split's .wav files")
-    ap.add_argument("--swivuriso-tsv", help="Swivuriso split .tsv from src/swivuriso.py (instead of --xml)")
-    ap.add_argument("--swivuriso-audio", help="folder that TSV's file paths are relative to")
-    ap.add_argument("--root", required=True)
+    testsets.add_args(ap)  # --xml/--fleurs-tsv/--swivuriso-tsv/--soapies-root, --root, --train-*, --max-seconds, ...
     ap.add_argument("--out", required=True)
     ap.add_argument("--model", default="openai/whisper-small")
     ap.add_argument("--language", default="auto")
     ap.add_argument("--batch-size", type=int, default=32)
-    ap.add_argument("--limit", type=int, default=0, help="only the first N clips (0 = all)")
-    ap.add_argument("--samples", type=int, default=20)
-    ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--train-xml", help="training split; adds scores on test clips whose sentence never occurs in training")
-    ap.add_argument("--train-fleurs-tsv", help="FLEURS training .tsv, also counted as 'seen in training'")
-    ap.add_argument("--max-seconds", type=float, default=30.0,
-                    help="leave out longer clips: Whisper only hears the first 30 s, so scoring them would be unfair")
     ap.add_argument("--max-new-tokens", type=int, default=225, help="FLEURS sentences need up to ~145 tokens")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
-
-    if sum(map(bool, (a.xml, a.fleurs_tsv, a.swivuriso_tsv))) != 1:
-        sys.exit("give exactly one of --xml, --fleurs-tsv or --swivuriso-tsv")
-    if a.xml:
-        clips = nchlt.load_split(a.xml, a.root)
-    elif a.fleurs_tsv:
-        clips = fleurs.load_split(a.fleurs_tsv, a.fleurs_audio or "")
-    else:
-        clips = swivuriso.load_split(a.swivuriso_tsv, a.swivuriso_audio or "")
-    too_long = [c for c in clips if c["duration"] > a.max_seconds]
-    clips = [c for c in clips if c["duration"] <= a.max_seconds]
-    if too_long:
-        print(f"left out {len(too_long)} clips over {a.max_seconds:.0f} s", flush=True)
-    if a.limit:
-        clips = clips[: a.limit]
-    print(f"{len(clips)} clips, {sum(c['duration'] for c in clips) / 3600:.2f} h, "
-          f"{len({c['speaker'] for c in clips})} speakers", flush=True)
+    kind, clips, too_long = testsets.load(a)
 
     if a.dry_run:
         transcribe, env = (lambda b: ([c["text"] for c in b], ["dry"] * len(b))), {"device": "none"}
@@ -120,66 +89,12 @@ def main():
             print(f"  {k + len(batch)}/{len(clips)} clips, {time.time() - t0:.0f} s", flush=True)
     secs = time.time() - t0
 
-    seen = set()
-    if a.train_xml:
-        seen |= {normalise(c["text"]) for c in nchlt.load_split(a.train_xml, a.root)}
-    if a.train_fleurs_tsv:
-        seen |= {normalise(c["text"]) for c in fleurs.load_split(a.train_fleurs_tsv, "")}
-    for c in clips:
-        c["text_in_training"] = "seen" if normalise(c["text"]) in seen else "unseen"
-        s = score([c["text"]], [c["hyp"]])
-        c["wer"], c["cer"] = round(s["wer"], 1), round(s["cer"], 1)
-        c["exact"] = normalise(c["text"]) == normalise(c["hyp"])
-    with open(os.path.join(a.out, "predictions.jsonl"), "w", encoding="utf-8") as f:
-        for c in clips:
-            f.write(json.dumps({k: v for k, v in c.items() if k != "path"}, ensure_ascii=False) + "\n")
-
-    def group(key):
-        out = {}
-        for g in sorted({c[key] for c in clips}):
-            sub = [c for c in clips if c[key] == g]
-            s = score([c["text"] for c in sub], [c["hyp"] for c in sub])
-            out[g] = {"wer": round(s["wer"], 1), "cer": round(s["cer"], 1), "n": s["n"]}
-        return out
-
-    total = score([c["text"] for c in clips], [c["hyp"] for c in clips])
     if not a.dry_run:
         import transformers
         env["transformers"] = transformers.__version__
-    metrics = {
-        "model": a.model, "language": a.language, "test_set": os.path.basename(a.xml or a.fleurs_tsv or a.swivuriso_tsv),
-        "clips": len(clips), "left_out_over_max_seconds": len(too_long), "max_new_tokens": a.max_new_tokens, "audio_hours": round(sum(c["duration"] for c in clips) / 3600, 3),
-        "wer": round(total["wer"], 2), "cer": round(total["cer"], 2),
-        "exact_match_pct": round(100 * sum(c["exact"] for c in clips) / len(clips), 2),
-        "empty_output_pct": round(100 * sum(not normalise(c["hyp"]) for c in clips) / len(clips), 2),
-        "detected_languages": dict(collections.Counter(c["lang"] for c in clips).most_common()),
-        "per_speaker": group("speaker"), "per_gender": group("gender"),
-        **({"by_text_in_training": group("text_in_training")} if (a.train_xml or a.train_fleurs_tsv) else {}),
-        **({"per_type": group("type")} if a.swivuriso_tsv else {}),  # scripted (read) vs unscripted (own words)
-        "normalisation": NORMALISATION, "seconds": round(secs, 1), "batch_size": a.batch_size,
-        "env": {**env, "python": platform.python_version()},
-    }
-    with open(os.path.join(a.out, "metrics.json"), "w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=2, ensure_ascii=False)
-
-    # samples: a fixed, seeded pick spread over the speakers, so the founder can listen and judge
-    rng = random.Random(a.seed)
-    by_spk = collections.defaultdict(list)
-    for c in clips:
-        by_spk[c["speaker"]].append(c)
-    picks = []
-    while len(picks) < min(a.samples, len(clips)):
-        for spk in sorted(by_spk):
-            pool = [c for c in by_spk[spk] if c not in picks]
-            if pool and len(picks) < a.samples:
-                picks.append(rng.choice(pool))
-    with open(os.path.join(a.out, "samples.md"), "w", encoding="utf-8") as f:
-        f.write(f"# Samples: {a.model}, language={a.language}\n\n")
-        f.write("| clip | speaker | Whisper's language | reference | Whisper's output | WER % | CER % |\n")
-        f.write("|---|---|---|---|---|---|---|\n")
-        for c in picks:
-            f.write(f"| {c['id']} | {c['speaker']} {(c['gender'] or '-')[0]} | {c['lang']} | {c['text']} | "
-                    f"{c['hyp'].replace('|', '/')} | {c['wer']} | {c['cer']} |\n")
+    metrics = testsets.report(a, kind, clips, too_long, model=a.model, language=a.language,
+                              max_new_tokens=a.max_new_tokens, seconds=secs, extra={"batch_size": a.batch_size},
+                              env={**env, "python": platform.python_version()})
     print(json.dumps({k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "detected_languages", "seconds")}))
 
 

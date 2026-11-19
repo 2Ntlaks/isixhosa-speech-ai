@@ -1,0 +1,8 @@
+120 short clips, 15 long recordings (36-70 s)
+loaded ct2-int8 in 1 s
+VAD False: short WER 36.50 CER 7.96 | long WER 45.27 CER 17.55 | 475 s
+loop guard: ct2-int8 piece 2 of 3 repeated itself; kept the decode at temperature 0.4
+VAD True: short WER 36.75 CER 7.89 | long WER 44.96 CER 11.93 | 458 s
+CER change with VAD: short -0.07 (better 32, worse 37), long -5.62 (better 10, worse 5) -> PASS: keep VAD on
+
+[exited with code 0]

@@ -16,9 +16,23 @@ Stage 4 (code-switching, D-0016/D-0017), all optional:
   to keep English words in English spelling inside isiXhosa speech.
 - --soapies-root: score the Soapies code-switched dev set at each evaluation and pick the best checkpoint on it
   (research-only data: dev/test use only, never trained on).
+Training recipe options (R-0035, D-0031); every default reproduces the earlier runs exactly:
+- --epochs E: train for E passes over the training clips instead of --max-steps (rounded up to a whole number of
+  --eval-every, so the last steps are evaluated and saved); --lr-scheduler linear (default) | cosine | ...
+- --swivuriso-dev-tsv/--swivuriso-dev-audio: also score Swivuriso dev clips at each evaluation: a seeded sample
+  stratified by speaker and by scripted/unscripted (--swivuriso-dev-per-speaker clips per speaker, about half
+  unscripted where a speaker has them), references of at most --swivuriso-dev-max-tokens tokens so that none is cut
+  off by --generation-max-length. Swivuriso dev speakers never train (separate split); their sentences are excluded.
+- --select-on: which dev score picks the best checkpoint. auto (default) = as before (Soapies if given, else NCHLT);
+  swivuriso+fleurs = 0.5 x Swivuriso dev CER + 0.5 x FLEURS dev CER ("combined_cer"); or one set's CER.
+- --count-runaways: log, per dev set, how many outputs ran away (> 2.5x the reference and > 150 letters).
+- --spec-augment: SpecAugment (masks random time stretches and frequency bands of the training audio's spectrogram;
+  never at evaluation), with the --mask-* settings; the attention mask is passed so that masks fall on speech, not on
+  the silence that pads every clip to 30 s.
 """
 import argparse
 import json
+import math
 import os
 import random
 import re
@@ -60,8 +74,8 @@ def read16k(path):
 class Clips(torch.utils.data.Dataset):
     """A clip is one file ("path") or several joined with silence ("parts" + "gaps"). "lang" picks the language tag."""
 
-    def __init__(self, clips, proc, language):
-        self.clips, self.proc = clips, proc
+    def __init__(self, clips, proc, language, attention_mask=False):
+        self.clips, self.proc, self.attention_mask = clips, proc, attention_mask
         tok = proc.tokenizer
         self.prefix = {lang: tok.convert_tokens_to_ids(["<|startoftranscript|>", f"<|{lang}|>", "<|transcribe|>",
                                                         "<|notimestamps|>"])
@@ -82,11 +96,16 @@ class Clips(torch.utils.data.Dataset):
             audio = np.concatenate(pieces)
         else:
             audio = read16k(c["path"])
-        feats = self.proc.feature_extractor(audio, sampling_rate=16000).input_features[0]
+        if self.attention_mask:  # which of the 3000 frames are audio, not padding (SpecAugment masks only those)
+            f = self.proc.feature_extractor(audio, sampling_rate=16000, return_attention_mask=True)
+            extra = {"attention_mask": f.attention_mask[0]}
+        else:
+            f, extra = self.proc.feature_extractor(audio, sampling_rate=16000), {}
+        feats = f.input_features[0]
         tok = self.proc.tokenizer
         labels = (self.prefix[c.get("lang", self.language)] + tok(target_text(c["text"]), add_special_tokens=False).input_ids
                   + [tok.eos_token_id])
-        return {"input_features": feats, "labels": labels}
+        return {"input_features": feats, "labels": labels, **extra}
 
 
 def take_hours(clips, hours, seed):
@@ -124,8 +143,8 @@ class Collator:
     decoder_start_token_id: int
 
     def __call__(self, items):
-        batch = self.proc.feature_extractor.pad([{"input_features": x["input_features"]} for x in items],
-                                                return_tensors="pt")
+        keys = ["input_features"] + (["attention_mask"] if "attention_mask" in items[0] else [])
+        batch = self.proc.feature_extractor.pad([{k: x[k] for k in keys} for x in items], return_tensors="pt")
         labels = self.proc.tokenizer.pad([{"input_ids": x["labels"]} for x in items], return_tensors="pt")
         ids = labels["input_ids"].masked_fill(labels.attention_mask.ne(1), -100)  # padding is ignored by the loss
         if (ids[:, 0] == self.decoder_start_token_id).all():  # the model adds <|startoftranscript|> itself
@@ -144,6 +163,72 @@ def split_dev(clips, n_speakers, seed):
     for g in sorted(by_gender):
         dev |= set(rng.sample(by_gender[g], n_speakers // 2))
     return [c for c in clips if c["speaker"] not in dev], [c for c in clips if c["speaker"] in dev], sorted(dev)
+
+
+def swivuriso_dev_sample(clips, per_speaker, seed):
+    """A fixed dev sample: per_speaker clips from every speaker, about half unscripted where the speaker has enough,
+    the rest scripted (topped up from the other type when one runs short). Seeded; sorted by id."""
+    rng = random.Random(seed)
+    out = []
+    for spk in sorted({c["speaker"] for c in clips}):
+        mine = sorted((c for c in clips if c["speaker"] == spk), key=lambda c: c["id"])
+        free = [c for c in mine if c["type"] == "unscripted"]
+        read = [c for c in mine if c["type"] != "unscripted"]
+        rng.shuffle(free)
+        rng.shuffle(read)
+        n_free = min(len(free), per_speaker // 2)
+        n_read = min(len(read), per_speaker - n_free)
+        n_free = min(len(free), per_speaker - n_read)
+        out += free[:n_free] + read[:n_read]
+    return sorted(out, key=lambda c: c["id"])
+
+
+def steps_for(a, n_train):
+    """--max-steps, or --epochs converted to optimiser steps and rounded up to a multiple of --eval-every."""
+    if a.epochs is None:
+        return a.max_steps
+    steps = math.ceil(a.epochs * n_train / (a.batch_size * a.grad_accum))
+    return max(a.eval_every, math.ceil(steps / a.eval_every) * a.eval_every)
+
+
+def selection_metric(select_on, sets):
+    """-> (metric_for_best_model, the dev sets averaged or None). `sets` = names of the dev sets scored."""
+    if select_on == "auto":  # exactly the earlier rule
+        return ("soapies_cer" if "soapies" in sets else "nchlt_cer" if "fleurs" in sets else "cer"), None
+    if select_on == "swivuriso+fleurs":
+        missing = {"swivuriso", "fleurs"} - set(sets)
+        if missing:
+            raise SystemExit(f"--select-on swivuriso+fleurs needs the {sorted(missing)} dev set(s)")
+        return "combined_cer", ("swivuriso", "fleurs")
+    if select_on not in sets:
+        raise SystemExit(f"--select-on {select_on}: that dev set is not scored")
+    return (f"{select_on}_cer" if len(sets) > 1 else "cer"), None
+
+
+def apply_spec_augment(model, a):
+    """SpecAugment on the training audio (transformers masks only in training mode, never at evaluation)."""
+    model.config.apply_spec_augment = True
+    for k in ("mask_time_prob", "mask_time_length", "mask_time_min_masks", "mask_feature_prob",
+              "mask_feature_length", "mask_feature_min_masks"):
+        setattr(model.config, k, getattr(a, k))
+
+
+class CombinedTrainer(Seq2SeqTrainer):
+    """Seq2SeqTrainer plus one more dev score, the mean of some dev sets' CER, added before the best checkpoint is
+    chosen (so --select-on swivuriso+fleurs can use it) and written to the log."""
+
+    def __init__(self, *args, combine=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.combine = combine
+
+    def evaluate(self, eval_dataset=None, ignore_keys=None, metric_key_prefix="eval", **gen_kwargs):
+        metrics = super().evaluate(eval_dataset, ignore_keys=ignore_keys, metric_key_prefix=metric_key_prefix,
+                                   **gen_kwargs)
+        if self.combine and metric_key_prefix == "eval" and eval_dataset is None:  # the call that scores every set
+            value = round(sum(metrics[f"eval_{n}_cer"] for n in self.combine) / len(self.combine), 3)
+            metrics["eval_combined_cer"] = value
+            self.log({"eval_combined_cer": value})
+        return metrics
 
 
 def last_checkpoint(folder):
@@ -194,6 +279,27 @@ def main():
     ap.add_argument("--stitch", type=int, default=0, help="number of joined isiXhosa+English clips (needs --english-xml)")
     ap.add_argument("--soapies-root", help="folder with Soapies engxho (balanced_engxho.xml, ids/, extracted/): its dev"
                     " set is scored at each evaluation and picks the best checkpoint (never trained on, D-0016)")
+    r = ap.add_argument_group("training recipe options (R-0035); the defaults are the earlier runs' behaviour")
+    r.add_argument("--epochs", type=float, help="train this many passes over the training clips (overrides --max-steps)")
+    r.add_argument("--lr-scheduler", default="linear", help="transformers scheduler name: linear | cosine | ...")
+    r.add_argument("--save-total-limit", type=int, default=2)
+    r.add_argument("--num-workers", type=int, default=4, help="data loader processes (0 on a small laptop)")
+    r.add_argument("--swivuriso-dev-tsv", help="Swivuriso dev.tsv: scored at each evaluation (never trained on)")
+    r.add_argument("--swivuriso-dev-audio")
+    r.add_argument("--swivuriso-dev-per-speaker", type=int, default=22)
+    r.add_argument("--swivuriso-dev-max-tokens", type=int, default=220,
+                   help="only dev references this short, so --generation-max-length never cuts one off")
+    r.add_argument("--select-on", default="auto",
+                   choices=["auto", "nchlt", "fleurs", "swivuriso", "soapies", "swivuriso+fleurs"])
+    r.add_argument("--count-runaways", action="store_true")
+    r.add_argument("--split-only", action="store_true", help="write data_split.json and stop (a check before a run)")
+    r.add_argument("--spec-augment", action="store_true")
+    r.add_argument("--mask-time-prob", type=float, default=0.05)
+    r.add_argument("--mask-time-length", type=int, default=10)
+    r.add_argument("--mask-time-min-masks", type=int, default=2)
+    r.add_argument("--mask-feature-prob", type=float, default=0.10)
+    r.add_argument("--mask-feature-length", type=int, default=8)
+    r.add_argument("--mask-feature-min-masks", type=int, default=1)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     proc = WhisperProcessor.from_pretrained(a.model, language=a.language, task="transcribe")
@@ -224,6 +330,8 @@ def main():
         if not test_texts:  # fail closed: new data without a leak filter is never trained on
             sys.exit("--swivuriso-tsv needs --exclude-texts with the test and dev sentences")
         test_texts |= dev_texts  # the NCHLT dev speakers pick the checkpoint, so their sentences stay out too
+        if a.swivuriso_dev_tsv:  # so do the Swivuriso dev sentences (the job's exclusion file has them already)
+            test_texts |= {c["text"] for c in swivuriso.load_split(a.swivuriso_dev_tsv, a.swivuriso_dev_audio or "")}
         swiv = [c for c in sw if c["text"] not in test_texts]  # a test sentence never becomes training data
         swiv_leaks = len(sw) - len(swiv)
         n = len(swiv)  # Whisper writes at most 448 tokens (4 go to the prefix and end): longer transcripts can't be learned
@@ -263,7 +371,15 @@ def main():
         for c in fd:
             c["text"] = normalise(c["text"])
         fd = [c for c in fd if c["duration"] <= a.max_seconds and c["text"]]
-        fleurs_dev = random.Random(a.seed).sample(fd, min(a.fleurs_dev_clips, len(fd)))
+        fleurs_dev = random.Random(a.seed).sample(fd, min(a.fleurs_dev_clips or len(fd), len(fd)))  # 0 = all
+    swiv_dev = []
+    if a.swivuriso_dev_tsv:
+        sd = [c for c in swivuriso.load_split(a.swivuriso_dev_tsv, a.swivuriso_dev_audio or "")
+              if c["duration"] <= a.max_seconds
+              and len(proc.tokenizer(c["text"], add_special_tokens=False).input_ids) <= a.swivuriso_dev_max_tokens]
+        swiv_dev = swivuriso_dev_sample(sd, a.swivuriso_dev_per_speaker, a.seed)
+        assert not {c["speaker"] for c in swiv_dev} & {c["speaker"] for c in train}, "a dev speaker is in training"
+    max_steps = steps_for(a, len(train))
     info = {"train_clips": len(train), "train_hours": round(sum(c["duration"] for c in train) / 3600, 2),
             "train_speakers": len({c["speaker"] for c in train}), "dev_speakers": dev_speakers,
             "dev_clips_scored": len(dev), "dropped_over_max_seconds": len(load_split(a.xml, a.root)) - len(clips),
@@ -276,9 +392,23 @@ def main():
             "stitched_clips": len(stitched), "stitched_hours": round(sum(c["duration"] for c in stitched) / 3600, 2),
             "soapies_dev_clips_scored": len(soapies_dev), "model": a.model, "batch_size": a.batch_size,
             "grad_accum": a.grad_accum, "gradient_checkpointing": a.gradient_checkpointing}
+    if a.epochs is not None or swiv_dev or a.spec_augment or a.select_on != "auto" or a.lr_scheduler != "linear":
+        info["recipe"] = {  # written only when a recipe option is used, so earlier runs' data_split.json stay the same
+            "max_steps": max_steps, "epochs_requested": a.epochs,
+            "epochs": round(max_steps * a.batch_size * a.grad_accum / len(train), 3), "lr_scheduler": a.lr_scheduler,
+            "select_on": a.select_on, "swivuriso_dev_clips_scored": len(swiv_dev),
+            "swivuriso_dev_speakers": len({c["speaker"] for c in swiv_dev}),
+            "swivuriso_dev_unscripted": sum(c["type"] == "unscripted" for c in swiv_dev),
+            "swivuriso_dev_hours": round(sum(c["duration"] for c in swiv_dev) / 3600, 2),
+            "spec_augment": {k: getattr(a, k) for k in ("mask_time_prob", "mask_time_length", "mask_time_min_masks",
+                                                        "mask_feature_prob", "mask_feature_length",
+                                                        "mask_feature_min_masks")} if a.spec_augment else None,
+            "generation_max_length": a.generation_max_length, "save_total_limit": a.save_total_limit}
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
+    if a.split_only:
+        return
 
     model = WhisperForConditionalGeneration.from_pretrained(a.model)
     model.generation_config.language = a.language
@@ -287,6 +417,8 @@ def main():
     model.config.forced_decoder_ids = None
     if a.gradient_checkpointing:
         model.config.use_cache = False  # the decoder cache can't be used while recomputing activations
+    if a.spec_augment:
+        apply_spec_augment(model, a)
 
     def compute_metrics(pred):
         ids = pred.predictions
@@ -296,28 +428,35 @@ def main():
         hyps = proc.tokenizer.batch_decode(ids, skip_special_tokens=True)
         refs = proc.tokenizer.batch_decode(lab, skip_special_tokens=True)
         s = score(refs, hyps)
-        return {"wer": round(s["wer"], 2), "cer": round(s["cer"], 2)}
+        out = {"wer": round(s["wer"], 2), "cer": round(s["cer"], 2)}
+        if a.count_runaways:  # outputs that ran on (> 2.5x the reference and > 150 letters)
+            out["runaways"] = sum(len(h) > 2.5 * len(r) and len(h) > 150
+                                  for r, h in zip(map(normalise, refs), map(normalise, hyps)))
+        return out
 
     evals = {"nchlt": Clips(dev, proc, a.language)}
     if fleurs_dev:
         evals["fleurs"] = Clips(fleurs_dev, proc, a.language)
     if soapies_dev:
         evals["soapies"] = Clips(soapies_dev, proc, a.language)
-    best = "soapies_cer" if soapies_dev else "nchlt_cer" if fleurs_dev else "cer"
+    if swiv_dev:
+        evals["swivuriso"] = Clips(swiv_dev, proc, a.language)
+    best, combine = selection_metric(a.select_on, list(evals))
     ckpts = os.path.join(a.out, "checkpoints")
     args = Seq2SeqTrainingArguments(
         output_dir=ckpts, per_device_train_batch_size=a.batch_size, gradient_accumulation_steps=a.grad_accum,
-        per_device_eval_batch_size=32, learning_rate=a.lr, warmup_steps=a.warmup, max_steps=a.max_steps,
-        lr_scheduler_type="linear", bf16=torch.cuda.is_available(), eval_strategy="steps", eval_steps=a.eval_every,
-        save_strategy="steps", save_steps=a.eval_every, save_total_limit=2, load_best_model_at_end=True,
+        per_device_eval_batch_size=32, learning_rate=a.lr, warmup_steps=a.warmup, max_steps=max_steps,
+        lr_scheduler_type=a.lr_scheduler, bf16=torch.cuda.is_available(), eval_strategy="steps", eval_steps=a.eval_every,
+        save_strategy="steps", save_steps=a.eval_every, save_total_limit=a.save_total_limit, load_best_model_at_end=True,
         metric_for_best_model=best, greater_is_better=False,
         gradient_checkpointing=a.gradient_checkpointing, predict_with_generate=True, generation_max_length=a.generation_max_length,
-        logging_steps=25, report_to="none", dataloader_num_workers=4, remove_unused_columns=False,
+        logging_steps=25, report_to="none", dataloader_num_workers=a.num_workers, remove_unused_columns=False,
         label_names=["labels"], seed=a.seed)
-    trainer = Seq2SeqTrainer(model=model, args=args, train_dataset=Clips(train, proc, a.language),
-                             eval_dataset=evals if len(evals) > 1 else evals["nchlt"],
-                             data_collator=Collator(proc, model.config.decoder_start_token_id),
-                             compute_metrics=compute_metrics, processing_class=proc.feature_extractor)
+    trainer_class, extra = (CombinedTrainer, {"combine": combine}) if combine else (Seq2SeqTrainer, {})
+    trainer = trainer_class(model=model, args=args, train_dataset=Clips(train, proc, a.language, a.spec_augment),
+                            eval_dataset=evals if len(evals) > 1 else evals["nchlt"],
+                            data_collator=Collator(proc, model.config.decoder_start_token_id),
+                            compute_metrics=compute_metrics, processing_class=proc.feature_extractor, **extra)
     resume = last_checkpoint(ckpts)
     print(f"resuming from {resume}" if resume else "starting from the stock model", flush=True)
     trainer.train(resume_from_checkpoint=resume)
