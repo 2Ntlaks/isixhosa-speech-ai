@@ -72,6 +72,16 @@ class TestSets(Fixture):
                     self.assertEqual(m["word_hits"]["eng"]["pct"], 100.0)
                     self.assertEqual(m["cer_no_spaces"], 0.0)
 
+    def test_longest_keeps_the_longest_clips(self):
+        a = argparse.Namespace(xml=None, fleurs_tsv=None, swivuriso_tsv=self.p["swiv_test"], soapies_root=None,
+                               swivuriso_audio=self.p["swiv_audio"], max_seconds=30.0, limit=0, sample=0,
+                               sample_seed=1, longest=2)
+        with contextlib.redirect_stdout(io.StringIO()):
+            got = testsets.load(a)[1]
+            a.longest = 0
+            every = testsets.load(a)[1]
+        self.assertEqual([c["duration"] for c in got], sorted((c["duration"] for c in every), reverse=True)[:2])
+
     def test_sample_is_seeded_ordered_and_the_same_for_every_evaluator(self):
         a = argparse.Namespace(xml=None, fleurs_tsv=None, swivuriso_tsv=self.p["swiv_test"], soapies_root=None,
                                swivuriso_audio=self.p["swiv_audio"], max_seconds=30.0, limit=0, sample=3,
@@ -183,7 +193,8 @@ class CompareAndConvert(Fixture):
         for k in ("per_speaker", "exact_match_pct", "language"):  # what src/eval_soapies.py never wrote
             m.pop(k)
         json.dump(m, open(os.path.join(b, "metrics.json"), "w"))
-        r = subprocess.run([PY, str(ROOT / "src" / "compare_runs.py"), f"new={a}", f"old={b}"], capture_output=True,
+        os.remove(os.path.join(b, "samples.md"))  # src/eval_soapies.py never wrote one either (F-16): b goes first
+        r = subprocess.run([PY, str(ROOT / "src" / "compare_runs.py"), f"old={b}", f"new={a}"], capture_output=True,
                            text=True, encoding="utf-8")
         self.assertEqual(r.returncode, 0, r.stderr)
         rep = json.loads(r.stdout)

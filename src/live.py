@@ -312,8 +312,7 @@ if __name__ == "__main__":
     dtype = getattr(torch, a.dtype)
     CPU_THREADS, CHUNK_BATCH_SIZE = a.threads, a.chunk_batch_size
     GUARD_RATIO = None if a.guard_compression_ratio.lower() == "none" else float(a.guard_compression_ratio)
-    VAD = not a.no_vad
-    if VAD:
+    if not a.no_vad:
         try:
             import faster_whisper.vad  # noqa: F401  (Silero VAD; needs onnxruntime)
             import onnxruntime  # noqa: F401
@@ -325,6 +324,7 @@ if __name__ == "__main__":
     if not offered:
         sys.exit(f"none of {a.models} is in {MODELS}")
     transcribe(np.zeros(SR, dtype=np.float32), offered[0])  # warm only the default; comparisons load lazily
+    VAD = not a.no_vad  # switched on after the warm-up: VAD finds no speech in silence and would skip the decode
     host = "0.0.0.0" if PUBLIC else "127.0.0.1"
     print(f"ready: open http://127.0.0.1:{a.port}  (models {', '.join(offered)}; CPU, {CPU_THREADS} threads, batch {CHUNK_BATCH_SIZE}"
           + ("; public: nothing stored" if PUBLIC else "") + ")", flush=True)

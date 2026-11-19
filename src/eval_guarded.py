@@ -24,7 +24,8 @@ BatchedInferencePipeline, which ignores the fallback temperatures.
 
 Writes predictions.jsonl, metrics.json and samples.md (src/compare_runs.py compares them with earlier runs). Besides
 WER/CER it reports how many clips needed a retry ("fallback"), at which temperature they ended, how many exhausted
-every temperature, how many were dropped as "no speech", and the time per clip.
+every temperature, how many outputs came back empty (and, only when the no-speech check is on, how many were
+dropped as "no speech"), and the time per clip, after one untimed warm-up decode (as src/eval_omni.py).
 """
 import argparse
 import math
@@ -153,6 +154,7 @@ def main():
     m.add_argument("--compute-type", default="int8", help="int8 (CPU) | float16 (GPU) | ...")
     m.add_argument("--threads", type=int, default=8, help="CPU threads (CPU device)")
     m.add_argument("--label", help="model name written in metrics.json (default: repo@revision or folder)")
+    m.add_argument("--progress-every", type=int, default=50, help="print a progress line every N clips")
     add_decode_args(ap)
     a = ap.parse_args()
     if bool(a.model) == bool(a.hf_repo):
@@ -174,6 +176,8 @@ def main():
     label = a.label or (f"{a.hf_repo}@{a.revision[:8]} ({a.hf_variant})" if a.hf_repo else a.model)
     print(f"model {label} on {a.device} ({a.compute_type}); {len(clips)} clips; decoding {opts}", flush=True)
 
+    list(model.transcribe(testsets.read16k(clips[0]["path"]), **opts)[0])  # warm-up decode, not timed (F-11)
+    log.attempts.clear()
     t0 = time.time()
     for i, c in enumerate(clips):
         audio = testsets.read16k(c["path"])
@@ -194,13 +198,14 @@ def main():
             "final_temperature": segments[-1].temperature if segments else None,
             "fallback": len(tried) > 1,
             "exhausted": len(tried) >= len(temps) and bool(log.attempts) and needs_retry(log.attempts[-1], opts),
-            "no_speech_skip": not segments,
+            "empty_output": not segments,  # faster-whisper drops a window whose text is empty
+            "no_speech_skip": opts["no_speech_threshold"] is not None and not segments,  # only if that check is on
             "avg_logprob": round(segments[-1].avg_logprob, 3) if segments else None,
             "compression_ratio": round(segments[-1].compression_ratio, 3) if segments else None,
             "no_speech_prob": round(log.attempts[-1]["no_speech_prob"], 3) if log.attempts else None,
             "first_compression_ratio": round(log.attempts[0]["compression_ratio"], 3) if log.attempts else None,
         }
-        if (i + 1) % 50 == 0 or i + 1 == len(clips):
+        if (i + 1) % a.progress_every == 0 or i + 1 == len(clips):
             fb = sum(x["decode"]["fallback"] for x in clips[: i + 1])
             print(f"  {i + 1}/{len(clips)} clips, {time.time() - t0:.0f} s, {fb} needed a fallback", flush=True)
     secs = time.time() - t0
@@ -209,13 +214,15 @@ def main():
     finals = {}
     for c in clips:
         if c["decode"]["fallback"]:
-            k = "no speech" if c["decode"]["no_speech_skip"] else str(c["decode"]["final_temperature"])
+            k = ("no speech" if c["decode"]["no_speech_skip"] else "empty output" if c["decode"]["empty_output"]
+                 else str(c["decode"]["final_temperature"]))
             finals[k] = finals.get(k, 0) + 1
     guard = {
         "clips_with_fallback": sum(c["decode"]["fallback"] for c in clips),
         "fallback_pct": round(100 * sum(c["decode"]["fallback"] for c in clips) / len(clips), 2),
         "fallback_final_temperature": dict(sorted(finals.items())),
         "exhausted_every_temperature": sum(c["decode"]["exhausted"] for c in clips),
+        "empty_outputs": sum(c["decode"]["empty_output"] for c in clips),
         "no_speech_skipped": sum(c["decode"]["no_speech_skip"] for c in clips),
         "fallback_clips": [{"id": c["id"], "final_temperature": c["decode"]["final_temperature"],
                             "temperatures_tried": c["decode"]["temperatures_tried"],
@@ -228,7 +235,8 @@ def main():
               "seconds_per_clip_median": round(statistics.median(per_clip), 3),
               "seconds_per_clip_p95": round(sorted(per_clip)[math.ceil(0.95 * len(per_clip)) - 1], 3),
               "real_time_factor": round(sum(per_clip) / sum(c["duration"] for c in clips), 4),
-              "note": "decode time per clip (features + encoder + decoder), audio loading excluded"}
+              "note": "decode time per clip (features + encoder + decoder); one untimed warm-up decode first; "
+                      "audio loading excluded"}
     settings = {k: (list(v) if isinstance(v, tuple) else v) for k, v in opts.items()}
     env = {"engine": f"faster-whisper {faster_whisper.__version__}, ctranslate2 {ctranslate2.__version__}",
            "device": a.device, "compute_type": a.compute_type, "cpu_threads": a.threads,

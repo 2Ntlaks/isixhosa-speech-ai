@@ -44,6 +44,7 @@ def add_args(ap):
     ap.add_argument("--sample", type=int, default=0, help="a seeded random N of the clips (0 = all); same N clips "
                     "for every model and evaluator with the same --sample-seed")
     ap.add_argument("--sample-seed", type=int, default=1)
+    ap.add_argument("--longest", type=int, default=0, help="only the N longest clips (memory preflights)")
     ap.add_argument("--samples", type=int, default=20, help="clips shown in samples.md")
     ap.add_argument("--seed", type=int, default=1, help="seed for the samples.md pick")
 
@@ -90,6 +91,8 @@ def load(a):
     if getattr(a, "sample", 0):
         keep = set(random.Random(a.sample_seed).sample(range(len(clips)), min(a.sample, len(clips))))
         clips = [c for i, c in enumerate(clips) if i in keep]  # original order kept
+    if getattr(a, "longest", 0):
+        clips = sorted(clips, key=lambda c: c["duration"], reverse=True)[: a.longest]
     print(f"{len(clips)} clips, {sum(c['duration'] for c in clips) / 3600:.2f} h, "
           f"{len({c['speaker'] for c in clips})} speakers", flush=True)
     return kind, clips, too_long

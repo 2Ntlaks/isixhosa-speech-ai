@@ -292,6 +292,7 @@ def main():
     r.add_argument("--select-on", default="auto",
                    choices=["auto", "nchlt", "fleurs", "swivuriso", "soapies", "swivuriso+fleurs"])
     r.add_argument("--count-runaways", action="store_true")
+    r.add_argument("--split-only", action="store_true", help="write data_split.json and stop (a check before a run)")
     r.add_argument("--spec-augment", action="store_true")
     r.add_argument("--mask-time-prob", type=float, default=0.05)
     r.add_argument("--mask-time-length", type=int, default=10)
@@ -406,6 +407,8 @@ def main():
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
+    if a.split_only:
+        return
 
     model = WhisperForConditionalGeneration.from_pretrained(a.model)
     model.generation_config.language = a.language

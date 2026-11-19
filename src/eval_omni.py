@@ -73,6 +73,7 @@ def main():
     ap.add_argument("--batch-size", type=int, default=1, help="1 for per-clip timing; larger on a GPU")
     ap.add_argument("--max-audio-seconds", type=float, default=40.0, help="the package's own limit")
     ap.add_argument("--package-commit", default=os.environ.get("OMNI_COMMIT", ""), help="recorded in metrics.json")
+    ap.add_argument("--progress-every", type=int, default=100, help="print a progress line every N clips")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     dtype = a.dtype or ("float32" if a.device == "cpu" else "bfloat16")
@@ -119,10 +120,13 @@ def main():
             c["hyp"] = c["hyp_raw"] if a.keep_curly_apostrophes else c["hyp_raw"].translate(CURLY)
             c["lang"], c["seconds"] = lang or "-", round(each, 3)
         done = k + len(batch)
-        if done % 100 < a.batch_size or done == len(clips):
+        if done % a.progress_every < len(batch) or done == len(clips):
             print(f"  {done}/{len(clips)} clips, {time.time() - t0:.0f} s", flush=True)
     secs = time.time() - t0
 
+    if not a.dry_run and a.device == "cuda":
+        import torch
+        env["peak_gpu_memory_gb"] = round(torch.cuda.max_memory_allocated() / 1e9, 2)
     per_clip = [c["seconds"] for c in clips]
     timing = {"batch_size": a.batch_size,
               "seconds_per_clip_mean": round(statistics.mean(per_clip), 3),
@@ -142,7 +146,8 @@ def main():
                "score_without_apostrophe_mapping": {"wer": round(raw["wer"], 2), "cer": round(raw["cer"], 2)},
                "outputs_with_curly_apostrophes": sum(c["hyp_raw"] != c["hyp"] for c in clips),
                "diagnostics": testsets.diagnostics(kind, clips)})
-    print({k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "seconds")}, timing, flush=True)
+    print({**{k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "seconds")},
+           "peak_gpu_memory_gb": env.get("peak_gpu_memory_gb")}, timing, flush=True)
 
 
 if __name__ == "__main__":
