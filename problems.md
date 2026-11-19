@@ -288,3 +288,18 @@ Format:
   mismatch fails in the first minutes. R-0034 relaunched on its own.
 - Cost: ~8 min of node time inside R-0033 (~$0.18).
 - Lesson: pin every compiled companion library (torchaudio, torchvision) to the exact torch version.
+
+## P-0023 · 2026-11-20 · R-0034 attempt 2: pyarrow needs NumPy 2, the venv resolved NumPy 1.26
+- Stage / run: R-0034 (standalone, i-07f876be42f20b061), setup step "download omniASR_CTC_300M_v2"
+- Symptom:
+  ```
+  ImportError: pyarrow requires NumPy 2.0 or newer, found 1.26.4
+  ```
+  raised from omnilingual_asr/datasets/storage/mixture_parquet_storage.py (`import pyarrow as pa`), after the torch /
+  torchaudio fix (P-0022) had passed its version check.
+- Cause: a dependency of Meta's package holds NumPy below 2, while pyarrow (unpinned) resolved to a release built for
+  NumPy 2 only. The version check imported only torch and torchaudio, so the next broken import surfaced one step later.
+- Fix: pin pyarrow==18.1.0 (works with NumPy 1.x and 2.x); the version check now imports ASRInferencePipeline itself, so
+  every import problem shows in the first minutes.
+- Cost: ~5 min of a g6.xlarge (~$0.10).
+- Lesson: an import smoke test must import the entry point you will call, not just its biggest dependencies.
