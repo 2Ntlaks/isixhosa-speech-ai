@@ -158,5 +158,106 @@ class InferenceTests(unittest.TestCase):
         self.assertNotIn("private", stdout.getvalue())
 
 
+
+LOOP = "la " * 60  # a runaway: compresses very well (ratio far above 2.4)
+
+
+class LoopingProcessor(Processor):
+    """Chunk 2's beam output is a runaway; sampled retries (ids >= 100) come back as normal text."""
+
+    def __init__(self, retries_loop=0):
+        super().__init__()
+        self.retries_loop = retries_loop  # how many retries still repeat before one comes out fine
+
+    def batch_decode(self, outputs, **kwargs):
+        texts = []
+        for output in outputs:
+            i = int(output[0])
+            if i == 2:
+                texts.append(LOOP)
+            elif i >= 100:
+                if self.retries_loop:
+                    self.retries_loop -= 1
+                    texts.append("da " * (40 + self.retries_loop))  # still repetitive, a bit less each time
+                else:
+                    texts.append(f"fixed at {i - 100}")
+            else:
+                texts.append(f"chunk {i}")
+        return texts
+
+
+class SamplingCT2Model(CT2Model):
+    def generate(self, features, prompts, **kwargs):
+        self.calls.append((len(features), prompts, kwargs))
+        if "sampling_temperature" in kwargs:
+            return [types.SimpleNamespace(sequences_ids=[[100 + int(10 * kwargs["sampling_temperature"])]])]
+        return [types.SimpleNamespace(sequences_ids=[[int(row[0])]]) for row in features]
+
+
+class LoopGuardTests(unittest.TestCase):
+    """The loop guard (R-0033): only repetitive chunks are retried; normal chunks keep their beam-5 text."""
+    setUp = InferenceTests.setUp
+    engines = InferenceTests.engines
+
+    def test_normal_chunks_are_never_retried(self):
+        proc, model = Processor(), SamplingCT2Model()
+        self.engines({"m": (proc, model)})
+        self.assertEqual(live.transcribe(self.audio, "m")[0], "chunk 1 chunk 2 chunk 3")
+        self.assertTrue(all(c[2] == {"beam_size": 5, "max_length": 225} for c in model.calls))
+
+    def test_runaway_chunk_is_resampled_at_rising_temperature(self):
+        proc, model = LoopingProcessor(retries_loop=1), SamplingCT2Model()
+        self.engines({"m": (proc, model)})
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            text, _ = live.transcribe(self.audio, "m")
+        self.assertEqual(text, "chunk 1 fixed at 4 chunk 3")  # 0.2 still looped, 0.4 was fine
+        retries = [c[2] for c in model.calls if "sampling_temperature" in c[2]]
+        self.assertEqual([r["sampling_temperature"] for r in retries], [0.2, 0.4])
+        self.assertTrue(all(r["beam_size"] == 1 and r["num_hypotheses"] == 5 and r["sampling_topk"] == 0
+                            and r["max_length"] == 225 for r in retries))
+        self.assertTrue(all(c[0] == 1 for c in model.calls))  # one chunk per call, as before
+        self.assertIn("temperature 0.4", out.getvalue())
+        self.assertNotIn("la la", out.getvalue())  # the log never carries text (public demo)
+
+    def test_every_retry_loops_keeps_the_least_repetitive(self):
+        proc, model = LoopingProcessor(retries_loop=99), SamplingCT2Model()
+        self.engines({"m": (proc, model)})
+        with contextlib.redirect_stdout(io.StringIO()):
+            text, _ = live.transcribe(self.audio, "m")
+        kept = text.split("chunk 1 ")[1].split(" chunk 3")[0]
+        tried = [LOOP.strip()] + [("da " * (40 + n)).strip() for n in range(98, 93, -1)]
+        self.assertEqual(kept, min(tried, key=live.compression_ratio))
+        self.assertEqual(len([c for c in model.calls if "sampling_temperature" in c[2]]), 5)
+
+    def test_guard_can_be_turned_off(self):
+        proc, model = LoopingProcessor(), SamplingCT2Model()
+        self.engines({"m": (proc, model)})
+        with patch.object(live, "GUARD_RATIO", None):
+            self.assertEqual(live.transcribe(self.audio, "m")[0], "chunk 1 " + LOOP.strip() + " chunk 3")
+        self.assertFalse([c for c in model.calls if "sampling_temperature" in c[2]])
+
+    def test_transformers_path_retries_by_sampling(self):
+        proc, model = LoopingProcessor(), TransformersModel()
+        self.engines({"hf": (proc, model)})
+        original = model.generate
+
+        def generate(features, **kwargs):
+            out = original(features, **kwargs)
+            return out + 100 + int(10 * kwargs["temperature"]) if kwargs.get("do_sample") else out
+
+        model.generate = generate
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(live.transcribe(self.audio, "hf")[0], "chunk 1 fixed at 4 chunk 3")
+        retry = [c for c in model.calls if c.get("do_sample")]
+        self.assertEqual(retry, [{"language": "sw", "task": "transcribe", "max_new_tokens": 225,
+                                  "do_sample": True, "temperature": 0.2}])
+
+    def test_threshold_matches_whisper(self):
+        self.assertEqual((live.GUARD_RATIO, live.GUARD_TEMPERATURES, live.GUARD_BEST_OF),
+                         (2.4, (0.2, 0.4, 0.6, 0.8, 1.0), 5))
+        self.assertLess(live.compression_ratio("the quick brown fox jumps over the lazy dog"), 2.4)
+        self.assertGreater(live.compression_ratio(LOOP), 2.4)
+
+
 if __name__ == "__main__":
     unittest.main()

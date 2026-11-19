@@ -7,6 +7,11 @@ copy (model.bin, int8: ct2-transformers-converter --quantization int8; same answ
 in --models is the default and is warmed at startup. Other models load on first use and then stay cached.
 --threads controls CPU parallelism; --chunk-batch-size bounds the number of 30 s chunks sent to a model at once.
 
+Loop guard (R-0033): a chunk whose text is too repetitive (gzip compression ratio over 2.4, Whisper's own rule) is
+decoded again by sampling at temperature 0.2, 0.4, ... 1.0 (best of 5) until the text is no longer repetitive; if every
+retry still repeats, the least repetitive text is kept. Normal chunks are never retried, so their text, the beam (5),
+the 30 s chunking and the token limit are unchanged. --guard-compression-ratio none turns the guard off.
+
 API (what the page uses; any program can call it the same way):
   POST /transcribe?model=R-0019-int8&also=R-0027-int8&keep=1
        body: audio in any format ffmpeg reads (browser webm, WhatsApp ogg/opus, m4a, mp3, wav), up to 100 MB
@@ -29,6 +34,7 @@ import subprocess
 import sys
 import threading
 import time
+import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
@@ -47,6 +53,9 @@ MAX_BYTES = 100 * 1024 * 1024
 CHUNK_BATCH_SIZE = 1  # bound model activations even when an upload contains many chunks
 CPU_THREADS = torch.get_num_threads()
 dtype = torch.bfloat16
+GUARD_RATIO = 2.4  # Whisper's compression-ratio threshold; None turns the loop guard off
+GUARD_TEMPERATURES = (0.2, 0.4, 0.6, 0.8, 1.0)  # Whisper's fallback temperatures after the beam search
+GUARD_BEST_OF = 5  # samples drawn at each fallback temperature
 
 FFMPEG = shutil.which("ffmpeg")
 loaded, lock = {}, threading.Lock()
@@ -88,6 +97,28 @@ def transcribe(audio, name):
     return transcribe_models(audio, [name])[name]
 
 
+def compression_ratio(text):
+    """gzip-style compression ratio of the text, as Whisper and faster-whisper compute it: loops compress well."""
+    data = text.encode("utf-8")
+    return len(data) / len(zlib.compress(data)) if data else 0.0
+
+
+def guarded(text, retry):
+    """Whisper's loop guard for one chunk. retry(temperature) decodes the chunk again by sampling and returns its text.
+    -> (text, temperature of the kept text, or None when the first text was fine)."""
+    if GUARD_RATIO is None or compression_ratio(text) <= GUARD_RATIO:
+        return text, None
+    tried = [(compression_ratio(text), text, 0.0)]
+    for temperature in GUARD_TEMPERATURES:
+        new = retry(temperature).strip()
+        ratio = compression_ratio(new)
+        if ratio <= GUARD_RATIO:
+            return new, temperature
+        tried.append((ratio, new, temperature))
+    _, text, temperature = min(tried, key=lambda x: x[0])  # every retry repeats too: keep the least repetitive
+    return text, temperature
+
+
 def transcribe_models(audio, names):
     """Bound feature/model batches and reuse compatible features within this request only.
 
@@ -115,6 +146,11 @@ def transcribe_models(audio, names):
                 t = time.perf_counter()
                 if isinstance(m, WhisperForConditionalGeneration):
                     out = m.generate(feats.to(dtype), language="sw", task="transcribe", max_new_tokens=225)
+
+                    def sample(j, temperature):  # one sampled decode of chunk j (the loop guard's retry)
+                        ids = m.generate(feats[j:j + 1].to(dtype), language="sw", task="transcribe",
+                                         max_new_tokens=225, do_sample=True, temperature=temperature)
+                        return proc.batch_decode(ids, skip_special_tokens=True)[0]
                 else:
                     import ctranslate2
                     prompt = proc.tokenizer.convert_tokens_to_ids(
@@ -122,8 +158,21 @@ def transcribe_models(audio, names):
                     res = m.generate(ctranslate2.StorageView.from_array(np.ascontiguousarray(feats.numpy())),
                                      [prompt] * len(pieces), beam_size=5, max_length=225)
                     out = [r.sequences_ids[0] for r in res]
+
+                    def sample(j, temperature):  # best of GUARD_BEST_OF samples, as faster-whisper retries
+                        r = m.generate(ctranslate2.StorageView.from_array(np.ascontiguousarray(feats[j:j + 1].numpy())),
+                                       [prompt], beam_size=1, num_hypotheses=GUARD_BEST_OF, sampling_topk=0,
+                                       sampling_temperature=temperature, max_length=225)
+                        return proc.batch_decode([r[0].sequences_ids[0]], skip_special_tokens=True)[0]
                 seconds[name] += time.perf_counter() - t
-                texts[name].extend(t.strip() for t in proc.batch_decode(out, skip_special_tokens=True))
+                for j, text in enumerate(proc.batch_decode(out, skip_special_tokens=True)):
+                    t = time.perf_counter()
+                    text, temperature = guarded(text.strip(), lambda temp: sample(j, temp))
+                    if temperature is not None:  # numbers only: the public demo never logs text
+                        seconds[name] += time.perf_counter() - t
+                        print(f"loop guard: {name} chunk at {(start + j * CHUNK) // SR} s repeated itself; "
+                              f"kept the decode at temperature {temperature}", flush=True)
+                    texts[name].append(text)
     return {name: (" ".join(texts[name]).strip(), round(seconds[name], 2)) for name in names}
 
 
@@ -235,6 +284,8 @@ if __name__ == "__main__":
                     help="CPU threads per model (default: PyTorch's CPU thread count)")
     ap.add_argument("--chunk-batch-size", type=positive_int, default=CHUNK_BATCH_SIZE,
                     help="30-second chunks per model call (default 1; larger batches use more memory)")
+    ap.add_argument("--guard-compression-ratio", default="2.4",
+                    help="loop guard threshold (Whisper's 2.4); 'none' turns the guard off")
     ap.add_argument("--dtype", choices=["bfloat16", "float32"], default="bfloat16",
                     help="for transformers checkpoints: bfloat16 halves memory (medium ~1.9 GB instead of ~3.5 GB)")
     a = ap.parse_args()
@@ -242,6 +293,7 @@ if __name__ == "__main__":
         sys.exit("ffmpeg not found on PATH (needed to read browser recordings)")
     dtype = getattr(torch, a.dtype)
     CPU_THREADS, CHUNK_BATCH_SIZE = a.threads, a.chunk_batch_size
+    GUARD_RATIO = None if a.guard_compression_ratio.lower() == "none" else float(a.guard_compression_ratio)
     torch.set_num_threads(CPU_THREADS)
     MODELS, PUBLIC = a.models_dir, a.public
     offered[:] = [m for m in a.models.split(",") if complete(m)]
