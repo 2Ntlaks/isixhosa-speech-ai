@@ -1,0 +1,218 @@
+{
+  "model": "R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) ct2-int8, beam 5 + loop guard",
+  "language": "sw",
+  "test_set": "dev_test.tsv",
+  "clips": 50,
+  "left_out_over_max_seconds": 0,
+  "max_new_tokens": 440,
+  "audio_hours": 0.221,
+  "wer": 24.03,
+  "cer": 4.94,
+  "exact_match_pct": 16.0,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 50
+  },
+  "per_speaker": {
+    "swiv_119f0926-f8fc-11ef-a9a6-0242ac120003": {
+      "wer": 50.0,
+      "cer": 13.1,
+      "n": 8
+    },
+    "swiv_142c2c89-219d-11f0-9a50-0242ac120005": {
+      "wer": 16.0,
+      "cer": 2.1,
+      "n": 1
+    },
+    "swiv_1fc9720a-1463-11f0-b3c5-0242ac120004": {
+      "wer": 22.2,
+      "cer": 3.4,
+      "n": 1
+    },
+    "swiv_44e069f2-e2c9-11ef-931f-0242ac120004": {
+      "wer": 14.3,
+      "cer": 1.4,
+      "n": 2
+    },
+    "swiv_5299032f-1f45-11f0-8813-0242ac120003": {
+      "wer": 5.9,
+      "cer": 0.4,
+      "n": 2
+    },
+    "swiv_5ff626a5-eea9-11ef-9a96-0242ac120002": {
+      "wer": 100.0,
+      "cer": 14.7,
+      "n": 1
+    },
+    "swiv_6219b0dd-096c-11f0-ae3c-0242ac120003": {
+      "wer": 11.8,
+      "cer": 2.0,
+      "n": 1
+    },
+    "swiv_774412ef-e784-11ef-9e0f-0242ac120002": {
+      "wer": 13.3,
+      "cer": 1.4,
+      "n": 1
+    },
+    "swiv_86657798-00a0-11f0-9dd7-0242ac120004": {
+      "wer": 25.5,
+      "cer": 5.1,
+      "n": 4
+    },
+    "swiv_8c5cf8a4-137a-11f0-b3c5-0242ac120004": {
+      "wer": 31.1,
+      "cer": 6.2,
+      "n": 3
+    },
+    "swiv_8d9824e4-736a-11f0-9db4-0242ac120005": {
+      "wer": 8.2,
+      "cer": 1.2,
+      "n": 4
+    },
+    "swiv_9e113e71-150d-11f0-b3c5-0242ac120004": {
+      "wer": 33.3,
+      "cer": 7.1,
+      "n": 2
+    },
+    "swiv_aa4a35ee-4052-11f0-9ff3-0242ac120004": {
+      "wer": 40.0,
+      "cer": 3.7,
+      "n": 1
+    },
+    "swiv_ab12644d-ee02-11ef-9554-0242ac120003": {
+      "wer": 9.7,
+      "cer": 1.8,
+      "n": 2
+    },
+    "swiv_bcdfffa5-5b11-11f0-ac40-0242ac120003": {
+      "wer": 29.3,
+      "cer": 7.5,
+      "n": 2
+    },
+    "swiv_c5057347-5352-11f0-a31a-0242ac120005": {
+      "wer": 42.3,
+      "cer": 4.5,
+      "n": 1
+    },
+    "swiv_cde33783-13b9-11f0-b3c5-0242ac120004": {
+      "wer": 15.6,
+      "cer": 2.9,
+      "n": 4
+    },
+    "swiv_d370ace5-0879-11f0-ae3c-0242ac120003": {
+      "wer": 15.6,
+      "cer": 2.8,
+      "n": 3
+    },
+    "swiv_f28a3507-e3c2-11ef-baa7-0242ac120004": {
+      "wer": 9.1,
+      "cer": 3.2,
+      "n": 1
+    },
+    "swiv_f4d50ebf-317f-11f0-833b-0242ac120004": {
+      "wer": 19.1,
+      "cer": 3.7,
+      "n": 3
+    },
+    "swiv_f8e378a7-f4d2-11ef-ac4e-0242ac120005": {
+      "wer": 5.6,
+      "cer": 1.0,
+      "n": 3
+    }
+  },
+  "per_gender": {
+    "": {
+      "wer": 24.0,
+      "cer": 4.9,
+      "n": 50
+    }
+  },
+  "by_text_in_training": {
+    "unseen": {
+      "wer": 24.0,
+      "cer": 4.9,
+      "n": 50
+    }
+  },
+  "per_type": {
+    "scripted": {
+      "wer": 18.6,
+      "cer": 3.4,
+      "n": 34
+    },
+    "unscripted": {
+      "wer": 33.1,
+      "cer": 7.6,
+      "n": 16
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 211.1,
+  "decoder": "faster-whisper with Whisper's reliability rules (R-0033)",
+  "decoding": {
+    "language": "sw",
+    "task": "transcribe",
+    "beam_size": 5,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0,
+    "repetition_penalty": 1.0,
+    "no_repeat_ngram_size": 0,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": null,
+    "no_speech_threshold": null,
+    "condition_on_previous_text": false,
+    "without_timestamps": true,
+    "suppress_blank": true,
+    "vad_filter": false,
+    "word_timestamps": false,
+    "initial_prompt": null,
+    "max_new_tokens": 440
+  },
+  "model_source": {
+    "ct2_folder": "models_cache/whisper-medium-isixhosa@603a39b5/ct2-int8",
+    "folder": "models_cache/whisper-medium-isixhosa@603a39b5/ct2-int8"
+  },
+  "sample": {
+    "n": 50,
+    "seed": 1
+  },
+  "guard": {
+    "clips_with_fallback": 0,
+    "fallback_pct": 0.0,
+    "fallback_final_temperature": {},
+    "exhausted_every_temperature": 0,
+    "empty_outputs": 0,
+    "no_speech_skipped": 0,
+    "fallback_clips": [],
+    "decoding_attempts": 50
+  },
+  "timing": {
+    "seconds_per_clip_mean": 4.221,
+    "seconds_per_clip_median": 4.135,
+    "seconds_per_clip_p95": 5.981,
+    "real_time_factor": 0.2652,
+    "note": "decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded"
+  },
+  "diagnostics": {
+    "cer_no_spaces": 4.6,
+    "runaway_clips": 0,
+    "outputs_with_digits": 3,
+    "outputs_with_non_ascii": 0
+  },
+  "env": {
+    "engine": "faster-whisper 1.2.1, ctranslate2 4.5.0",
+    "device": "cpu",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "mkl": "0",
+    "python": "3.12.3",
+    "machine": "x86_64"
+  }
+}

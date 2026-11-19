@@ -79,3 +79,25 @@ cloud/wait.sh R-0033 && cloud/collect.sh R-0033 && mv runs/R-0033/R-0034/* runs/
   fixes (see the builder's report), including a failing reproduction check and a failing R-0034.
 - Swivuriso and Soapies per-clip outputs and samples stay out of git (.gitignore: `runs/**/eval_swivuriso*/`,
   `runs/**/eval_soapies*/` predictions and samples).
+
+## Outcome (2026-11-20, lead)
+- Node i-0d4db684ee7961bae, g6.4xlarge on-demand (no g6.2xlarge capacity), commit 0d64cd8, 21:01-22:42 UTC
+  (~1.7 h, ~$2.25), terminated itself. GPU peak 6 973 MiB of ~22 500.
+- **Rule 1 (reproduction): PASSED.** October evaluator on the same data and weights: NCHLT 13.65 / 2.31 (Oct 13.67 /
+  2.31), FLEURS 30.30 / 6.24 (30.32 / 6.24), Swivuriso 19.12 / 4.12 (19.12 / 4.12).
+- **Loop guard fired on 0 clips in every arm** (R-0019 never looped on these sets; the guard costs nothing).
+- **Rule 2, the new baseline R-0035 must beat** (beam 5 + loop guard, CT2 float16, WER / CER):
+
+  | Test set | Oct greedy (R-0019) | guarded beam 1 | **guarded beam 5** |
+  |---|---|---|---|
+  | NCHLT test (2770) | 13.67 / 2.31 | 13.94 / 2.34 | **13.48 / 2.23** |
+  | FLEURS test (1034) | 30.32 / 6.24 | 30.48 / 6.31 | **28.92 / 5.75** |
+  | Swivuriso dev_test (2145) | 19.12 / 4.12 | 19.09 / 4.11 | **18.26 / 3.92** |
+  | Soapies test (391) | 66.62 / 29.29 (R-0030, laptop int8 greedy) | 66.31 / 28.79 | **63.37 / 27.08** |
+
+  The gain comes from beam 5, not the guard: beam 1 under CTranslate2 matches the old greedy within noise.
+- **Rule 3 (int8 check): PASSED.** Pooled over the 200 timed clips: int8 CPU CER 7.04 vs GPU float16 7.06
+  (WER 30.29 vs 30.07); 134/200 outputs identical.
+- CPU int8 beam 5, 8 threads on the node's CPU (cpu.txt): median 2.7 s (NCHLT), 4.0 s (FLEURS), 4.1 s (Swivuriso),
+  2.8 s (Soapies) per clip.
+- R-0034 did not run: its setup failed (P-0022); R-0033 carried on as designed.

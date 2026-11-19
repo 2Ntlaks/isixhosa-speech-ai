@@ -1,0 +1,4 @@
+nchlt: October 2770 clips WER 13.67 CER 2.31 | now 2770 clips WER 13.65 CER 2.31 | REPRODUCED
+fleurs: October 1034 clips WER 30.32 CER 6.24 | now 1034 clips WER 30.3 CER 6.24 | REPRODUCED
+swivuriso: October 2145 clips WER 19.12 CER 4.12 | now 2145 clips WER 19.12 CER 4.12 | REPRODUCED
+reproduction check passed

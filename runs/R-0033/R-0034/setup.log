@@ -1,0 +1,26 @@
+=== 21:06:42 R-0034 apt libsndfile1
+=== 21:07:27 R-0034 venv
+=== 21:07:27 R-0034 install (commit 81f51e224ce9e74b02cc2a3eaf21b2d91d743455)
+=== 21:09:31 R-0034 version check
+{"omnilingual-asr": "0.2.0", "fairseq2": "0.6", "torch": "2.8.0+cu128"}
+=== 21:09:34 R-0034 download omniASR_CTC_300M_v2
+Traceback (most recent call last):
+OSError: /opt/omni-venv/lib/python3.12/site-packages/torchaudio/lib/_torchaudio.abi3.so: undefined symbol: torch_library_impl
+--- R-0034 download omniASR_CTC_300M_v2: exit 1
+!!! R-0034 download omniASR_CTC_300M_v2 FAILED; last lines of its log:
+    import torchaudio.functional as F
+  File "/opt/omni-venv/lib/python3.12/site-packages/torchaudio/__init__.py", line 7, in <module>
+    from . import _extension  # noqa  # usort: skip
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/omni-venv/lib/python3.12/site-packages/torchaudio/_extension/__init__.py", line 30, in <module>
+    _IS_TORCHAUDIO_EXT_AVAILABLE = _load_lib("_torchaudio")
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/omni-venv/lib/python3.12/site-packages/torchaudio/_extension/utils.py", line 56, in _load_lib
+    torch.ops.load_library(paths[0])
+  File "/opt/omni-venv/lib/python3.12/site-packages/torch/_ops.py", line 1478, in load_library
+    ctypes.CDLL(path)
+  File "/usr/lib/python3.12/ctypes/__init__.py", line 379, in __init__
+    self._handle = _dlopen(self._name, mode)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: /opt/omni-venv/lib/python3.12/site-packages/torchaudio/lib/_torchaudio.abi3.so: undefined symbol: torch_library_impl
+!!! 21:09:39 R-0034 setup FAILED or timed out (see out/R-0034/omni.log); R-0033 carries on

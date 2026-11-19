@@ -1,0 +1,11 @@
+391 clips, 0.24 h, 5 speakers
+model R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) CT2 float16, beam 5 + loop guard on cuda (float16); 391 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 96}
+  50/391 clips, 22 s, 0 needed a fallback
+  100/391 clips, 43 s, 0 needed a fallback
+  150/391 clips, 64 s, 0 needed a fallback
+  200/391 clips, 86 s, 0 needed a fallback
+  250/391 clips, 107 s, 0 needed a fallback
+  300/391 clips, 128 s, 0 needed a fallback
+  350/391 clips, 145 s, 0 needed a fallback
+  391/391 clips, 153 s, 0 needed a fallback
+{'wer': 63.37, 'cer': 27.08, 'exact_match_pct': 3.58, 'seconds': 153.4} 0 fallbacks {'seconds_per_clip_mean': 0.392, 'seconds_per_clip_median': 0.387, 'seconds_per_clip_p95': 0.639, 'real_time_factor': 0.1782, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}

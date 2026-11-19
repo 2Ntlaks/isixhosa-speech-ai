@@ -1,0 +1,226 @@
+Shutdown scheduled for Fri 2026-11-20 01:02:01 UTC, use 'shutdown -c' to cancel.
+=== 21:02:02 node up Â· R-0033 Â· commit 0d64cd8
+name, driver_version, memory.total [MiB]
+NVIDIA L4, 595.112.07, 23034 MiB
+=== 21:02:03 installing Python packages
+downloading uv 0.5.11 x86_64-unknown-linux-gnu
+torch 2.5.1+cu124 cuda True
+=== 21:02:55 running runs/R-0033/job.sh
+NVIDIA L4, 23034 MiB
+16
+               total        used        free      shared  buff/cache   available
+Mem:              60           1          52           0           6          58
+=== 21:02:55 software
+faster-whisper 1.2.1 ctranslate2 4.5.0 CUDA devices 1
+=== 21:03:00 test data
+=== 21:03:35 FLEURS: from Hugging Face google/fleurs @ 70bb2e84b976b7e960aa89f1c648e09c59f894dd
+--- 21:03:35 data/fleurs_xh_za/train.tsv
+--- 21:03:35 data/fleurs_xh_za/dev.tsv
+--- 21:03:35 data/fleurs_xh_za/test.tsv
+--- 21:03:35 data/fleurs_xh_za/audio/test.tar.gz
+FLEURS test: 1034 clips <= 30 s, as in every earlier run
+NCHLT test wavs: 2770; FLEURS test: 1041; Swivuriso dev_test: 2145; Soapies wavs: 7923
+/dev/root       145G   61G   84G  42% /
+=== 21:05:11 R-0019 from Hugging Face @ 603a39b5f70526ef2192e5d6f80f713c682a1d39: full weights -> CTranslate2 float16, and the int8 copy
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:  80%|████████  | 8/10 [00:00<00:00, 30.03it/s]Fetching 10 files:  90%|█████████ | 9/10 [00:20<00:02,  2.22s/it]Fetching 10 files: 100%|██████████| 10/10 [00:30<00:00,  3.05s/it]Fetching 10 files: 100%|██████████| 10/10 [00:30<00:00,  3.05s/it]
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files:  73%|███████▎  | 8/11 [00:00<00:00, 34.38it/s]Fetching 11 files: 100%|██████████| 11/11 [00:07<00:00,  1.42it/s]
+models_cache/whisper-medium-isixhosa@603a39b5-ct2-float16:
+added_tokens.json
+config.json
+generation_config.json
+merges.txt
+model.bin
+normalizer.json
+preprocessor_config.json
+special_tokens_map.json
+tokenizer.json
+tokenizer_config.json
+vocab.json
+vocabulary.json
+
+models_cache/whisper-medium-isixhosa@603a39b5/ct2-int8:
+added_tokens.json
+config.json
+generation_config.json
+merges.txt
+model.bin
+normalizer.json
+preprocessor_config.json
+special_tokens_map.json
+tokenizer.json
+tokenizer_config.json
+vocab.json
+vocabulary.json
+1.5G	models_cache/whisper-medium-isixhosa@603a39b5-ct2-float16
+746M	models_cache/whisper-medium-isixhosa@603a39b5/ct2-int8
+2.9G	models_cache/whisper-medium-isixhosa@603a39b5-full
+=== 21:05:58 preflight: 3 clips per set, both arms, GPU float16
+{'wer': 0.0, 'cer': 0.0, 'exact_match_pct': 100.0, 'seconds': 0.4} 0 fallbacks {'seconds_per_clip_mean': 0.147, 'seconds_per_clip_median': 0.142, 'seconds_per_clip_p95': 0.17, 'real_time_factor': 0.0557, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 0.0, 'cer': 0.0, 'exact_match_pct': 100.0, 'seconds': 0.5} 0 fallbacks {'seconds_per_clip_mean': 0.158, 'seconds_per_clip_median': 0.154, 'seconds_per_clip_p95': 0.187, 'real_time_factor': 0.0598, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 26.67, 'cer': 4.41, 'exact_match_pct': 0.0, 'seconds': 1.3} 0 fallbacks {'seconds_per_clip_mean': 0.428, 'seconds_per_clip_median': 0.426, 'seconds_per_clip_p95': 0.432, 'real_time_factor': 0.0295, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 26.67, 'cer': 4.41, 'exact_match_pct': 0.0, 'seconds': 1.4} 0 fallbacks {'seconds_per_clip_mean': 0.481, 'seconds_per_clip_median': 0.481, 'seconds_per_clip_p95': 0.485, 'real_time_factor': 0.0331, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 34.38, 'cer': 11.79, 'exact_match_pct': 0.0, 'seconds': 2.2} 0 fallbacks {'seconds_per_clip_mean': 0.748, 'seconds_per_clip_median': 0.775, 'seconds_per_clip_p95': 0.776, 'real_time_factor': 0.0303, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 33.33, 'cer': 11.55, 'exact_match_pct': 0.0, 'seconds': 2.6} 0 fallbacks {'seconds_per_clip_mean': 0.87, 'seconds_per_clip_median': 0.905, 'seconds_per_clip_p95': 0.906, 'real_time_factor': 0.0352, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 42.86, 'cer': 16.25, 'exact_match_pct': 0.0, 'seconds': 0.5} 0 fallbacks {'seconds_per_clip_mean': 0.182, 'seconds_per_clip_median': 0.183, 'seconds_per_clip_p95': 0.187, 'real_time_factor': 0.0716, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 42.86, 'cer': 11.88, 'exact_match_pct': 0.0, 'seconds': 0.6} 0 fallbacks {'seconds_per_clip_mean': 0.204, 'seconds_per_clip_median': 0.206, 'seconds_per_clip_p95': 0.214, 'real_time_factor': 0.0804, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+=== 21:06:42 reproduction check: src/baseline.py (transformers greedy fp16, R-0019's October evaluator)
+2770 clips, 3.11 h, 8 speakers
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+  32/2770 clips, 2 s
+  352/2770 clips, 22 s
+  672/2770 clips, 42 s
+  992/2770 clips, 63 s
+  1312/2770 clips, 85 s
+  1632/2770 clips, 107 s
+  1952/2770 clips, 129 s
+  2272/2770 clips, 151 s
+  2592/2770 clips, 175 s
+{"wer": 13.65, "cer": 2.31, "exact_match_pct": 69.6, "detected_languages": {"sw": 2770}, "seconds": 188.0}
+left out 7 clips over 30 s
+1034 clips, 3.72 h, 1 speakers
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+  32/1034 clips, 3 s
+  352/1034 clips, 38 s
+  672/1034 clips, 79 s
+  992/1034 clips, 128 s
+{"wer": 30.3, "cer": 6.24, "exact_match_pct": 3.0, "detected_languages": {"sw": 1034}, "seconds": 137.2}
+2145 clips, 9.40 h, 24 speakers
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+  32/2145 clips, 3 s
+  352/2145 clips, 31 s
+  672/2145 clips, 65 s
+  992/2145 clips, 109 s
+  1312/2145 clips, 162 s
+  1632/2145 clips, 221 s
+  1952/2145 clips, 289 s
+{"wer": 19.12, "cer": 4.12, "exact_match_pct": 20.56, "detected_languages": {"sw": 2145}, "seconds": 335.8}
+nchlt: October 2770 clips WER 13.67 CER 2.31 | now 2770 clips WER 13.65 CER 2.31 | REPRODUCED
+fleurs: October 1034 clips WER 30.32 CER 6.24 | now 1034 clips WER 30.3 CER 6.24 | REPRODUCED
+swivuriso: October 2145 clips WER 19.12 CER 4.12 | now 2145 clips WER 19.12 CER 4.12 | REPRODUCED
+reproduction check passed
+=== 21:17:58 R-0033 GPU float16: 3 lanes side by side
+--- 21:17:58 GPU memory 0 MiB | gpu_fp16_beam1.swivuriso:  gpu_fp16_beam5.fleurs:  gpu_fp16_beam5.swivuriso: 
+--- 21:18:58 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso:  gpu_fp16_beam5.fleurs:  gpu_fp16_beam5.swivuriso: 
+--- 21:19:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 50/2145 clips gpu_fp16_beam5.fleurs: 50/1034 clips gpu_fp16_beam5.swivuriso: 50/2145 clips
+--- 21:20:58 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 100/2145 clips gpu_fp16_beam5.fleurs: 100/1034 clips gpu_fp16_beam5.swivuriso: 50/2145 clips
+--- 21:21:58 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 150/2145 clips gpu_fp16_beam5.fleurs: 150/1034 clips gpu_fp16_beam5.swivuriso: 100/2145 clips
+--- 21:22:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 200/2145 clips gpu_fp16_beam5.fleurs: 150/1034 clips gpu_fp16_beam5.swivuriso: 150/2145 clips
+--- 21:23:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 200/2145 clips gpu_fp16_beam5.fleurs: 200/1034 clips gpu_fp16_beam5.swivuriso: 150/2145 clips
+--- 21:24:58 GPU memory 6909 MiB | gpu_fp16_beam1.swivuriso: 250/2145 clips gpu_fp16_beam5.fleurs: 250/1034 clips gpu_fp16_beam5.swivuriso: 200/2145 clips
+--- 21:25:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 300/2145 clips gpu_fp16_beam5.fleurs: 250/1034 clips gpu_fp16_beam5.swivuriso: 250/2145 clips
+--- 21:26:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 350/2145 clips gpu_fp16_beam5.fleurs: 300/1034 clips gpu_fp16_beam5.swivuriso: 250/2145 clips
+--- 21:27:58 GPU memory 6781 MiB | gpu_fp16_beam1.swivuriso: 400/2145 clips gpu_fp16_beam5.fleurs: 350/1034 clips gpu_fp16_beam5.swivuriso: 300/2145 clips
+--- 21:28:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 450/2145 clips gpu_fp16_beam5.fleurs: 400/1034 clips gpu_fp16_beam5.swivuriso: 350/2145 clips
+--- 21:29:58 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 500/2145 clips gpu_fp16_beam5.fleurs: 450/1034 clips gpu_fp16_beam5.swivuriso: 350/2145 clips
+--- 21:30:58 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 550/2145 clips gpu_fp16_beam5.fleurs: 500/1034 clips gpu_fp16_beam5.swivuriso: 400/2145 clips
+--- 21:31:59 GPU memory 6749 MiB | gpu_fp16_beam1.swivuriso: 600/2145 clips gpu_fp16_beam5.fleurs: 500/1034 clips gpu_fp16_beam5.swivuriso: 450/2145 clips
+--- 21:32:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 600/2145 clips gpu_fp16_beam5.fleurs: 550/1034 clips gpu_fp16_beam5.swivuriso: 500/2145 clips
+--- 21:33:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 650/2145 clips gpu_fp16_beam5.fleurs: 600/1034 clips gpu_fp16_beam5.swivuriso: 500/2145 clips
+--- 21:34:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 700/2145 clips gpu_fp16_beam5.fleurs: 650/1034 clips gpu_fp16_beam5.swivuriso: 550/2145 clips
+--- 21:35:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 700/2145 clips gpu_fp16_beam5.fleurs: 650/1034 clips gpu_fp16_beam5.swivuriso: 600/2145 clips
+--- 21:36:59 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 750/2145 clips gpu_fp16_beam5.fleurs: 700/1034 clips gpu_fp16_beam5.swivuriso: 600/2145 clips
+--- 21:37:59 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 800/2145 clips gpu_fp16_beam5.fleurs: 750/1034 clips gpu_fp16_beam5.swivuriso: 650/2145 clips
+--- 21:38:59 GPU memory 6909 MiB | gpu_fp16_beam1.swivuriso: 850/2145 clips gpu_fp16_beam5.fleurs: 800/1034 clips gpu_fp16_beam5.swivuriso: 700/2145 clips
+--- 21:39:59 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 900/2145 clips gpu_fp16_beam5.fleurs: 850/1034 clips gpu_fp16_beam5.swivuriso: 700/2145 clips
+--- 21:40:59 GPU memory 6877 MiB | gpu_fp16_beam1.swivuriso: 950/2145 clips gpu_fp16_beam5.fleurs: 850/1034 clips gpu_fp16_beam5.swivuriso: 750/2145 clips
+--- 21:41:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 1000/2145 clips gpu_fp16_beam5.fleurs: 900/1034 clips gpu_fp16_beam5.swivuriso: 750/2145 clips
+--- 21:42:59 GPU memory 6845 MiB | gpu_fp16_beam1.swivuriso: 1050/2145 clips gpu_fp16_beam5.fleurs: 950/1034 clips gpu_fp16_beam5.swivuriso: 800/2145 clips
+--- 21:43:59 GPU memory 6909 MiB | gpu_fp16_beam1.swivuriso: 1100/2145 clips gpu_fp16_beam5.fleurs: 1000/1034 clips gpu_fp16_beam5.swivuriso: 850/2145 clips
+--- 21:44:59 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs:  gpu_fp16_beam1.swivuriso: 1150/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 850/2145 clips
+--- 21:45:59 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 50/1034 clips gpu_fp16_beam1.swivuriso: 1200/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 900/2145 clips
+--- 21:46:59 GPU memory 6813 MiB | gpu_fp16_beam1.fleurs: 50/1034 clips gpu_fp16_beam1.swivuriso: 1200/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 950/2145 clips
+--- 21:47:59 GPU memory 6877 MiB | gpu_fp16_beam1.fleurs: 100/1034 clips gpu_fp16_beam1.swivuriso: 1250/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1000/2145 clips
+--- 21:48:59 GPU memory 6941 MiB | gpu_fp16_beam1.fleurs: 150/1034 clips gpu_fp16_beam1.swivuriso: 1300/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1050/2145 clips
+--- 21:49:59 GPU memory 6813 MiB | gpu_fp16_beam1.fleurs: 200/1034 clips gpu_fp16_beam1.swivuriso: 1350/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1100/2145 clips
+--- 21:50:59 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 250/1034 clips gpu_fp16_beam1.swivuriso: 1400/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1100/2145 clips
+--- 21:51:59 GPU memory 6877 MiB | gpu_fp16_beam1.fleurs: 300/1034 clips gpu_fp16_beam1.swivuriso: 1450/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1150/2145 clips
+--- 21:52:59 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 350/1034 clips gpu_fp16_beam1.swivuriso: 1500/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1150/2145 clips
+--- 21:53:59 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 400/1034 clips gpu_fp16_beam1.swivuriso: 1500/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1200/2145 clips
+--- 21:54:59 GPU memory 6941 MiB | gpu_fp16_beam1.fleurs: 450/1034 clips gpu_fp16_beam1.swivuriso: 1550/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1250/2145 clips
+--- 21:55:59 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 500/1034 clips gpu_fp16_beam1.swivuriso: 1600/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1250/2145 clips
+--- 21:57:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 550/1034 clips gpu_fp16_beam1.swivuriso: 1650/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1300/2145 clips
+--- 21:58:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 600/1034 clips gpu_fp16_beam1.swivuriso: 1700/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1350/2145 clips
+--- 21:59:00 GPU memory 6781 MiB | gpu_fp16_beam1.fleurs: 650/1034 clips gpu_fp16_beam1.swivuriso: 1750/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1350/2145 clips
+--- 22:00:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 700/1034 clips gpu_fp16_beam1.swivuriso: 1750/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1400/2145 clips
+--- 22:01:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 700/1034 clips gpu_fp16_beam1.swivuriso: 1800/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1450/2145 clips
+--- 22:02:00 GPU memory 6877 MiB | gpu_fp16_beam1.fleurs: 800/1034 clips gpu_fp16_beam1.swivuriso: 1850/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1500/2145 clips
+--- 22:03:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 800/1034 clips gpu_fp16_beam1.swivuriso: 1900/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1500/2145 clips
+--- 22:04:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 850/1034 clips gpu_fp16_beam1.swivuriso: 1950/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1550/2145 clips
+--- 22:05:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 900/1034 clips gpu_fp16_beam1.swivuriso: 2000/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1600/2145 clips
+--- 22:06:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 950/1034 clips gpu_fp16_beam1.swivuriso: 2050/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1600/2145 clips
+--- 22:07:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 1000/1034 clips gpu_fp16_beam1.swivuriso: 2100/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1650/2145 clips
+--- 22:08:00 GPU memory 6845 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 50/2770 clips gpu_fp16_beam1.swivuriso: 2100/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.swivuriso: 1700/2145 clips
+--- 22:09:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 200/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 50/2770 clips gpu_fp16_beam5.swivuriso: 1700/2145 clips
+--- 22:10:00 GPU memory 6941 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 350/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 200/2770 clips gpu_fp16_beam5.swivuriso: 1750/2145 clips
+--- 22:11:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 450/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 300/2770 clips gpu_fp16_beam5.swivuriso: 1800/2145 clips
+--- 22:12:00 GPU memory 6877 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 600/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 400/2770 clips gpu_fp16_beam5.swivuriso: 1850/2145 clips
+--- 22:13:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 750/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 550/2770 clips gpu_fp16_beam5.swivuriso: 1850/2145 clips
+--- 22:14:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 850/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 650/2770 clips gpu_fp16_beam5.swivuriso: 1900/2145 clips
+--- 22:15:00 GPU memory 6941 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1000/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 750/2770 clips gpu_fp16_beam5.swivuriso: 1950/2145 clips
+--- 22:16:00 GPU memory 6877 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1100/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 850/2770 clips gpu_fp16_beam5.swivuriso: 2000/2145 clips
+--- 22:17:00 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1250/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1000/2770 clips gpu_fp16_beam5.swivuriso: 2000/2145 clips
+--- 22:18:00 GPU memory 6973 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1400/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1100/2770 clips gpu_fp16_beam5.swivuriso: 2050/2145 clips
+--- 22:19:01 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1500/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1200/2770 clips gpu_fp16_beam5.swivuriso: 2100/2145 clips
+--- 22:20:01 GPU memory 6909 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1650/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1350/2770 clips gpu_fp16_beam5.swivuriso: 2100/2145 clips
+--- 22:21:01 GPU memory 4618 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 1800/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1500/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:22:01 GPU memory 4490 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2000/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1650/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:23:01 GPU memory 4586 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2150/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 1800/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:24:01 GPU memory 4618 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2300/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2000/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:25:01 GPU memory 4618 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2500/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2150/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:26:01 GPU memory 4650 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2650/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2300/2770 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:27:01 GPU memory 4362 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2770/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2450/2770 clips gpu_fp16_beam5.soapies:  gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:28:01 GPU memory 4618 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2770/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2600/2770 clips gpu_fp16_beam5.soapies: 150/391 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:29:01 GPU memory 4650 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2770/2770 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2750/2770 clips gpu_fp16_beam5.soapies: 300/391 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+--- 22:30:01 GPU memory 2294 MiB | gpu_fp16_beam1.fleurs: 1034/1034 clips gpu_fp16_beam1.nchlt: 2770/2770 clips gpu_fp16_beam1.soapies: 150/391 clips gpu_fp16_beam1.swivuriso: 2145/2145 clips gpu_fp16_beam5.fleurs: 1034/1034 clips gpu_fp16_beam5.nchlt: 2770/2770 clips gpu_fp16_beam5.soapies: 391/391 clips gpu_fp16_beam5.swivuriso: 2145/2145 clips
+R-0033 GPU peak memory: 6973 MiB (of ~22 500)
+{'wer': 30.48, 'cer': 6.31, 'exact_match_pct': 3.68, 'seconds': 1335.1} 0 fallbacks {'seconds_per_clip_mean': 1.291, 'seconds_per_clip_median': 1.257, 'seconds_per_clip_p95': 1.86, 'real_time_factor': 0.0998, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 13.94, 'cer': 2.34, 'exact_match_pct': 69.1, 'seconds': 1164.5} 0 fallbacks {'seconds_per_clip_mean': 0.42, 'seconds_per_clip_median': 0.422, 'seconds_per_clip_p95': 0.533, 'real_time_factor': 0.104, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 66.31, 'cer': 28.79, 'exact_match_pct': 2.3, 'seconds': 74.3} 0 fallbacks {'seconds_per_clip_mean': 0.19, 'seconds_per_clip_median': 0.182, 'seconds_per_clip_p95': 0.272, 'real_time_factor': 0.0863, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 19.09, 'cer': 4.11, 'exact_match_pct': 20.28, 'seconds': 2999.4} 0 fallbacks {'seconds_per_clip_mean': 1.397, 'seconds_per_clip_median': 1.346, 'seconds_per_clip_p95': 2.409, 'real_time_factor': 0.0886, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 28.92, 'cer': 5.75, 'exact_match_pct': 4.45, 'seconds': 1601.8} 0 fallbacks {'seconds_per_clip_mean': 1.549, 'seconds_per_clip_median': 1.51, 'seconds_per_clip_p95': 2.271, 'real_time_factor': 0.1197, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 13.48, 'cer': 2.23, 'exact_match_pct': 69.86, 'seconds': 1254.1} 0 fallbacks {'seconds_per_clip_mean': 0.452, 'seconds_per_clip_median': 0.449, 'seconds_per_clip_p95': 0.601, 'real_time_factor': 0.112, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 63.37, 'cer': 27.08, 'exact_match_pct': 3.58, 'seconds': 153.4} 0 fallbacks {'seconds_per_clip_mean': 0.392, 'seconds_per_clip_median': 0.387, 'seconds_per_clip_p95': 0.639, 'real_time_factor': 0.1782, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+{'wer': 18.26, 'cer': 3.92, 'exact_match_pct': 21.26, 'seconds': 3734.4} 0 fallbacks {'seconds_per_clip_mean': 1.74, 'seconds_per_clip_median': 1.678, 'seconds_per_clip_p95': 3.044, 'real_time_factor': 0.1103, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+  File "/usr/lib/python3.12/ctypes/__init__.py", line 379, in __init__
+    self._handle = _dlopen(self._name, mode)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: /opt/omni-venv/lib/python3.12/site-packages/torchaudio/lib/_torchaudio.abi3.so: undefined symbol: torch_library_impl
+!!! 21:09:39 R-0034 setup FAILED or timed out (see out/R-0034/omni.log); R-0033 carries on
+=== 22:30:39 CPU timing, one job at a time, nothing else running
+=== 22:30:39 R-0033 CPU int8 (published copy), beam 5 + loop guard, 50 clips per set, 8 threads
+50 clips, 0.06 h, 8 speakers
+model R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) ct2-int8, beam 5 + loop guard on cpu (int8); 50 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 96}
+  10/50 clips, 27 s, 0 needed a fallback
+  20/50 clips, 53 s, 0 needed a fallback
+  30/50 clips, 80 s, 0 needed a fallback
+  40/50 clips, 107 s, 0 needed a fallback
+  50/50 clips, 135 s, 0 needed a fallback
+{'wer': 10.96, 'cer': 1.94, 'exact_match_pct': 74.0, 'seconds': 134.7} 0 fallbacks {'seconds_per_clip_mean': 2.693, 'seconds_per_clip_median': 2.702, 'seconds_per_clip_p95': 2.823, 'real_time_factor': 0.6795, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+left out 7 clips over 30 s
+50 clips, 0.18 h, 1 speakers
+model R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) ct2-int8, beam 5 + loop guard on cpu (int8); 50 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 225}
+  10/50 clips, 38 s, 0 needed a fallback
+  20/50 clips, 79 s, 0 needed a fallback
+  30/50 clips, 119 s, 0 needed a fallback
+  40/50 clips, 160 s, 0 needed a fallback
+  50/50 clips, 201 s, 0 needed a fallback
+{'wer': 27.46, 'cer': 5.01, 'exact_match_pct': 4.0, 'seconds': 200.8} 0 fallbacks {'seconds_per_clip_mean': 4.015, 'seconds_per_clip_median': 3.966, 'seconds_per_clip_p95': 5.6, 'real_time_factor': 0.3088, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+50 clips, 0.22 h, 21 speakers
+model R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) ct2-int8, beam 5 + loop guard on cpu (int8); 50 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 440}
+  10/50 clips, 41 s, 0 needed a fallback
+  20/50 clips, 85 s, 0 needed a fallback
+  30/50 clips, 125 s, 0 needed a fallback
+  40/50 clips, 167 s, 0 needed a fallback
+  50/50 clips, 211 s, 0 needed a fallback
+{'wer': 24.03, 'cer': 4.94, 'exact_match_pct': 16.0, 'seconds': 211.1} 0 fallbacks {'seconds_per_clip_mean': 4.221, 'seconds_per_clip_median': 4.135, 'seconds_per_clip_p95': 5.981, 'real_time_factor': 0.2652, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+50 clips, 0.03 h, 5 speakers
+model R-0019 (Ntlakanipho/whisper-medium-isixhosa@603a39b5) ct2-int8, beam 5 + loop guard on cpu (int8); 50 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 96}
+  10/50 clips, 29 s, 0 needed a fallback
+  20/50 clips, 56 s, 0 needed a fallback
+  30/50 clips, 85 s, 0 needed a fallback
+  40/50 clips, 113 s, 0 needed a fallback
+  50/50 clips, 142 s, 0 needed a fallback
+{'wer': 61.69, 'cer': 23.51, 'exact_match_pct': 0.0, 'seconds': 142.2} 0 fallbacks {'seconds_per_clip_mean': 2.843, 'seconds_per_clip_median': 2.825, 'seconds_per_clip_p95': 3.213, 'real_time_factor': 1.2346, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}
+Model name:                              AMD EPYC 7R13 Processor
+BIOS Model name:                         AMD EPYC 7R13 Processor  CPU @ 2.6GHz
+=== 22:42:35 R-0033 done; R-0034: FAILED parts: setup

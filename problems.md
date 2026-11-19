@@ -273,3 +273,18 @@ Format:
   deleted models/ and FLEURS to cut storage cost after the pause, without a JOURNAL entry. Not confirmed (no S3 access
   logs). Rule from now on: deleting anything in S3 needs the founder's word and a JOURNAL line; every new model that
   matters also goes to a private Hugging Face repo (second home), as planned for R-0035.
+
+## P-0022 · 2026-11-20 · R-0034: torchaudio did not match torch in the Omnilingual venv
+- Stage / run: R-0034 setup, on R-0033's node
+- Symptom:
+  ```
+  OSError: /opt/omni-venv/lib/python3.12/site-packages/torchaudio/lib/_torchaudio.abi3.so: undefined symbol: torch_library_impl
+  ```
+  (versions: omnilingual-asr 0.2.0, fairseq2 0.6, torch 2.8.0+cu128)
+- Cause: the install pinned omnilingual-asr but not torchaudio; the resolver took a torchaudio built for a different
+  torch, so its compiled library could not load. The builder could not test this on the laptop (fairseq2 has no
+  Windows build); the job's isolation worked: R-0033 finished.
+- Fix: runs/R-0034/omni.sh pins torch==2.8.0 torchaudio==2.8.0 and imports torchaudio in the version check, so a
+  mismatch fails in the first minutes. R-0034 relaunched on its own.
+- Cost: ~8 min of node time inside R-0033 (~$0.18).
+- Lesson: pin every compiled companion library (torchaudio, torchvision) to the exact torch version.
