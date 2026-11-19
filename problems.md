@@ -267,3 +267,9 @@ Format:
   (unpublished, failed its ship rule by 0.02 CER) is lost, so it cannot be re-scored with a loop guard. Its recipe is
   repeated inside R-0035 anyway. FLEURS can be re-fetched (cloud/fetch_data.sh).
 - Lesson: an unpublished model that might still matter needs a second home; check S3 contents before planning a restart.
+
+## P-0021 update · 2026-11-19 · likely cause
+- Founder: "i think previous model deleted s3 because of not wanting costs" - most likely an earlier agent session
+  deleted models/ and FLEURS to cut storage cost after the pause, without a JOURNAL entry. Not confirmed (no S3 access
+  logs). Rule from now on: deleting anything in S3 needs the founder's word and a JOURNAL line; every new model that
+  matters also goes to a private Hugging Face repo (second home), as planned for R-0035.

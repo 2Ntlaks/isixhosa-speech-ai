@@ -291,3 +291,9 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   Omnilingual CTC 300M/1B on Swivuriso, Soapies, FLEURS, after checking Meta's training data for test overlap;
   R-0035 medium retrained with the fixed recipe (longer training, Swivuriso+FLEURS checkpoint choice, SpecAugment).
 - Run IDs R-0033 to R-0035 are reserved for this plan (P-0018). November GPU spend at decision time: $0.53 of $30.
+
+## D-0032 · 2026-11-19 · R-0035 bundles the recipe fixes; budget raised to ~$15-17
+- Options: one bundled run (~$12-13) or separate runs per fix (~$30+). Agent recommended bundled. Founder: "bundle would
+  be better". R-0035 changes together: training length (9000 steps), checkpoint selection (Swivuriso + FLEURS dev,
+  output cap 96 -> 225), SpecAugment. The result shows whether the recipe as a whole helps, not which part.
+- Budget: builder's estimates put R-0033 + R-0034 + R-0035 at ~$15-17 (D-0031 said ~$10-13). Founder: "yes it okay".
