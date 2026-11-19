@@ -9,9 +9,14 @@ Models: omniASR_CTC_300M_v2 (325M parameters) and omniASR_CTC_1B_v2 (975M), Apac
 (github.com/facebookresearch/omnilingual-asr, installed from a pinned commit in its own venv because it needs fairseq2
 and its own torch; see runs/R-0034/run.md). The package downloads the weights from Meta's server on first use.
 
-- CTC models ignore the language code: --lang xho_Latn is passed and recorded, and the package logs that it ignores
-  it. They write isiXhosa in their own spelling and casing; scoring.normalise lowercases and drops punctuation for
-  both sides exactly as for Thetha, so digits or other written forms still count as errors, as they would for Thetha.
+- No language code is passed: CTC models do not support language conditioning (xho_Latn only matters for the LLM
+  variants; --lang passes one anyway).
+- The v2 models write capitals, punctuation, digits and curly apostrophes. Curly apostrophes (U+2018, U+2019, U+02BC)
+  are mapped to the straight ' before scoring (Thetha only ever writes '), otherwise scoring.normalise would split
+  words at them; "hyp_raw" keeps the model's own text and metrics.json also reports the unmapped score. Everything
+  else goes through the same scoring.normalise as Thetha (lowercase, punctuation dropped), so a digit where the
+  reference spells the number still counts as an error; metrics.json "diagnostics" adds the FLEURS clips whose
+  reference has no digit, CER without spaces, and how many outputs contain digits or non-ASCII letters.
 - The package refuses audio over 40 s; every test clip here is at most 30 s (the same --max-seconds as Thetha).
 - Timing: on CPU each clip goes alone (batch 1), so seconds per clip is the model's own time on this machine
   (warm-up excluded, audio loading excluded). With --batch-size > 1 (GPU, accuracy runs) the batch time is shared
@@ -30,6 +35,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import testsets  # noqa: E402
 
 OMNI_REPO = "https://github.com/facebookresearch/omnilingual-asr"
+CURLY = str.maketrans({"‘": "'", "’": "'", "ʼ": "'"})  # typographic apostrophes -> the one Thetha writes
 
 
 def load_pipeline(card, device, dtype):
@@ -58,7 +64,8 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--model-card", default="omniASR_CTC_300M_v2",
                     help="omniASR_CTC_300M_v2 | omniASR_CTC_1B_v2 (any card the package knows)")
-    ap.add_argument("--lang", default="xho_Latn", help="passed to the package; CTC models ignore it ('' = none)")
+    ap.add_argument("--lang", default="", help="language code for the package (default none: CTC models ignore it)")
+    ap.add_argument("--keep-curly-apostrophes", action="store_true", help="score the raw output (no ' mapping)")
     ap.add_argument("--device", default="cpu", help="cpu | cuda")
     ap.add_argument("--dtype", default=None, help="float32 | bfloat16 | float16 (default: float32 on CPU, "
                     "bfloat16 on GPU, the package's own default there)")
@@ -108,7 +115,9 @@ def main():
         hyps = pipe.transcribe(inp, lang=[lang] * len(batch) if lang else None, batch_size=len(batch))
         each = (time.perf_counter() - start) / len(batch)
         for c, h in zip(batch, hyps):
-            c["hyp"], c["lang"], c["seconds"] = h.strip(), lang or "-", round(each, 3)
+            c["hyp_raw"] = h.strip()
+            c["hyp"] = c["hyp_raw"] if a.keep_curly_apostrophes else c["hyp_raw"].translate(CURLY)
+            c["lang"], c["seconds"] = lang or "-", round(each, 3)
         done = k + len(batch)
         if done % 100 < a.batch_size or done == len(clips):
             print(f"  {done}/{len(clips)} clips, {time.time() - t0:.0f} s", flush=True)
@@ -122,11 +131,17 @@ def main():
               "real_time_factor": round(sum(per_clip) / sum(c["duration"] for c in clips), 4),
               "note": "model time per clip, warm-up and audio loading excluded"
                       + ("" if a.batch_size == 1 else "; batch time shared equally, only the total is meaningful")}
+    from scoring import score
+    raw = score([c["text"] for c in clips], [c["hyp_raw"] for c in clips])
     metrics = testsets.report(
-        a, kind, clips, too_long, model=a.model_card, language=f"{a.lang} (ignored by CTC models)" if a.lang else "-",
+        a, kind, clips, too_long, model=a.model_card, language=f"{a.lang} (ignored by CTC models)" if a.lang else "none",
         max_new_tokens=None, seconds=secs, env=env, column="lang code", output_column="output",
         extra={"decoder": "Meta Omnilingual ASR CTC, greedy (argmax) as in the package",
-               "sample": {"n": a.sample, "seed": a.sample_seed} if a.sample else None, "timing": timing})
+               "sample": {"n": a.sample, "seed": a.sample_seed} if a.sample else None, "timing": timing,
+               "curly_apostrophes_mapped": not a.keep_curly_apostrophes,
+               "score_without_apostrophe_mapping": {"wer": round(raw["wer"], 2), "cer": round(raw["cer"], 2)},
+               "outputs_with_curly_apostrophes": sum(c["hyp_raw"] != c["hyp"] for c in clips),
+               "diagnostics": testsets.diagnostics(kind, clips)})
     print({k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "seconds")}, timing, flush=True)
 
 

@@ -129,6 +129,33 @@ def _soapies_extras(clips):
     return out
 
 
+def runaway(ref, hyp):
+    """A runaway output (Neon pre-flight memo): over 2.5x the reference's length and over 150 letters."""
+    return len(hyp) > 2.5 * len(ref) and len(hyp) > 150
+
+
+def diagnostics(kind, clips):
+    """Secondary views of the same predictions, for fair comparisons between very different models (R-0033/R-0034).
+    The headline WER/CER stay the plain scoring.normalise scores."""
+    import jiwer
+
+    def sub(name, rows):
+        if not rows:
+            return {name: None}
+        s = score([c["text"] for c in rows], [c["hyp"] for c in rows])
+        return {name: {"wer": round(s["wer"], 2), "cer": round(s["cer"], 2), "n": s["n"]}}
+
+    out = {"cer_no_spaces": round(100 * jiwer.cer([normalise(c["text"]).replace(" ", "") or "-" for c in clips],
+                                                  [normalise(c["hyp"]).replace(" ", "") or "-" for c in clips]), 2),
+           "runaway_clips": sum(runaway(normalise(c["text"]), normalise(c["hyp"])) for c in clips),
+           "outputs_with_digits": sum(any(ch.isdigit() for ch in c["hyp"]) for c in clips),
+           "outputs_with_non_ascii": sum(any(ord(ch) > 127 for ch in c["hyp"]) for c in clips)}
+    if kind == "fleurs":  # 200 of 1034 FLEURS test references contain digits; a spelled-out number scores as wrong
+        out.update(sub("reference_without_digits", [c for c in clips if not any(ch.isdigit() for ch in c["text"])]))
+        out.update(sub("reference_with_digits", [c for c in clips if any(ch.isdigit() for ch in c["text"])]))
+    return out
+
+
 def report(a, kind, clips, too_long, *, model, language, max_new_tokens, seconds, env, extra=None,
            column="Whisper's language", output_column="Whisper's output"):
     """Score clips (each has "hyp" and "lang") and write predictions.jsonl, metrics.json and samples.md to a.out.

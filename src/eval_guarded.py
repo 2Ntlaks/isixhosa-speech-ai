@@ -11,12 +11,16 @@ the clips and normalisation of every earlier evaluation (src/testsets.py, src/sc
   # a local model: a CTranslate2 folder, or a transformers checkpoint (converted with --quantization first)
   python src/eval_guarded.py --model model/final --quantization float16 --device cuda ...
 
-What "Whisper's reliability rules" means (Radford et al. 2022, section 4.5; faster-whisper's defaults): decode with
-beam search (5); if the text is too repetitive (gzip compression ratio > 2.4) or the model is unsure (average log
-probability < -1.0), decode again by sampling at temperature 0.2, then 0.4, ... up to 1.0 (best of 5 samples); if the
-model says "no speech" (probability > 0.6) while unsure, output nothing. Each clip is decoded on its own, with no
-previous text and no timestamps, language "sw" (isiXhosa borrows Swahili's tag, D-0007). Every setting is a flag.
-Sampling is seeded per clip (from the clip id), so a rerun gives the same text whatever the order or batch.
+The loop guard (Whisper's own rule, Radford et al. 2022 section 4.5; settings from Neon's pre-flight memo, checked by
+the lead): decode with beam search; if the text is too repetitive (gzip compression ratio > 2.4, i.e. a loop), decode
+again by sampling at temperature 0.2, then 0.4, then 0.6 (best of 5 samples), keeping the first that is not
+repetitive. Whisper's other two checks are OFF by default: "unsure" (average log probability < -1.0) would resample
+hard but correct clips at random, and "no speech" relies on a <|nospeech|> token our fine-tunes never trained on
+(--log-prob-threshold -1.0 / --no-speech-threshold 0.6 turn them on). No repetition penalty. Each clip is decoded on
+its own (no previous text, no timestamps, no VAD), language "sw" (isiXhosa borrows Swahili's tag, D-0007). R-0033 runs
+two arms on the same clips: --beam-size 1 and --beam-size 5. Every setting is a flag. Sampling is seeded per clip (from
+the clip id), so a rerun gives the same text whatever the order. WhisperModel.transcribe is used, not
+BatchedInferencePipeline, which ignores the fallback temperatures.
 
 Writes predictions.jsonl, metrics.json and samples.md (src/compare_runs.py compares them with earlier runs). Besides
 WER/CER it reports how many clips needed a retry ("fallback"), at which temperature they ended, how many exhausted
@@ -50,11 +54,11 @@ def add_decode_args(ap):
     g.add_argument("--length-penalty", type=float, default=1.0)
     g.add_argument("--repetition-penalty", type=float, default=1.0)
     g.add_argument("--no-repeat-ngram-size", type=int, default=0)
-    g.add_argument("--temperatures", default="0.0,0.2,0.4,0.6,0.8,1.0",
+    g.add_argument("--temperatures", default="0.0,0.2,0.4,0.6",
                    help="tried in order; the first is the beam search, the rest are fallbacks")
     g.add_argument("--compression-ratio-threshold", type=float_or_none, default=2.4, help="'none' turns it off")
-    g.add_argument("--log-prob-threshold", type=float_or_none, default=-1.0, help="'none' turns it off")
-    g.add_argument("--no-speech-threshold", type=float_or_none, default=0.6, help="'none' turns it off")
+    g.add_argument("--log-prob-threshold", type=float_or_none, default=None, help="Whisper's -1.0; default off")
+    g.add_argument("--no-speech-threshold", type=float_or_none, default=None, help="Whisper's 0.6; default off")
     g.add_argument("--condition-on-previous-text", action="store_true", help="default off: every clip on its own")
     g.add_argument("--with-timestamps", action="store_true", help="default off: without_timestamps=True")
     g.add_argument("--no-suppress-blank", action="store_true")
@@ -194,6 +198,7 @@ def main():
             "avg_logprob": round(segments[-1].avg_logprob, 3) if segments else None,
             "compression_ratio": round(segments[-1].compression_ratio, 3) if segments else None,
             "no_speech_prob": round(log.attempts[-1]["no_speech_prob"], 3) if log.attempts else None,
+            "first_compression_ratio": round(log.attempts[0]["compression_ratio"], 3) if log.attempts else None,
         }
         if (i + 1) % 50 == 0 or i + 1 == len(clips):
             fb = sum(x["decode"]["fallback"] for x in clips[: i + 1])
@@ -212,7 +217,11 @@ def main():
         "fallback_final_temperature": dict(sorted(finals.items())),
         "exhausted_every_temperature": sum(c["decode"]["exhausted"] for c in clips),
         "no_speech_skipped": sum(c["decode"]["no_speech_skip"] for c in clips),
-        "fallback_clip_ids": [c["id"] for c in clips if c["decode"]["fallback"]],
+        "fallback_clips": [{"id": c["id"], "final_temperature": c["decode"]["final_temperature"],
+                            "temperatures_tried": c["decode"]["temperatures_tried"],
+                            "first_compression_ratio": c["decode"]["first_compression_ratio"],
+                            "kept_compression_ratio": c["decode"]["compression_ratio"],
+                            "exhausted": c["decode"]["exhausted"]} for c in clips if c["decode"]["fallback"]],
         "decoding_attempts": sum(c["decode"]["attempts"] for c in clips),
     }
     timing = {"seconds_per_clip_mean": round(statistics.mean(per_clip), 3),
@@ -234,7 +243,7 @@ def main():
         seconds=secs, env=env, column="language", output_column="output",
         extra={"decoder": "faster-whisper with Whisper's reliability rules (R-0033)", "decoding": settings,
                "model_source": source, "sample": {"n": a.sample, "seed": a.sample_seed} if a.sample else None,
-               "guard": guard, "timing": timing})
+               "guard": guard, "timing": timing, "diagnostics": testsets.diagnostics(kind, clips)})
     print({k: metrics[k] for k in ("wer", "cer", "exact_match_pct", "seconds")}, guard["clips_with_fallback"],
           "fallbacks", timing, flush=True)
 

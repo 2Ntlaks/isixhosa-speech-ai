@@ -101,9 +101,10 @@ class GuardedRules(unittest.TestCase):
     def test_defaults_are_whispers_reliability_rules(self):
         o = self.options()
         self.assertEqual(o["beam_size"], 5)
-        self.assertEqual(o["temperature"], (0.0, 0.2, 0.4, 0.6, 0.8, 1.0))
+        self.assertEqual(o["temperature"], (0.0, 0.2, 0.4, 0.6))
         self.assertEqual((o["compression_ratio_threshold"], o["log_prob_threshold"], o["no_speech_threshold"]),
-                         (2.4, -1.0, 0.6))
+                         (2.4, None, None))  # fallback fires on loops only (Neon pre-flight)
+        self.assertEqual((o["repetition_penalty"], o["no_repeat_ngram_size"]), (1.0, 0))
         self.assertEqual((o["condition_on_previous_text"], o["without_timestamps"], o["language"], o["task"]),
                          (False, True, "sw", "transcribe"))
         self.assertEqual((o["best_of"], o["vad_filter"], o["max_new_tokens"]), (5, False, 225))
@@ -119,7 +120,7 @@ class GuardedRules(unittest.TestCase):
                          (3, (0.0, 0.5), None, -2.0, None, True, False, True, 100, "en"))
 
     def test_retry_rule_matches_faster_whisper(self):
-        o = self.options()
+        o = self.options("--log-prob-threshold", "-1.0", "--no-speech-threshold", "0.6")  # Whisper's full rule
         ok = {"compression_ratio": 1.4, "avg_logprob": -0.3, "no_speech_prob": 0.0}
         self.assertFalse(eval_guarded.needs_retry(ok, o))
         self.assertTrue(eval_guarded.needs_retry({**ok, "compression_ratio": 2.5}, o))
@@ -147,7 +148,7 @@ class OmniContract(Fixture):
         class Pipe:
             def transcribe(self, inp, lang=None, batch_size=1):
                 calls.append((inp, lang, batch_size))
-                return ["Alpha, Beta!"] * len(inp)
+                return ["Alpha, Beta’s!"] * len(inp)
 
         out = os.path.join(self.tmp.name, "omni_contract")
         argv = ["eval_omni.py", "--model-card", "omniASR_CTC_300M_v2", "--out", out, "--sample", "2",
@@ -157,14 +158,17 @@ class OmniContract(Fixture):
             eval_omni.main()
         self.assertEqual(len(calls), 3)  # warm-up + 2 clips
         for inp, lang, bs in calls:
-            self.assertEqual((len(inp), lang, bs), (1, ["xho_Latn"], 1))
+            self.assertEqual((len(inp), lang, bs), (1, None, 1))  # CTC: no language code
             w = inp[0]["waveform"]
             self.assertEqual((inp[0]["sample_rate"], w.ndim, w.dtype), (16000, 1, np.float32))  # Soapies is 32 kHz
         m = json.load(open(os.path.join(out, "metrics.json"), encoding="utf-8"))
         self.assertEqual(m["model"], "omniASR_CTC_300M_v2")
-        self.assertIn("ignored", m["language"])
+        self.assertEqual(m["language"], "none")
         preds = [json.loads(l) for l in open(os.path.join(out, "predictions.jsonl"), encoding="utf-8")]
-        self.assertTrue(all(p["hyp"] == "Alpha, Beta!" for p in preds))  # raw output kept; scoring normalises
+        self.assertTrue(all(p["hyp"] == "Alpha, Beta's!" and p["hyp_raw"] == "Alpha, Beta’s!" for p in preds))
+        self.assertEqual(m["outputs_with_curly_apostrophes"], 2)
+        self.assertIn("score_without_apostrophe_mapping", m)
+        self.assertEqual(m["diagnostics"]["outputs_with_non_ascii"], 0)  # counted after the mapping
 
 
 class CompareAndConvert(Fixture):

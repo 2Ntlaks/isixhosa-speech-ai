@@ -64,7 +64,7 @@ def main():
                                                  / len(sub), 2)),
             "by_text_in_training": metrics.get("by_text_in_training"),
             "per_speaker_cer": {k: v["cer"] for k, v in (per_speaker or {}).items()},
-            **({"guard": {k: v for k, v in metrics["guard"].items() if k != "fallback_clip_ids"}}
+            **({"guard": {k: v for k, v in metrics["guard"].items() if k != "fallback_clips"}}
                if "guard" in metrics else {}),
             "patterns": pattern_recall({p["id"]: p for p in sub}),
             "check": score([p["text"] for p in sub], [p["hyp"] for p in sub]),
