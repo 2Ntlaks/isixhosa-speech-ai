@@ -38,14 +38,16 @@ def main():
     proc = WhisperProcessor.from_pretrained(a.model, language="sw", task="transcribe")
     clips = [c for c in swivuriso.load_split(a.swivuriso_tsv, a.swivuriso_audio) if c["duration"] <= 30]
     clips = sorted(random.Random(1).sample(clips, min(a.clips, len(clips))), key=lambda c: c["duration"])
-    model = WhisperForConditionalGeneration.from_pretrained(a.model)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = WhisperForConditionalGeneration.from_pretrained(a.model).to(device)
     train.apply_spec_augment(model, a)
     data = train.Clips(clips, proc, "sw", attention_mask=True)
     batch = train.Collator(proc, model.config.decoder_start_token_id)([data[i] for i in range(len(clips))])
+    batch = {k: v.to(device) for k, v in batch.items()}
 
     am = batch["attention_mask"]
     frames = am.sum(-1)
-    expected = torch.tensor([min(3000, int(round(c["duration"] * 100))) for c in clips])
+    expected = torch.tensor([min(3000, int(round(c["duration"] * 100))) for c in clips], device=device)
     assert am.shape == (len(clips), 3000), f"attention mask shape {tuple(am.shape)}"
     assert (frames - expected).abs().max() <= 2, f"attention mask lengths {frames.tolist()} vs audio {expected.tolist()}"
     print(f"1. attention mask OK: shape {tuple(am.shape)}, audio frames {frames.tolist()}")
@@ -91,7 +93,7 @@ def main():
               labels=batch["labels"])
     assert torch.equal(seen["features"], batch["input_features"]), "features were masked in evaluation mode"
     print("4. evaluation mode: no masking")
-    print("SpecAugment check OK", {k: getattr(model.config, k) for k in (
+    print(f"SpecAugment check OK on {device}", {k: getattr(model.config, k) for k in (
         "apply_spec_augment", "mask_time_prob", "mask_time_length", "mask_time_min_masks", "mask_feature_prob",
         "mask_feature_length", "mask_feature_min_masks")})
 
