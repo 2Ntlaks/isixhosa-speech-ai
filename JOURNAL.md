@@ -409,3 +409,8 @@ Format:
   training stopped at 1.3-1.6 epochs with dev loss still falling; checkpoint chosen on NCHLT dev.
 - $0 spent. November GPU spend $0.53 of $30. No AWS machines running.
 - Next: builder finishes code; Neon reviews it; lead launches R-0033 + R-0034 (~$1); R-0035 cost goes to the founder.
+- (later, 2026-11-19) Builder fixed all 20 findings of Neon's code review (lead checked the blockers; 35 tests pass on
+  merged main 0d64cd8). Founder: S3 deletion likely an earlier session saving cost (P-0021 update); R-0035 bundled and
+  budget ~$15-17 OK (D-0032). Live-page VAD check passed (evidence/live-vad-check-2026-11-19/): VAD on.
+- R-0033 + R-0034 launched at commit 0d64cd8: i-0d4db684ee7961bae, g6.4xlarge on-demand (no g6.2xlarge capacity in
+  any zone), 4 h cap (worst case ~$5.30).
