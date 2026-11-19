@@ -42,3 +42,12 @@ Use the reports together with these corrections.
 Real sources and accurate numbers, strong code reading (found the 96-token bug and the attention_mask trap), honest
 UNVERIFIED lists. Weak spot: details of secondary sources (issue threads, table labels) are sometimes misattributed,
 and conclusions are stated more firmly than the sources allow. Check its secondary citations before relying on them.
+
+## neon-code-review-2026-11-19.md (review of builder branch t3/81cf49f5)
+- Lead checked the four blockers in the code: all real (R-0035 resume `tail` on missing logs under set -e; FLEURS curl
+  with --retry but no stall timeout, P-0016 again; LD_LIBRARY_PATH from setup_ct2 leaking into the Omnilingual venv
+  and R-0034 failures able to stop R-0033; six GPU processes on one 22 GB L4 with 1B_v2 batch 8 never preflighted).
+- Correction: F-06 assumed an 8 vCPU G quota. On 2026-11-19 the on-demand G quota is 32 vCPU (D-0026 request granted);
+  spot is still 8. g6.4xlarge works on demand.
+- Verdict: a careful, line-level review with honest certainty labels; it found real money-wasting bugs the builder's
+  laptop rehearsals could not show. All 20 findings sent to the builder with the lead's decision on each.
