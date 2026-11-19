@@ -21,3 +21,8 @@ runs/**/gate_r0019/samples.md
 runs/R-0030/*/predictions.jsonl
 runs/R-0030/samples.md
 runs/R-0031/soapies_*/predictions.jsonl
+# R-0033 to R-0035: Soapies and Swivuriso per-clip outputs from the shared evaluators stay local (D-0016, D-0024)
+runs/**/eval_swivuriso*/predictions.jsonl
+runs/**/eval_swivuriso*/samples.md
+runs/**/eval_soapies*/predictions.jsonl
+runs/**/eval_soapies*/samples.md
