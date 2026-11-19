@@ -53,7 +53,7 @@ if [ $PHASE = setup ]; then
   step 300 "venv" uv venv -q -p 3.12 /opt/omni-venv || exit 1
   step 1500 "install (commit $OMNI_COMMIT)" env VIRTUAL_ENV=/opt/omni-venv uv pip install -q \
     "omnilingual-asr @ git+https://github.com/facebookresearch/omnilingual-asr@$OMNI_COMMIT" \
-    jiwer==3.0.5 soundfile scipy torch==2.8.0 torchaudio==2.8.0 pyarrow==18.1.0 || exit 1   # torchaudio must match torch (P-0022); pyarrow must accept the resolved NumPy 1.26 (P-0023)
+    jiwer==3.0.5 soundfile scipy torch==2.8.0 torchaudio==2.8.0 pyarrow==20.0.0 || exit 1   # torchaudio must match torch (P-0022); omnilingual-asr needs pyarrow>=20, fairseq2 0.6 needs numpy~=1.23, pyarrow 26 needs numpy>=2 (P-0023)
   step 120 "version check" $OPY -c "
 import importlib.metadata as m, torch, torchaudio.functional, numpy, pyarrow
 from omnilingual_asr.models.inference.pipeline import ASRInferencePipeline   # the whole import chain, before any download

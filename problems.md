@@ -303,3 +303,15 @@ Format:
   every import problem shows in the first minutes.
 - Cost: ~5 min of a g6.xlarge (~$0.10).
 - Lesson: an import smoke test must import the entry point you will call, not just its biggest dependencies.
+
+## P-0023 update · 2026-11-20 · the first pin was wrong; root cause found from package metadata
+- Attempt 3 (i-095006d114c8089c8) failed at install in ~4 min (~$0.07):
+  ```
+  Because only omnilingual-asr==0.2.0 is available and omnilingual-asr==0.2.0 depends on pyarrow>=20.0.0 ...
+  you require omnilingual-asr and pyarrow==18.1.0 ... your requirements are unsatisfiable.
+  ```
+- Root cause, checked offline before the next launch: fairseq2 0.6.0 declares numpy~=1.23 and omnilingual-asr 0.2.0
+  declares pyarrow>=20.0.0 (PyPI metadata). pyarrow does not declare a NumPy requirement, so the resolver took the
+  newest, 26.x, whose pyproject requires numpy>=2.0; releases 20-25 build with numpy>=1.25 and run on 1.26.
+- Fix: pyarrow==20.0.0. Lesson: check the published requirements offline before relaunching; three quick launches
+  cost ~$0.25 that a two-minute metadata check would have saved.
