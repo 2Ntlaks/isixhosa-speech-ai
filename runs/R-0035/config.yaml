@@ -17,6 +17,6 @@ spec_augment: on, with attention mask; mask_time_prob 0.05, mask_time_length 10,
 test: NCHLT test 2770, FLEURS test 1034 (<= 30 s), Swivuriso dev_test 2145, Soapies test 391
   standard decoding: src/eval_guarded.py, CTranslate2 float16 GPU, beam 5, compression ratio 2.4, temperatures
   0.0/0.2/0.4/0.6 best of 5, no log-prob / no-speech checks, no previous text, no timestamps, no VAD
-  also: beam 1 + guard; src/baseline.py transformers greedy (NCHLT 96, FLEURS 225, Swivuriso 440 tokens)
-outputs: s3 models/R-0035/ and models/R-0035-int8/ (each with COMPLETE); checkpoints s3 jobs/R-0035/checkpoints/
+  also: src/baseline.py transformers greedy (NCHLT 96, FLEURS 225, Swivuriso 440 tokens)
+outputs: s3 models/R-0035/ and models/R-0035-int8/ (each with COMPLETE); checkpoints s3 jobs/R-0035/checkpoints/; no beam-1 arm (F-13)
 machine: g6e.xlarge (L40S 48 GB) on-demand $1.861/h, fallback g6e.2xlarge $2.24/h; 300 GB disk; cap 6 h; resumes

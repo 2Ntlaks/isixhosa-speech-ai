@@ -18,10 +18,16 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
   unmapped score is reported too. Digits: FLEURS references contain digits in 200 of 1034 clips, and a spelled-out
   number counts as wrong, so FLEURS is also reported on the 834 clips whose reference has no digit. Also reported:
   CER without spaces (word-splitting differences), how many outputs contain digits or non-ASCII letters.
-- **Accuracy:** GPU, the package's default bfloat16, batches of 8, every clip of the four test sets.
-- **Speed:** CPU only (GPU hidden), batch 1, 8 threads, float32 and bfloat16 (Meta issue #57: float32 can be 2-3x
-  faster on CPU), on the same 50 seeded clips per set that R-0033 times R-0019-int8 on. Warm-up and audio loading are
-  not timed. Speeds are this node's (an AMD EPYC), not the laptop's; only same-node numbers are compared.
+- **Accuracy:** GPU, the package's default bfloat16, every clip of the four test sets, alone on the GPU (after
+  R-0033's GPU part). Each model first runs two batches of the longest real clips (~30 s) at batch 8; if that runs out
+  of memory, batch 4, then 2, then 1 (the batch size used is recorded). Peak GPU memory is in every metrics.json.
+- **Speed:** CPU only (GPU hidden), batch 1, 8 threads, **float32**, on the same 50 seeded clips per set that R-0033
+  times R-0019-int8 on (200 clips), 1B first. bfloat16 only as a probe: 300M on 20 FLEURS clips, against float32 on
+  the same 20 (Meta issue #57: bfloat16 can be much slower on CPUs without bfloat16 instructions, like this AMD EPYC).
+  The CPU phase stops itself after 45 min. Warm-up and audio loading are not timed. Speeds are this node's, not the
+  laptop's; only same-node numbers are compared.
+- **Failures:** each set is a separate step; a failed or timed-out step is recorded (`FAILED_PARTS`) and the others
+  still run. Meta's venv runs in a clean environment (no library path from the job's own venv, Neon review F-02).
 - **Compared with:** R-0019 under the standard decoding (R-0033 beam 5 + guard, GPU float16) for accuracy; R-0019 int8
   CPU beam 5 + guard (R-0033) for speed.
 
@@ -35,18 +41,22 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
     by speakers in every split and Thetha removed them from its training, Meta likely did not. NCHLT full test: Thetha
     trained on NCHLT and 81.6 % of test clips repeat training sentences. NCHLT is compared only on its **511
     unseen-sentence clips**, with the caveat that NCHLT's studio recordings are Thetha's home ground.
-- **What would change the plan (a recommendation for the founder, not a rule):** if Meta 1B is within 0.5 CER of
-  R-0019 or better on both FLEURS and Soapies and at least 2x faster per clip on the CPU, the lead proposes trying a
-  CTC fine-tune (Neon's step 5) before more Whisper runs; otherwise Whisper stays the main path and R-0035 goes ahead
-  as planned. No model is published or replaced by this run.
+- **What would change the plan (a recommendation for the founder, not a rule):** if Meta 1B (GPU accuracy run,
+  apostrophes mapped) is within 0.5 CER of R-0019 (R-0033, beam 5 + guard, GPU float16) or better on BOTH the 834
+  FLEURS test clips whose reference has no digit AND all 391 Soapies test clips, and its **median seconds per clip
+  pooled over the 200 timed clips** (CPU, float32, batch 1) is at most half R-0019-int8's median on the same 200 clips
+  (beam 5 + guard, same node), the lead proposes trying a CTC fine-tune (Neon's step 5) before more Whisper runs;
+  otherwise Whisper stays the main path and R-0035 goes ahead as planned. No model is published or replaced by this
+  run.
 
 ## Command
 Runs inside R-0033's node (`runs/R-0033/job.sh` calls `runs/R-0034/omni.sh setup`, `gpu`, `cpu`). On its own:
 ```
-FALLBACK_TYPES="g6.2xlarge" cloud/run_job.sh --run R-0034 --type g6.xlarge --market ondemand --max-hours 2
+DISK_GB=150 FALLBACK_TYPES="g6.2xlarge" cloud/run_job.sh --run R-0034 --type g6.xlarge --market ondemand --max-hours 2
 ```
-- **Cost:** included in R-0033's estimate (its share: venv ~5 min while R-0033 works, GPU accuracy ~10-15 min next to
-  R-0033's lanes, CPU timing ~20-25 min). Alone on a g6.xlarge ($0.805/h): ~1-1.5 h, ~$1.
+(Alone it writes straight to `out/`, so `cloud/collect.sh R-0034` puts the results in `runs/R-0034/`.)
+- **Cost:** included in R-0033's estimate (its share: venv and weights ~10 min while R-0033 works, GPU accuracy
+  ~15 min alone, CPU timing ~15-20 min, 45 min at most). Alone on a g6.xlarge ($0.805/h): ~1-1.5 h, ~$1.
 - **Laptop checks (builder):** fairseq2 has no Windows build, so the package could not run on the laptop. Checked
   instead: the package's source at the pinned commit (input format, 40 s limit, CTC ignores the language code); the
   evaluator end to end in its dry-run mode on all four formats; a unit test with a stand-in pipeline (one mono 16 kHz

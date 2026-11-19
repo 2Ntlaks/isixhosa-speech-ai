@@ -26,8 +26,9 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
   `70bb2e84b976b7e960aa89f1c648e09c59f894dd` (its S3 copy is gone, P-0021); checked on the laptop: it gives exactly
   R-0019's 1034 test clips and texts, and the test archive's SHA-256 matches the published one.
 - **Also recorded per clip and per set:** whether a fallback fired, at which temperature the kept text came from,
-  the first and kept compression ratio, clips that exhausted every temperature; CER without spaces; runaway count
-  (> 2.5x the reference and > 150 letters); FLEURS references with and without digits; seconds per clip.
+  the first and kept compression ratio, clips that exhausted every temperature, empty outputs; CER without spaces;
+  runaway count (> 2.5x the reference and > 150 letters); FLEURS references with and without digits; seconds per clip
+  (after one untimed warm-up decode, as for Meta's models).
 - **Reproduction check first:** the October evaluator (`src/baseline.py`, transformers greedy fp16) on NCHLT, FLEURS and
   Swivuriso with the same Hugging Face weights. It must give R-0019's recorded scores again (same clip counts, CER
   within 0.05, WER within 0.2): NCHLT 13.67 / 2.31, FLEURS 30.32 / 6.24, Swivuriso 19.12 / 4.12 (WER / CER). This proves
@@ -35,16 +36,20 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
   has an L4 (same Ada generation); tiny fp16 differences are possible, hence the small tolerance.
 - **CPU part (timed, nothing else running):** the int8 copy, beam 5 + guard, 8 threads, on 50 seeded clips per test
   set (the same 200 clips R-0034 times Meta's models on).
-- **Same node:** R-0034 (Meta Omnilingual) runs on this node too (`runs/R-0034/omni.sh`); its GPU part runs next to
-  R-0033's GPU lanes (accuracy only), its CPU part after R-0033's CPU part, alone.
+- **Same node, in this order (Neon's code review F-03):** reproduction check (Meta's venv and weights download in the
+  background meanwhile, CPU and network only) -> R-0033 on the GPU in 3 lanes (~3 GB each, well under the L4's 22 GB;
+  memory logged every minute, peak reported) -> R-0034 alone on the GPU -> R-0033 CPU timing -> R-0034 CPU timing.
+  R-0034 runs in a clean environment (no job-venv library path, F-02) and its failures are recorded
+  (`out/R-0034/FAILED`), never stopping R-0033.
 
 ## Rules set before the run
-1. **Reproduction check** fails (any set outside the tolerance) -> nothing else from this run is interpreted; the
-   lead finds out why first (data or weights differ).
+1. **Reproduction check** fails (any set outside the tolerance) -> the job stops there (exit 1, before the GPU
+   lanes) and nothing from this run is interpreted; the lead finds out why first (data or weights differ).
 2. **The standard decoding from now on** is beam 5 + loop guard, CTranslate2 float16 on the GPU, with the settings
    above. R-0019's beam-5 guarded scores from this run are the numbers R-0035 must beat (its ship rule names them).
-3. **int8 check (as R-0020 / R-0031):** on the 200 timed clips, the int8 CPU copy's CER is at most 0.3 above the GPU
-   float16 beam-5 CER on the same clips.
+3. **int8 check (as R-0020 / R-0031):** pooled over all 200 timed clips (the four 50-clip sets together, one CER),
+   the int8 CPU copy's CER is at most 0.3 above the GPU float16 beam-5 CER on the same 200 clips. The per-set numbers
+   are reported but do not decide (50 clips per set are too few).
 4. No ship rule: R-0019 stays the published model whatever these numbers say; this run only changes how we measure.
 
 - **Expected, not a rule:** the guard fires on very few clips (< 1 %); beam 5 a little better than greedy (R-0021: CER
@@ -52,21 +57,25 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
 
 ## Command
 ```
-FALLBACK_TYPES="g6.4xlarge g6e.xlarge" cloud/run_job.sh --run R-0033 --type g6.2xlarge --market ondemand --max-hours 4
-cloud/wait.sh R-0033 && cloud/collect.sh R-0033      # then move runs/R-0033/R-0034/ to runs/R-0034/
+DISK_GB=150 FALLBACK_TYPES="g6.4xlarge g6e.xlarge" cloud/run_job.sh --run R-0033 --type g6.2xlarge --market ondemand --max-hours 4
+cloud/wait.sh R-0033 && cloud/collect.sh R-0033 && mv runs/R-0033/R-0034/* runs/R-0034/ && rmdir runs/R-0033/R-0034
 ```
-- **Machine:** g6.2xlarge on-demand (NVIDIA L4 24 GB, 8 vCPU, 32 GB RAM), us-east-1, $0.978/h. Root disk default
-  (100 GB) is enough: about 3 GB of test audio, 4 GB of R-0019, 5 GB of Meta's models and their venv.
-- **Time and cost estimate (R-0033 and R-0034 together):** boot and installs ~10 min; data and R-0019 download and
-  conversion ~10 min; preflight ~2 min; reproduction check ~15-18 min (L40S took 7.2 min in October; the L4 is about
-  half as fast); GPU lanes ~35-55 min (the longest is Swivuriso beam 5, 2145 clips one at a time; faster-whisper's GPU
-  speed on this model was never measured here, so this is the least certain number); CPU timing ~25-30 min for R-0019
-  int8 (200 clips; the laptop measured 3.7 s per FLEURS clip with the small model) and ~20-25 min for Meta's four CPU
-  variants. **About 2-2.5 h, about $2-2.50; cap 4 h ($3.90 at most).**
+- **Machine:** g6.2xlarge on-demand (NVIDIA L4 24 GB, 8 vCPU, 32 GB RAM), us-east-1, $0.978/h. Fallbacks are
+  on-demand only: g6.4xlarge (16 vCPU; the on-demand G quota is now 32 vCPU, checked by the lead; the spot quota is 8,
+  so never with `--market spot`), then g6e.xlarge. Root disk 150 GB (F-05): the AMI and the job venv take ~55 GB,
+  Meta's venv ~10 GB, models ~15 GB, test audio ~3 GB.
+- **Time and cost estimate (R-0033 and R-0034 together, after Neon's review):** boot and installs ~10 min; data
+  and R-0019 download and conversion ~10 min; preflight ~2 min; reproduction check ~20-22 min (L40S took 7.2 min in
+  October; the L4 has about a third of its memory bandwidth); R-0033 GPU lanes ~40-55 min (3 lanes; the longest is
+  Swivuriso beam 5, 2145 clips one at a time; faster-whisper's GPU speed on this model was never measured here, so
+  this is the least certain number); R-0034 GPU alone ~15 min; R-0033 CPU timing ~25-30 min (200 clips); R-0034 CPU
+  timing ~15-20 min (float32 for both models, 200 clips each, plus a 20-clip bfloat16 probe of 300M; stopped by a
+  45 min budget whatever happens). **About 2.3-3 h, about $2.30-2.90; cap 4 h ($3.91 at most).**
 - **Laptop checks before launch (builder, 2026-11-19):** 34 unit tests pass; the evaluator scored 60 real FLEURS test
   clips with the published small model (R-0027 int8, laptop CPU): CER 6.99 vs R-0027's recorded greedy 7.65 on the
   same clips (same references); on the two clips R-0027 looped on, greedy looped again (ratio 2.63, CER 132.0) and the
   guard kept the 0.4 sample (ratio 1.32, CER 24.0); beam 5 alone already avoided both loops. The whole job was
-  rehearsed with whisper-tiny on synthetic data (stand-ins for AWS and the GPU): all 38 result folders written.
+  rehearsed with whisper-tiny on synthetic data (stand-ins for AWS and the GPU), before and after Neon's code review
+  fixes (see the builder's report), including a failing reproduction check and a failing R-0034.
 - Swivuriso and Soapies per-clip outputs and samples stay out of git (.gitignore: `runs/**/eval_swivuriso*/`,
   `runs/**/eval_soapies*/` predictions and samples).

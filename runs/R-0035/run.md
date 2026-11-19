@@ -29,18 +29,25 @@ Before the run (drafted by the builder 2026-11-19; the lead fills in the outcome
     8 of the 80 mel bands, at least 1); training only. The attention mask is passed with every training clip, so time
     masks fall on speech: without it, 89 % of masked frames landed on the silence that pads clips to 30 s (laptop
     check, whisper-tiny). Not done: noise and speed perturbation (Neon's (d)); a later run.
-- **Preflight on the node, before any long work (P-0006, P-0007, P-0008 lessons):** (1) `src/check_specaug.py` with
-  whisper-medium: the mask reaches the model, masks stay inside the audio in training, none in evaluation; (2) the full
+- **Preflight on the node, before any long work (P-0006, P-0007, P-0008 lessons):** (1) the full training data
+  split, computed without training (`train.py --split-only`), must equal R-0029's data_split.json (clips, hours,
+  speakers, dev speakers, Swivuriso kept and dropped), or the job stops; (2) `src/check_specaug.py` with
+  whisper-medium: the mask reaches the model, masks stay inside the audio in training, none in evaluation; (3) the full
   recipe with every flag above on the 16 longest transcripts at batch 8 x 4 for 2 steps, with all three dev sets,
-  the combined score, the runaway counts and a save; if it does not fit, the same at 4 x 8; (3) the int8 copy with its
+  the combined score, the runaway counts and a save; if it fails, the same at 4 x 8; (4) the int8 copy with its
   processor files and tokenizer.json (P-0020) and the guarded evaluator on the GPU on 3 clips per test set, plus the
-  int8 copy on the CPU on 1 clip. Training progress reaches the log every 25 steps (~40 s).
-- **After training:** the best checkpoint to S3 models/R-0035/ (+ COMPLETE), the int8 copy to models/R-0035-int8/
-  (+ COMPLETE). Then, in this order: (1) the four test sets with the standard decoding (R-0033: loop guard, beam 5,
-  CTranslate2 float16, GPU); (2) the old evaluator (transformers greedy, src/baseline.py) on NCHLT, FLEURS and
-  Swivuriso, for continuity with results.md; (3) the guard with beam 1.
+  int8 copy on the CPU on 1 clip. Each preflight's full output is kept in out/; a failure prints its last 40 lines.
+  Training progress reaches the log every 25 steps (~40 s); the evaluations print a progress line every minute.
+- **After training:** the training records (log_history, data_split, train.log) to S3 first, then the best
+  checkpoint to S3 models/R-0035/, and only then the COMPLETE marker (F-09). Then, in this order: (1) the four test
+  sets with the standard decoding (R-0033: loop guard, beam 5, CTranslate2 float16, GPU), side by side; (2) the old
+  evaluator (transformers greedy, src/baseline.py) on NCHLT, FLEURS and Swivuriso, for continuity with results.md;
+  (3) the int8 copy to models/R-0035-int8/ (+ COMPLETE). No beam-1 arm (the lead's decision on Neon's F-13: R-0033
+  already shows what the guard alone does).
 - **Resuming:** if the 6 h cap stops the node, relaunching the same command continues: from the last checkpoint in
-  S3 if training was not finished, otherwise straight to the evaluations still missing.
+  S3 if training was not finished, otherwise straight to the evaluations still missing (finished test sets are
+  skipped). Checkpoints are mirrored every 5 min, each complete one with trainer_state.json uploaded last; older S3
+  checkpoints are deleted only after every newer local one is confirmed in S3 (F-09).
 - **Second home (P-0021 lesson):** S3 is the only copy of the new model until the lead copies it elsewhere (a private
   Hugging Face repo or the laptop). Do that before anything else once the run is done.
 
@@ -51,7 +58,7 @@ Under the SAME decoding (loop guard, beam 5, CTranslate2 float16 on the GPU, set
 3. have an **NCHLT test CER at most 0.5 above** R-0019's (R-0033's beam-5 number).
 "Lower" means lower at the two decimals the evaluator reports; a tie fails. All three or it does not ship. Its data
 split must match R-0029's (numbers above), or the run is not interpreted. Reported but not part of the rule: Soapies,
-the beam-1 arm, the old greedy evaluator, unscripted vs scripted, runaways, fallbacks. If it ships: the int8 copy is
+the old greedy evaluator, unscripted vs scripted, runaways, fallbacks. If it ships: the int8 copy is
 checked as R-0020 (CER at most 0.3 above the GPU on the same clips), then it becomes Thetha's default and, with the
 founder's OK, the published medium model.
 
@@ -71,11 +78,12 @@ Launch only after R-0033 (its R-0019 numbers are the bar) and after Neon's revie
   test set). ~3.5-4 min x 9 = **~35 min**, about 13 % of training time.
 - **Before training:** boot and installs ~10 min, data ~15-20 min (36.7 GB of Swivuriso from S3; FLEURS from Hugging
   Face once, then saved back to S3), preflight ~10 min.
-- **After training:** uploads and the two conversions ~10 min; standard decoding on four sets in parallel ~25 min
-  (L40S); old evaluator ~8 min (measured 7.2 min in October); beam-1 arm ~12 min.
-- **Total ~5.9-6.2 h** against the 6 h cap, so the last evaluations (the old evaluator and beam 1) may be cut off;
-  a relaunch then finishes them in ~40 min. **Cost: ~$11-11.5 on g6e.xlarge ($1.861/h) plus ~$1.2 for a relaunch,
-  about $12-13; ~$14-15 if only g6e.2xlarge ($2.24/h) is free.** Together with R-0033 and R-0034 (~$2-2.50): about
-  $14-17, above D-0031's ~$10-13. Ways to cut it, each with a cost: 8000 steps instead of 9000 (-27 min, ~$0.85),
-  dropping the beam-1 arm and the old evaluator for R-0035 (-20 min), NCHLT dev 300 clips instead of 600 (-5 min).
+- **After training:** uploads and the fp16 conversion ~5 min; standard decoding on four sets side by side ~25 min
+  (L40S); old evaluator ~8 min (measured 7.2 min in October); int8 copy ~3 min. ~40 min in all (beam-1 arm dropped).
+- **Total ~5.7-6.0 h** against the 6 h cap (before: 5.9-6.2 h). At the measured speeds it fits one launch with little
+  margin; if the cap stops it, what is lost is the end (the int8 copy, maybe part of the old evaluator), and a
+  relaunch finishes it in ~30 min (~$1). **Cost: ~$10.60-11.20 on g6e.xlarge ($1.861/h), ~$12 with a relaunch;
+  ~$13 if only g6e.2xlarge ($2.24/h, 1.57 s per step) is free.** Together with R-0033 and R-0034 (~$2.30-2.90):
+  about $13-15, still above D-0031's ~$10-13. The cheapest further cut is 8000 steps (-27 min, ~$0.85); the lead kept
+  9000.
 - **Checkpoints in S3:** up to 3 x ~9 GB under jobs/ (expires after 30 days), about $0.60 for a month.
