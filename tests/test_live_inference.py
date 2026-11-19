@@ -225,9 +225,10 @@ class LoopGuardTests(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()):
             text, _ = live.transcribe(self.audio, "m")
         kept = text.split("chunk 1 ")[1].split(" chunk 3")[0]
-        tried = [LOOP.strip()] + [("da " * (40 + n)).strip() for n in range(98, 93, -1)]
+        tried = [LOOP.strip()] + [("da " * (40 + n)).strip() for n in range(98, 95, -1)]
         self.assertEqual(kept, min(tried, key=live.compression_ratio))
-        self.assertEqual(len([c for c in model.calls if "sampling_temperature" in c[2]]), 5)
+        self.assertEqual([c[2]["sampling_temperature"] for c in model.calls if "sampling_temperature" in c[2]],
+                         [0.2, 0.4, 0.6])
 
     def test_guard_can_be_turned_off(self):
         proc, model = LoopingProcessor(), SamplingCT2Model()
@@ -254,9 +255,45 @@ class LoopGuardTests(unittest.TestCase):
 
     def test_threshold_matches_whisper(self):
         self.assertEqual((live.GUARD_RATIO, live.GUARD_TEMPERATURES, live.GUARD_BEST_OF),
-                         (2.4, (0.2, 0.4, 0.6, 0.8, 1.0), 5))
+                         (2.4, (0.2, 0.4, 0.6), 5))
         self.assertLess(live.compression_ratio("the quick brown fox jumps over the lazy dog"), 2.4)
         self.assertGreater(live.compression_ratio(LOOP), 2.4)
+
+
+class VadTests(unittest.TestCase):
+    """Voice activity filter: speech pieces replace the fixed 30 s cuts; no speech means no model call."""
+    setUp = InferenceTests.setUp
+    engines = InferenceTests.engines
+
+    def test_vad_pieces_are_what_the_model_hears(self):
+        proc, model = Processor(), CT2Model()
+        self.engines({"m": (proc, model)})
+        pieces = [np.full(3, 7, dtype=np.float32), np.full(2, 8, dtype=np.float32)]
+        with patch.object(live, "VAD", True), patch.object(live, "speech_pieces", return_value=pieces) as vad:
+            self.assertEqual(live.transcribe(self.audio, "m")[0], "chunk 7 chunk 8")
+        vad.assert_called_once()
+        self.assertEqual([len(c[0]) for c in proc.calls], [3, 2])
+        self.assertTrue(all(c[2] == {"beam_size": 5, "max_length": 225} for c in model.calls))
+
+    def test_no_speech_gives_empty_text_without_running_the_model(self):
+        proc, model = Processor(), CT2Model()
+        self.engines({"m": (proc, model)})
+        with patch.object(live, "VAD", True), patch.object(live, "speech_pieces", return_value=[]):
+            self.assertEqual(live.transcribe(self.audio, "m"), ("", 0.0))
+        self.assertFalse(proc.calls or model.calls)
+
+
+class SileroTests(unittest.TestCase):
+    """The real Silero VAD from faster-whisper (no stand-ins for ctranslate2 here)."""
+
+    def test_silero_finds_no_speech_in_silence_and_cuts_long_speech_at_30_s(self):
+        with patch.object(live, "CHUNK", 30 * live.SR):
+            self.assertEqual(live.speech_pieces(np.zeros(5 * live.SR, dtype=np.float32)), [])
+            stamps = [{"start": 0, "end": 20 * live.SR}, {"start": 22 * live.SR, "end": 40 * live.SR}]
+            with patch("faster_whisper.vad.get_speech_timestamps", return_value=stamps) as get:
+                pieces = live.speech_pieces(np.ones(41 * live.SR, dtype=np.float32))
+            self.assertEqual(get.call_args.args[1].max_speech_duration_s, 30.0)
+        self.assertEqual([len(p) // live.SR for p in pieces], [20, 18])  # cut at the pause, silence dropped
 
 
 if __name__ == "__main__":

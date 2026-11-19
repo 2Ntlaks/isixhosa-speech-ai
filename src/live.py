@@ -8,9 +8,13 @@ in --models is the default and is warmed at startup. Other models load on first 
 --threads controls CPU parallelism; --chunk-batch-size bounds the number of 30 s chunks sent to a model at once.
 
 Loop guard (R-0033): a chunk whose text is too repetitive (gzip compression ratio over 2.4, Whisper's own rule) is
-decoded again by sampling at temperature 0.2, 0.4, ... 1.0 (best of 5) until the text is no longer repetitive; if every
-retry still repeats, the least repetitive text is kept. Normal chunks are never retried, so their text, the beam (5),
-the 30 s chunking and the token limit are unchanged. --guard-compression-ratio none turns the guard off.
+decoded again by sampling at temperature 0.2, then 0.4, then 0.6 (best of 5) until the text is no longer repetitive; if
+every retry still repeats, the least repetitive text is kept. Normal chunks are never retried, so their beam-5 text and
+the token limit are unchanged. --guard-compression-ratio none turns the guard off.
+Voice activity filter (R-0033, Neon's pre-flight memo): the server first finds the speech with Silero VAD (the model and
+default settings faster-whisper's vad_filter uses), drops the silence (Whisper invents words in silence, R-0023) and
+cuts the speech into pieces of at most 30 s at pauses instead of every 30.0 s mid-word. A recording with no speech
+gives an empty text without running the model. --no-vad restores the old fixed 30 s cuts.
 
 API (what the page uses; any program can call it the same way):
   POST /transcribe?model=R-0019-int8&also=R-0027-int8&keep=1
@@ -54,8 +58,9 @@ CHUNK_BATCH_SIZE = 1  # bound model activations even when an upload contains man
 CPU_THREADS = torch.get_num_threads()
 dtype = torch.bfloat16
 GUARD_RATIO = 2.4  # Whisper's compression-ratio threshold; None turns the loop guard off
-GUARD_TEMPERATURES = (0.2, 0.4, 0.6, 0.8, 1.0)  # Whisper's fallback temperatures after the beam search
+GUARD_TEMPERATURES = (0.2, 0.4, 0.6)  # fallback temperatures after the beam search (Neon pre-flight: stop at 0.6)
 GUARD_BEST_OF = 5  # samples drawn at each fallback temperature
+VAD = False  # library default = fixed 30 s cuts (what the unit tests pin); the server turns it on unless --no-vad
 
 FFMPEG = shutil.which("ffmpeg")
 loaded, lock = {}, threading.Lock()
@@ -119,10 +124,22 @@ def guarded(text, retry):
     return text, temperature
 
 
+def speech_pieces(audio):
+    """Silero VAD as faster-whisper runs it: the speech only, in pieces of at most 30 s cut at pauses."""
+    from faster_whisper.vad import VadOptions, collect_chunks, get_speech_timestamps
+
+    stamps = get_speech_timestamps(audio, VadOptions(max_speech_duration_s=CHUNK / SR), sampling_rate=SR)
+    if not stamps:
+        return []
+    pieces, _ = collect_chunks(audio, stamps, SR, max_duration=CHUNK / SR)
+    return [p for p in pieces if len(p)]
+
+
 def transcribe_models(audio, names):
     """Bound feature/model batches and reuse compatible features within this request only.
 
-    Chunk boundaries, prompt, beam and token limits are unchanged. Model loading and
+    Chunks are fixed 30 s cuts, or with VAD the speech pieces. Prompt, beam and token limits
+    are unchanged; only repetitive chunks are retried (loop guard). Model loading and
     feature extraction also hold the CPU lock, so queued requests cannot do heavy work
     in parallel. compute_seconds retains its original meaning: model generation time.
     """
@@ -134,9 +151,9 @@ def transcribe_models(audio, names):
         feature_keys = {name: (type(proc.feature_extractor), proc.feature_extractor.to_json_string())
                         for name, (proc, _) in engines.items()}
         texts, seconds = {name: [] for name in names}, dict.fromkeys(names, 0.0)
-        for start in range(0, len(audio), CHUNK * CHUNK_BATCH_SIZE):
-            stop = min(start + CHUNK * CHUNK_BATCH_SIZE, len(audio))
-            pieces = [audio[i:i + CHUNK] for i in range(start, stop, CHUNK)]
+        every = speech_pieces(audio) if VAD else [audio[i:i + CHUNK] for i in range(0, len(audio), CHUNK)]
+        for start in range(0, len(every), CHUNK_BATCH_SIZE):
+            pieces = every[start:start + CHUNK_BATCH_SIZE]
             features = {}
             for name, (proc, m) in engines.items():
                 key = feature_keys[name]
@@ -170,7 +187,7 @@ def transcribe_models(audio, names):
                     text, temperature = guarded(text.strip(), lambda temp: sample(j, temp))
                     if temperature is not None:  # numbers only: the public demo never logs text
                         seconds[name] += time.perf_counter() - t
-                        print(f"loop guard: {name} chunk at {(start + j * CHUNK) // SR} s repeated itself; "
+                        print(f"loop guard: {name} piece {start + j + 1} of {len(every)} repeated itself; "
                               f"kept the decode at temperature {temperature}", flush=True)
                     texts[name].append(text)
     return {name: (" ".join(texts[name]).strip(), round(seconds[name], 2)) for name in names}
@@ -286,6 +303,7 @@ if __name__ == "__main__":
                     help="30-second chunks per model call (default 1; larger batches use more memory)")
     ap.add_argument("--guard-compression-ratio", default="2.4",
                     help="loop guard threshold (Whisper's 2.4); 'none' turns the guard off")
+    ap.add_argument("--no-vad", action="store_true", help="no voice activity filter: fixed 30 s cuts, silence kept")
     ap.add_argument("--dtype", choices=["bfloat16", "float32"], default="bfloat16",
                     help="for transformers checkpoints: bfloat16 halves memory (medium ~1.9 GB instead of ~3.5 GB)")
     a = ap.parse_args()
@@ -294,6 +312,13 @@ if __name__ == "__main__":
     dtype = getattr(torch, a.dtype)
     CPU_THREADS, CHUNK_BATCH_SIZE = a.threads, a.chunk_batch_size
     GUARD_RATIO = None if a.guard_compression_ratio.lower() == "none" else float(a.guard_compression_ratio)
+    VAD = not a.no_vad
+    if VAD:
+        try:
+            import faster_whisper.vad  # noqa: F401  (Silero VAD; needs onnxruntime)
+            import onnxruntime  # noqa: F401
+        except ImportError as e:
+            sys.exit(f"the voice activity filter needs faster-whisper and onnxruntime ({e}); or run with --no-vad")
     torch.set_num_threads(CPU_THREADS)
     MODELS, PUBLIC = a.models_dir, a.public
     offered[:] = [m for m in a.models.split(",") if complete(m)]

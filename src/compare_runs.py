@@ -2,7 +2,10 @@
 isiXhosa letter patterns, and the same sample clips side by side.
 
   python src/compare_runs.py runs/R-0001 runs/R-0003 runs/R-0004 > runs/R-0004/comparison.json
-Each run folder must contain predictions.jsonl and metrics.json (as written by src/baseline.py).
+  python src/compare_runs.py R-0019-greedy=runs/R-0019/eval_fleurs R-0019-guarded=runs/R-0033/gpu_fp16/eval_fleurs
+Each run folder must contain predictions.jsonl and metrics.json (src/baseline.py, src/eval_guarded.py,
+src/eval_omni.py, or the older src/eval_soapies.py / src/eval_ct2.py). A folder is named by the run ID in its path,
+or by NAME= in front of it (needed when several folders belong to one run).
 """
 import json
 import os
@@ -34,21 +37,35 @@ def pattern_recall(preds):
 
 def main():
     sys.stdout.reconfigure(encoding="utf-8")  # outputs include Arabic, Hindi, Khmer script
-    folders = sys.argv[1:]
-    def name(f):  # run ID: runs/R-0012/eval_fleurs -> R-0012 (P-0010: several folders are called eval_*)
+    args = sys.argv[1:]
+    named = [a.split("=", 1) if "=" in a and not os.path.isdir(a) else (None, a) for a in args]
+    folders = [f for _, f in named]
+    def name(label, f):  # run ID: runs/R-0012/eval_fleurs -> R-0012 (P-0010: several folders are called eval_*)
+        if label:
+            return label
         parts = os.path.normpath(f).split(os.sep)
         return next((x for x in reversed(parts) if x.startswith("R-")), parts[-1])
-    runs = {name(f): load(f) for f in folders}
+    runs = {name(label, f): load(f) for label, f in named}
     assert len(runs) == len(folders), "two folders map to the same run name"
     ids = sorted(set.intersection(*(set(p) for p, _ in runs.values())))
     report = {"clips_compared": len(ids), "runs": {}}
     for name, (preds, metrics) in runs.items():
         sub = [preds[i] for i in ids]
+        per_speaker = metrics.get("per_speaker")
+        if per_speaker is None and all("speaker" in p for p in sub):  # older evaluators did not group by speaker
+            per_speaker = {s: {"cer": round(score([p["text"] for p in sub if p["speaker"] == s],
+                                                  [p["hyp"] for p in sub if p["speaker"] == s])["cer"], 1)}
+                           for s in sorted({p["speaker"] for p in sub})}
         report["runs"][name] = {
-            "model": metrics["model"], "language": metrics["language"],
-            "wer": metrics["wer"], "cer": metrics["cer"], "exact_match_pct": metrics["exact_match_pct"],
+            "model": metrics["model"], "language": metrics.get("language", metrics.get("lang")),
+            "wer": metrics["wer"], "cer": metrics["cer"],
+            "exact_match_pct": metrics.get("exact_match_pct",
+                                           round(100 * sum(normalise(p["text"]) == normalise(p["hyp"]) for p in sub)
+                                                 / len(sub), 2)),
             "by_text_in_training": metrics.get("by_text_in_training"),
-            "per_speaker_cer": {k: v["cer"] for k, v in metrics["per_speaker"].items()},
+            "per_speaker_cer": {k: v["cer"] for k, v in (per_speaker or {}).items()},
+            **({"guard": {k: v for k, v in metrics["guard"].items() if k != "fallback_clip_ids"}}
+               if "guard" in metrics else {}),
             "patterns": pattern_recall({p["id"]: p for p in sub}),
             "check": score([p["text"] for p in sub], [p["hyp"] for p in sub]),
         }
