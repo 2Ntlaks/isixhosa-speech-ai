@@ -254,3 +254,16 @@ Format:
   which differs); `tail -n 1`. Relaunched as the same run.
 - **Lost:** ~4 min of a spot c7i.8xlarge (~$0.04).
 - **Lesson:** an int8 copy = converter output + the full model's processor/tokenizer files (+ tokenizer.json for faster-whisper).
+
+## P-0021 · 2026-11-19 · S3 models/ and FLEURS are gone; R-0029's weights are lost
+- Stage / run: restart check before R-0033 (D-0031)
+- Symptom: `aws s3api list-objects-v2 --prefix models/` returns nothing; datasets/ lists only nchlt_xho, soapies_engxho,
+  swivuriso_xho_16k, swivuriso_xho_long (36.7 GB). On 2026-10-22 (D-0030 cleanup) the records said S3 held models/
+  13.9 GB and FLEURS 3.1 GB (~57 GB total). Versioning is off, so deleted objects cannot be restored. This checkout is
+  a fresh clone with no data/ folder; no laptop copy of R-0029 was found.
+- Cause: unknown. Nothing in this project's git history or JOURNAL records the deletion. The bucket is shared with the
+  Mgaguli SA Studio project (its jobs/ are there). Question for the founder.
+- Impact: R-0019 and R-0027 are safe on Hugging Face (full weights + ct2-int8; R-0012 and R-0007 at tags). R-0029
+  (unpublished, failed its ship rule by 0.02 CER) is lost, so it cannot be re-scored with a loop guard. Its recipe is
+  repeated inside R-0035 anyway. FLEURS can be re-fetched (cloud/fetch_data.sh).
+- Lesson: an unpublished model that might still matter needs a second home; check S3 contents before planning a restart.

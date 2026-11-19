@@ -279,3 +279,15 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   S3 holds ~197 GB (~$4.50/month): datasets 182 GB (raw Swivuriso parquet 140 GB, prepared 16k copy 20.6 GB, long-clip
   pieces 11.4 GB, NCHLT 6.5, FLEURS 3.1, Soapies 0.4), models 13.9 GB, private Siyamthanda copy 0.74 GB. Deleting
   anything waits for the founder's word. Do not launch runs until he reopens the project.
+
+## D-0031 · 2026-11-19 · Development resumes now: steps 1-3 of the Neon review plan
+- Context: Neon (Gemini 4 Neon) wrote a first-principles review (docs/research/neon-first-principles-review-2026-11-19.md),
+  checked by Claude (26/26 sources real; repo claims confirmed; six claims overstated, listed in the session notes).
+  Options put to the founder: (a) stay paused, paperwork only; (b) step 1 only; (c) steps 1-3, ~$10-13 of credits.
+- Founder: "c) please ... development resume now not in 2027". Supersedes the pause in D-0030.
+- Team (founder's choice): Claude = lead (plan, AWS launches, verification, records); a Claude Opus 5.5 subagent at high
+  effort = builder (code + tests, no cloud spend); Neon = researcher and independent reviewer before money is spent.
+- Plan: R-0033 loop-guarded re-score of R-0019 (R-0029 can no longer be rescued, see P-0021); R-0034 Thetha vs Meta
+  Omnilingual CTC 300M/1B on Swivuriso, Soapies, FLEURS, after checking Meta's training data for test overlap;
+  R-0035 medium retrained with the fixed recipe (longer training, Swivuriso+FLEURS checkpoint choice, SpecAugment).
+- Run IDs R-0033 to R-0035 are reserved for this plan (P-0018). November GPU spend at decision time: $0.53 of $30.
