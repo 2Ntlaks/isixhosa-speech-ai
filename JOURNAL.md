@@ -397,3 +397,15 @@ Format:
   cloud/fetch_data.sh if the long-clip cutter must be rerun, the prepared 16k copy and the pieces are kept), S3
   private/siyamthanda-copy/ and the laptop copy Downloads\siyamthanda-thetha-test (Siya's original untouched). Bucket
   versioning is off, so the space is freed. S3 now ~57 GB (~$1.30/month).
+
+## 2026-11-19: development resumes (D-0031): Neon review, plan, team
+- Gemini 4 Neon (researcher) wrote a first-principles review and a pre-flight memo (docs/research/); Claude (lead)
+  verified both (docs/research/lead-verification-2026-11-19.md): sources real, numbers mostly exact, some overstatement.
+- Founder chose option (c): steps 1-3 now. Team: Claude lead, a Claude Opus 5.5 builder subagent (high effort, own
+  worktree), Neon researcher/reviewer. Run IDs R-0033 (loop-guarded re-score of R-0019), R-0034 (Thetha vs Meta
+  Omnilingual CTC), R-0035 (medium retrained with the fixed recipe) reserved.
+- Found: S3 models/ and FLEURS deleted after the pause; R-0029 weights lost (P-0021). R-0019/R-0027 safe on Hugging Face.
+- Found by Neon, confirmed: dev evaluation in R-0019/R-0027/R-0029 capped outputs at 96 tokens; SpecAugment off;
+  training stopped at 1.3-1.6 epochs with dev loss still falling; checkpoint chosen on NCHLT dev.
+- $0 spent. November GPU spend $0.53 of $30. No AWS machines running.
+- Next: builder finishes code; Neon reviews it; lead launches R-0033 + R-0034 (~$1); R-0035 cost goes to the founder.
