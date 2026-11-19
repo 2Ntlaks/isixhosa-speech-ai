@@ -1,0 +1,22 @@
+run: R-0035
+stage: 3
+what: R-0029's data with the fixed recipe (D-0031 step 3; Neon's pre-flight memo, checked by the lead)
+model: openai/whisper-medium @ abdf7c39ab9d0397620ccaea8974cc764cd0953e
+language_tag: sw (D-0007)
+train: exactly R-0029's (NCHLT train minus 6 dev speakers + FLEURS train <= 30 s + Swivuriso train 1-30 s no [?]
+  + 20,563 long-clip pieces; test/dev sentences dropped) = 98,663 clips, 309.68 h expected
+steps: 9000; batch 8 x grad-accum 4 = 32 (fallback 4 x 8); lr 1e-5; warmup 500; scheduler linear; bf16; seed 42
+eval: every 1000 steps; generation max length 225
+  nchlt dev: the same 600 clips as R-0019/R-0029 (information only)
+  fleurs dev: all clips <= 30 s (441)
+  swivuriso dev: 22 per speaker x 24 speakers, about half unscripted, references <= 220 tokens, seed 42
+selection: combined_cer = 0.5 x swivuriso dev CER + 0.5 x fleurs dev CER (lower is better); save_total_limit 3
+runaways: counted per dev set (> 2.5x reference and > 150 letters)
+spec_augment: on, with attention mask; mask_time_prob 0.05, mask_time_length 10, mask_time_min_masks 2,
+  mask_feature_prob 0.10, mask_feature_length 8, mask_feature_min_masks 1
+test: NCHLT test 2770, FLEURS test 1034 (<= 30 s), Swivuriso dev_test 2145, Soapies test 391
+  standard decoding: src/eval_guarded.py, CTranslate2 float16 GPU, beam 5, compression ratio 2.4, temperatures
+  0.0/0.2/0.4/0.6 best of 5, no log-prob / no-speech checks, no previous text, no timestamps, no VAD
+  also: beam 1 + guard; src/baseline.py transformers greedy (NCHLT 96, FLEURS 225, Swivuriso 440 tokens)
+outputs: s3 models/R-0035/ and models/R-0035-int8/ (each with COMPLETE); checkpoints s3 jobs/R-0035/checkpoints/
+machine: g6e.xlarge (L40S 48 GB) on-demand $1.861/h, fallback g6e.2xlarge $2.24/h; 300 GB disk; cap 6 h; resumes

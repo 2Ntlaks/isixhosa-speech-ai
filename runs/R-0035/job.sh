@@ -92,6 +92,10 @@ need = {"eval_nchlt_cer", "eval_fleurs_cer", "eval_swivuriso_cer", "eval_combine
 assert need <= keys, f"missing in the log: {need - keys}"
 d = json.load(open("/tmp/pre/data_split.json"))
 assert d["recipe"]["spec_augment"] and d["recipe"]["select_on"] == "swivuriso+fleurs", d["recipe"]
+same = {"swivuriso_train_clips": 52960, "swivuriso_dropped_test_sentences": 6139, "fleurs_train_clips": 3434,
+        "swivuriso_train_hours": 245.44, "fleurs_train_hours": 13.03}   # R-0029's data_split.json
+diff = {k: (d[k], v) for k, v in same.items() if d[k] != v}
+assert not diff, f"the training data differs from R-0029's (now, R-0029): {diff}"
 c = json.load(open("/tmp/pre/final/config.json"))
 assert c["apply_spec_augment"] and c["mask_feature_prob"] == 0.1, "SpecAugment not saved in the model config"
 print("recipe preflight OK:", sorted(need), "| Swivuriso dev:", d["recipe"]["swivuriso_dev_speakers"], "speakers")
