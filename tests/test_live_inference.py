@@ -1,6 +1,7 @@
 """Inference scheduling contracts, without loading weights or accessing the network."""
 import contextlib
 import io
+import os
 import json
 from pathlib import Path
 import sys
@@ -10,6 +11,8 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
+
+os.environ.setdefault("USE_TF", "0")  # a laptop with TensorFlow/Keras 3 installed breaks transformers 4.46
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))

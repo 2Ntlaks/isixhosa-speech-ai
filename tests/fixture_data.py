@@ -69,7 +69,7 @@ def swivuriso(root, split, n, seed0, speakers=3):
         rel = f"{split}/clip{k}.wav"
         dur = _wav(os.path.join(folder, rel), 1.5 + (k % 5), k)
         text = _text(k, 5)
-        rows.append({"id": f"clip{k}", "speaker": f"spk{split}{j % speakers}", "type": "read" if k % 2 else "unscripted",
+        rows.append({"id": f"clip{k}", "speaker": f"spk{split}{j % speakers}", "type": "scripted" if k % 2 else "unscripted",
                      "domain": "test", "duration": f"{dur:.3f}", "file": rel, "text": text, "raw": text})
     path = os.path.join(folder, f"{split}.tsv")
     with open(path, "w", encoding="utf-8", newline="") as f:
