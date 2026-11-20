@@ -1,0 +1,109 @@
+{
+  "model": "R-0035-int8-laptop",
+  "language": "sw",
+  "test_set": "test.tsv",
+  "clips": 100,
+  "left_out_over_max_seconds": 7,
+  "max_new_tokens": 225,
+  "audio_hours": 0.356,
+  "wer": 28.43,
+  "cer": 6.32,
+  "exact_match_pct": 5.0,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 100
+  },
+  "per_speaker": {
+    "fleurs": {
+      "wer": 28.4,
+      "cer": 6.3,
+      "n": 100
+    }
+  },
+  "per_gender": {
+    "male": {
+      "wer": 28.4,
+      "cer": 6.3,
+      "n": 100
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 770.7,
+  "decoder": "faster-whisper with Whisper's reliability rules (R-0033)",
+  "decoding": {
+    "language": "sw",
+    "task": "transcribe",
+    "beam_size": 5,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0,
+    "repetition_penalty": 1.0,
+    "no_repeat_ngram_size": 0,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": null,
+    "no_speech_threshold": null,
+    "condition_on_previous_text": false,
+    "without_timestamps": true,
+    "suppress_blank": true,
+    "vad_filter": false,
+    "word_timestamps": false,
+    "initial_prompt": null,
+    "max_new_tokens": 225
+  },
+  "model_source": {
+    "ct2_folder": "data/models/R-0035-int8",
+    "folder": "data/models/R-0035-int8"
+  },
+  "sample": {
+    "n": 100,
+    "seed": 1
+  },
+  "guard": {
+    "clips_with_fallback": 0,
+    "fallback_pct": 0.0,
+    "fallback_final_temperature": {},
+    "exhausted_every_temperature": 0,
+    "empty_outputs": 0,
+    "no_speech_skipped": 0,
+    "fallback_clips": [],
+    "decoding_attempts": 100
+  },
+  "timing": {
+    "seconds_per_clip_mean": 7.703,
+    "seconds_per_clip_median": 7.301,
+    "seconds_per_clip_p95": 11.315,
+    "real_time_factor": 0.6013,
+    "note": "decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded"
+  },
+  "diagnostics": {
+    "cer_no_spaces": 6.11,
+    "runaway_clips": 0,
+    "outputs_with_digits": 19,
+    "outputs_with_non_ascii": 1,
+    "reference_without_digits": {
+      "wer": 28.08,
+      "cer": 5.8,
+      "n": 80
+    },
+    "reference_with_digits": {
+      "wer": 29.59,
+      "cer": 8.32,
+      "n": 20
+    }
+  },
+  "env": {
+    "engine": "faster-whisper 1.2.1, ctranslate2 4.8.1",
+    "device": "cpu",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "mkl": "0",
+    "python": "3.12.10",
+    "machine": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD"
+  }
+}
