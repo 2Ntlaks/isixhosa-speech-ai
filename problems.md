@@ -344,3 +344,12 @@ Format:
   training file stops with the file named.
 - Cost: ~20 min of g6e.2xlarge (~$0.75). The preflight did its job: no training hours were spent.
 - Lesson: an error message that cannot name its input is a bug in itself; check every input file once before a long run.
+
+## P-0021 update 2 · 2026-11-20 · NCHLT isiXhosa audio was also partly deleted (cause of P-0025)
+- R-0035 attempt 2 (i-09201b27f072945e6, g6e.xlarge, ~20 min, ~$0.60): the new --check-audio stopped preflight 1/4 with
+  `!!! 16623 training files cannot be read, e.g. ['data/nchlt_xho/audio/001/nchlt_xho_001f_0001.wav', ...]`.
+- S3 datasets/nchlt_xho/extracted/nchlt_xho/audio/ holds only speakers 066-201 and 500-507; 001-065 are gone, and so are
+  the COMPLETE marker and MANIFEST. With FLEURS fully gone, this fits a deletion of datasets/ that ran in alphabetical
+  order and stopped partway. R-0033/R-0034 only needed NCHLT test speakers (500-507), so they were not affected.
+  R-0035 attempt 1's unreadable dev file (P-0025) was an NCHLT dev clip from one of those speakers.
+- Fix: re-fetch NCHLT isiXhosa from SADiLaR into S3 (cloud/fetch_data.sh --datasets nchlt, MD5-checked), then relaunch.
