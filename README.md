@@ -32,9 +32,11 @@ end to end, from raw corpora to a model you can talk to, not just to ship a chec
 > **Use it:** [whisper-medium-isixhosa](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) (more accurate) or [whisper-small-isixhosa](https://huggingface.co/Ntlakanipho/whisper-small-isixhosa) (faster) on Hugging Face.
 
 > [!NOTE]
-> **Paused for the rest of 2026** ([D-0030](decisions.md)). The models and the demo stay online. Where it stopped:
-> - **Medium: [R-0019](runs/R-0019)**, trained with Swivuriso (~146 h of read and unscripted isiXhosa, 407 speakers).
->   On people speaking in their own words its letter errors fell from 10.8 % to 4.1 %; on FLEURS from 8.0 % to 6.2 %.
+> **Development resumed in November 2026** ([D-0031](decisions.md)). Where it stands:
+> - **Medium: [R-0035](runs/R-0035)** (20 Nov 2026), the same 309.7 h of data as R-0029 with a fixed training recipe
+>   (about twice as long, SpecAugment, checkpoint chosen on natural speech). Fewer errors than R-0019 on every test:
+>   people speaking in their own words 3.8 → 2.8 % letter errors, FLEURS 5.75 → 5.21 % (same decoding, [R-0033](runs/R-0033)).
+>   The previous medium, [R-0019](runs/R-0019), stays on Hugging Face at `revision="R-0019"`.
 > - **Small, in the free demo: [R-0027](runs/R-0027)**, with 245 h of Swivuriso including long recordings cut at
 >   pauses. Everyday-speech letter errors fell from 11.8 % to 5.1 %.
 > - **Mixed isiXhosa–English speech** improved with the new data, without any dedicated mixed-speech training: 38 → 29 % (medium) and
@@ -72,6 +74,7 @@ The same FLEURS test sentences, which none of the models saw in training:
 | **3 · Improve** | Adding 13 hours of varied FLEURS sentences fixed the word-gluing. Moving from small to medium helped on every test set. An 8-bit copy runs on a laptop at the same accuracy. | FLEURS CER 8 % ([R-0012](runs/R-0012), [R-0013](runs/R-0013)) |
 | **3b · More data** | Added Swivuriso (South Africa African Next Voices): 146 h of read and unscripted speech from 407 new speakers, with every test and dev sentence kept out. Same model and recipe otherwise. | FLEURS CER 6.2 %, unscripted speech 10.8 → 4.1 % ([R-0019](runs/R-0019)) |
 | **3c · Long recordings** | Cut 8 787 long unscripted Swivuriso recordings at pauses into 98.9 h of extra training pieces (`src/swivuriso_long.py`). The small model trained on them halved its everyday-speech errors and became the demo model; the medium gained less, missed its ship rule by 0.02 and stays at R-0019. | small: unscripted CER 11.8 → 5.1 % ([R-0027](runs/R-0027)); medium: tie ([R-0029](runs/R-0029)) |
+| **3d · Better recipe** | A review found the medium runs stopped training too early, picked their checkpoint on read speech only and had no SpecAugment. R-0035 retrained R-0029's data with those fixed. Also checked: Meta's Omnilingual ASR is behind on every fair test ([R-0034](runs/R-0034)). | FLEURS CER 5.75 → 5.21 %, unscripted 3.8 → 2.8 % ([R-0035](runs/R-0035)) |
 | **4 · Mixed speech** | Tested on real isiXhosa–English TV dialogue. At first the model heard English words but spelled them the isiXhosa way ("stubborn" came out as "istabhunga"). The Swivuriso data fixed much of that without dedicated mixed-speech training (dedicated training is designed, not run). | CER 38 → 29 % ([R-0014](runs/R-0014), [R-0030](runs/R-0030)) |
 | **5 · Ship** | Code made open source; both models published on Hugging Face; a free demo that runs the small model in the visitor's browser, checked to keep its accuracy ([D-0019](decisions.md), [D-0020](decisions.md), [R-0017](runs/R-0017), [R-0028](runs/R-0028)). | [demo](https://ntlakanipho-thetha.static.hf.space/index.html) · [model](https://huggingface.co/Ntlakanipho/whisper-medium-isixhosa) |
 
@@ -98,14 +101,17 @@ letter fails a whole word; CER is the fairer headline.
 | whisper-small, NCHLT + FLEURS ([R-0007](runs/R-0007)) | 2.91 / 16.8 | 10.2 / 44.4 | 42.1 / 88.0 |
 | whisper-medium, NCHLT + FLEURS ([R-0012](runs/R-0012)) | 2.33 / 12.7 | 8.03 / 37.8 | 38.4 / 79.6 |
 | whisper-small, + Swivuriso 245 h ([R-0027](runs/R-0027), the demo) | 3.37 / 21.6 | 8.89 / 38.2 | 32.8 / 71.5 |
-| **whisper-medium, + Swivuriso 147 h ([R-0019](runs/R-0019))** | **2.31 / 13.7** | **6.24 / 30.3** | **29.3 / 66.6** |
+| whisper-medium, + Swivuriso 147 h ([R-0019](runs/R-0019)) | 2.31 / 13.7 | 6.24 / 30.3 | 29.3 / 66.6 |
 | whisper-medium, + Swivuriso 245 h ([R-0029](runs/R-0029), not published) | 2.32 / 14.2 | 6.16 / 29.8 | 28.1 / 64.3 |
+| **whisper-medium, same data, fixed recipe ([R-0035](runs/R-0035))** | **1.99 / 11.5** | **5.56 / 26.6** | **26.0 / 60.8**\* |
 
 <sub>Each cell is CER / WER in %. Every run, including the failed ones, is in <a href="results.md">results.md</a>.
 On the Swivuriso test (2 145 clips of 1–30 s, 24 speakers of its own), R-0019 scores 4.12 / 19.1 against R-0012's
 9.00 / 37.3 (<a href="runs/R-0018">R-0018</a>); R-0027 5.25 / 24.0 against R-0007's 9.88 / 42.5; R-0029 4.14 / 18.1, which
 missed R-0019's CER by 0.02 because of one runaway output. Soapies scores come from the 8-bit copies on CPU
-(<a href="runs/R-0030">R-0030</a>; R-0029 in <a href="runs/R-0031">R-0031</a>, where R-0019 scored 29.6 / 66.9).</sub>
+(<a href="runs/R-0030">R-0030</a>; R-0029 in <a href="runs/R-0031">R-0031</a>, where R-0019 scored 29.6 / 66.9).
+R-0035 on the Swivuriso test: 3.38 / 15.5 (same greedy evaluator). \*R-0035's Soapies score uses the newer standard
+decoding (beam 5 + loop guard, GPU; R-0019 decoded the same way: 27.1 / 63.4, <a href="runs/R-0033">R-0033</a>).</sub>
 
 > [!IMPORTANT]
 > **Reading these numbers honestly**

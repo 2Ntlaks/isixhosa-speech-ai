@@ -446,3 +446,10 @@ Format:
   float32 on the laptop = GPU (98/100 same text), so the int8 copy costs ~0.2-0.35 FLEURS CER, depending on the
   ctranslate2 version (4.5.0: +0.19). R-0035 int8 still beats today's R-0019 int8 on the same clips (6.32 vs 7.06).
   Founder to decide: switch Thetha anyway (ctranslate2 pinned 4.5.0), and publish.
+- (afternoon) Founder: "yes" to shipping (D-0033). Thetha's default is now R-0035-int8 (src/live.py; checked live).
+  Hugging Face whisper-medium-isixhosa main = R-0035 (commit dc2acbb6, tag R-0035); R-0019 tagged (603a39b5), R-0012
+  kept. Card release/model-card-medium.md checked with its own code example on the laptop. README updated.
+- Laptop setup now: no .venv; global Python 3.12 with ctranslate2 4.5.0, transformers 4.46.3, jiwer 3.0.5. TensorFlow is
+  also installed, so run transformers with USE_TF=0. data/ holds R-0035 (full + int8), R-0019-int8, NCHLT and FLEURS
+  test audio (~5 GB, gitignored; inside OneDrive, so it syncs).
+- Spend today: ~$17.0 cloud (above); laptop work $0. No AWS machines running.

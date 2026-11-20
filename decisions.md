@@ -297,3 +297,15 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
   be better". R-0035 changes together: training length (9000 steps), checkpoint selection (Swivuriso + FLEURS dev,
   output cap 96 -> 225), SpecAugment. The result shows whether the recipe as a whole helps, not which part.
 - Budget: builder's estimates put R-0033 + R-0034 + R-0035 at ~$15-17 (D-0031 said ~$10-13). Founder: "yes it okay".
+
+## D-0033 · 2026-11-20 · Ship R-0035: Thetha's default and the public Hugging Face medium model
+- Context: R-0035 passed its ship rule on all three tests (Swivuriso 3.24 vs 3.92, FLEURS 5.21 vs 5.75, NCHLT 1.92 vs
+  2.23 CER). Its int8 check (R-0036) passed on NCHLT but missed on FLEURS by 0.05 (+0.35 vs +0.3 allowed); R-0037
+  showed the int8 copy costs ~0.2-0.35 CER depending on the ctranslate2 version (4.5.0: +0.19), while R-0035 int8 still
+  beats today's R-0019 int8 on the same clips (6.32 vs 7.06).
+- Options: (1) switch Thetha to R-0035-int8 anyway, ctranslate2 4.5.0; (2) publish the full R-0035 model publicly, old
+  one tagged R-0019. Agent recommended yes to both; the int8 rule is left as written and its miss recorded.
+- Founder: "yes" (both). Second copy first (P-0021): private Hugging Face repo Ntlakanipho/isixhosa-models-backup.
+- Done: src/live.py default R-0035-int8, R-0019-int8 second (checked live: 12.8 s clip in 7.1 s); Hugging Face
+  whisper-medium-isixhosa = R-0035 at commit dc2acbb6 (release/publish_r0035.py, card release/model-card-medium.md), tags R-0019 (603a39b5) and
+  R-0035. The free browser demo (small model, R-0027) is unchanged.
