@@ -87,3 +87,8 @@ Launch only after R-0033 (its R-0019 numbers are the bar) and after Neon's revie
   about $13-15, still above D-0031's ~$10-13. The cheapest further cut is 8000 steps (-27 min, ~$0.85); the lead kept
   9000.
 - **Checkpoints in S3:** up to 3 x ~9 GB under jobs/ (expires after 30 days), about $0.60 for a month.
+
+## The bar in numbers (filled in from R-0033 before launch, 2026-11-20)
+R-0019 under the standard decoding (R-0033 gpu_fp16_beam5): Swivuriso dev_test CER 3.92, FLEURS test CER 5.75, NCHLT
+test CER 2.23. R-0035 ships only if Swivuriso < 3.92 AND FLEURS < 5.75 AND NCHLT <= 2.73. R-0034 (Meta Omnilingual
+CTC) did not meet its switch rule, so Whisper stays the main path and this run goes ahead (D-0031, D-0032).
