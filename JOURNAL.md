@@ -414,3 +414,16 @@ Format:
   budget ~$15-17 OK (D-0032). Live-page VAD check passed (evidence/live-vad-check-2026-11-19/): VAD on.
 - R-0033 + R-0034 launched at commit 0d64cd8: i-0d4db684ee7961bae, g6.4xlarge on-demand (no g6.2xlarge capacity in
   any zone), 4 h cap (worst case ~$5.30).
+
+## 2026-11-20 (early hours): R-0033 done, R-0034 done, R-0035 training
+- R-0033 (~$2.25): October scores reproduced exactly; new standard decoding = beam 5 + loop guard (guard fired on 0
+  clips). New bar for R-0035: Swivuriso CER 3.92, FLEURS 5.75, NCHLT 2.23 (was 4.12 / 6.24 / 2.31 greedy). int8 = fp16.
+- R-0034 (4 attempts, ~$1.15): three setup failures from library versions in Meta's venv (P-0022, P-0023, the third my
+  own wrong pin). Result: Meta Omnilingual CTC 1B is behind Thetha on every fair set (FLEURS digit-free 6.31 vs 5.49 CER,
+  Soapies 40.79 vs 27.08). Whisper stays the main path. Speed not comparable (P-0024).
+- R-0035: attempt 1 (~$0.75) stopped in preflight on an unreadable audio file whose name the error hid (P-0025); added
+  --check-audio. Attempt 2 (~$0.60): the check named it: 16 623 NCHLT training files missing from S3 (speakers 001-065,
+  part of the P-0021 deletion). Re-fetched NCHLT from SADiLaR (job fetch-nchlt-3, ~$0.01, checksum recorded). Attempt 3
+  (i-0675d50370ca38f4e, g6e.2xlarge, commit daa57a2): all checks passed, training at 1.56 s/step since 02:57 UTC.
+- Spend so far ~$5 + R-0035 attempt 3 (expected ~$13 at $2.24/h for ~5.7 h): total ~$18, a little over the ~$15-17
+  approved in D-0032 because two failed preflights and the g6e.2xlarge fallback each added a little.
