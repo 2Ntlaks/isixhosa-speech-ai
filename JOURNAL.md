@@ -440,3 +440,9 @@ Format:
   at the top of the ~$15-17 approved (D-0032). No AWS machines running.
 - Next: founder decides on shipping R-0035; then Neon research question: can the medium model run in the browser
   (TODO.md).
+- (afternoon) Second copy of R-0035 (P-0021): private Hugging Face repo Ntlakanipho/isixhosa-models-backup @ e5fb6601
+  (R-0035/ full weights, R-0035-int8/), sizes match S3.
+- R-0036 (laptop int8 check, $0): NCHLT pass (-0.08), FLEURS FAIL by 0.05 (+0.35 vs +0.3 allowed). R-0037 diagnostic:
+  float32 on the laptop = GPU (98/100 same text), so the int8 copy costs ~0.2-0.35 FLEURS CER, depending on the
+  ctranslate2 version (4.5.0: +0.19). R-0035 int8 still beats today's R-0019 int8 on the same clips (6.32 vs 7.06).
+  Founder to decide: switch Thetha anyway (ctranslate2 pinned 4.5.0), and publish.
