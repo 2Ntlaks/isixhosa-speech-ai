@@ -1,0 +1,27 @@
+{
+ "model": "C:/Users/ntlak/isixhosa-speech-ai-data/onnx/R-0035",
+ "encoder": "encoder_model_fp16.onnx",
+ "decoder": "decoder_model_merged_q4f16.onnx",
+ "sizes_mb": {
+  "encoder_model_fp16.onnx": 615.03,
+  "decoder_model_merged_q4f16.onnx": 367.12
+ },
+ "engine": "onnxruntime 1.27.0 CPU via optimum, 8 threads, basic graph optimisation, greedy + gzip loop guard",
+ "set": "fleurs",
+ "clips": 100,
+ "max_new_tokens": 225,
+ "onnx": {
+  "wer": 31.14,
+  "cer": 6.75
+ },
+ "r0035_gpu_greedy_same_clips": {
+  "wer": 29.5,
+  "cer": 6.69
+ },
+ "same_output_as_gpu": 44,
+ "loop_guard_used": 0,
+ "runaways_left": 0,
+ "seconds": 1042,
+ "audio_seconds": 1281,
+ "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace"
+}

@@ -1,0 +1,27 @@
+{
+ "model": "C:/Users/ntlak/isixhosa-speech-ai-data/onnx/R-0035",
+ "encoder": "encoder_model_q4.onnx",
+ "decoder": "decoder_model_merged_q4.onnx",
+ "sizes_mb": {
+  "encoder_model_q4.onnx": 210.09,
+  "decoder_model_merged_q4.onnx": 502.86
+ },
+ "engine": "onnxruntime 1.27.0 CPU via optimum, 8 threads, basic graph optimisation, greedy + gzip loop guard",
+ "set": "nchlt",
+ "clips": 200,
+ "max_new_tokens": 96,
+ "onnx": {
+  "wer": 30.03,
+  "cer": 5.27
+ },
+ "r0035_gpu_greedy_same_clips": {
+  "wer": 27.65,
+  "cer": 4.81
+ },
+ "same_output_as_gpu": 166,
+ "loop_guard_used": 0,
+ "runaways_left": 0,
+ "seconds": 2051,
+ "audio_seconds": 813,
+ "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace"
+}

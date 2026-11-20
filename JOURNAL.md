@@ -460,3 +460,14 @@ Format:
   lead verified it (docs/research/lead-verification-browser-medium-2026-11-20.md): high quality, two minor citation
   slips. Recommendation: $0 laptop test of R-0035 as 4-bit ONNX first; then small-by-default + opt-in medium on WebGPU;
   retraining small with the R-0035 recipe (~$5) is the cheap phone upgrade. Waiting on the founder.
+
+## 2026-11-20 (night) · R-0038: R-0035 as a 4-bit browser copy, laptop test ($0)
+- Founder said yes to Phase 1 of Neon's plan. Built 4-bit ONNX copies of R-0035 (src/export_onnx_q4.py) after four
+  snags (P-0026: 2 GB proto limit, float16 converter vs If branches, an onnxruntime CPU fusion bug, and accuracy_level=4
+  from the brief causing NaN; transformers.js leaves it unset). Decoder has no cache_position (P-0015 pin works).
+- Scored on the same clips as R-0036 / R-0028 (src/eval_onnx_browser.py, greedy + loop guard): A (548 MB) FLEURS CER
+  6.61 (GPU greedy 6.69, demo's small model 10.31) PASS; NCHLT unseen 5.27 vs 4.81 FAIL (bar +0.40, got +0.46).
+  B (fp16 encoder, 982 MB) 5.23 also FAIL; C shows the loss is the 4-bit weights (decoder), not float16 maths.
+- Laptop slept mid-run (B restarted; the scorer now keeps Windows awake). Cost $0.
+- Next: founder decision. Recommendation: go on to the browser speed test with A anyway (it beats the demo by a wide
+  margin), with the NCHLT miss stated; or stop and spend ~$5 on retraining small.

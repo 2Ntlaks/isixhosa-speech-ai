@@ -353,3 +353,22 @@ Format:
   order and stopped partway. R-0033/R-0034 only needed NCHLT test speakers (500-507), so they were not affected.
   R-0035 attempt 1's unreadable dev file (P-0025) was an NCHLT dev clip from one of those speakers.
 - Fix: re-fetch NCHLT isiXhosa from SADiLaR into S3 (cloud/fetch_data.sh --datasets nchlt, MD5-checked), then relaunch.
+
+## P-0026 · 2026-11-20 · R-0038: four snags making a 4-bit browser copy of whisper-medium (laptop, $0)
+1. optimum's export stopped at its merge step: `Exception: Unable to merge decoders. Detailed error: Failed to serialize
+   proto`. Medium's merged fp32 decoder is over protobuf's 2 GB limit. Fix: export without post-processing, quantise the
+   two decoder halves to 4 bits first, then merge (`merge_decoders(..., strict=False)`, as optimum itself does).
+2. onnxconverter-common's float16 converter, on the merged decoder: `Type parameter (T) of Optype (Concat) bound to
+   different types (tensor(float) and tensor(float16))`; converting each half before merging failed the same way on
+   MatMul. Cause: it does not follow values into the If branches. Fix: transformers.js 3.8.1's own copy of the
+   converter (scripts/float16.py, MIT, vendored unchanged as src/tjs_float16.py), which handles If subgraphs.
+3. onnxruntime 1.27 CPU, on the float16 copies: `Attempting to get index by a name which does not exist:
+   InsertedPrecisionFreeCast_/layers.3/final_layer_norm/Constant_output_0 for node: .../SimplifiedLayerNormFusion/`.
+   A bug in one graph optimisation. Fix for scoring: basic graph optimisation (does not change the maths). The browser
+   build of onnxruntime may hit the same bug: watch for it in the browser step.
+4. The 4-bit + float16 encoder returned NaN on every clip (decoder output "!!!!!"). onnx-community's published
+   whisper-medium q4f16 encoder ran fine on the same CPU, so it was our file: we set `accuracy_level=4` (Neon's brief
+   said transformers.js uses 4; its quantize.py actually leaves it unset). Fix: leave it unset, as transformers.js does.
+- Cost: ~1.5 h of laptop time, $0.
+- Lesson: when a published file works and ours does not, diff the two files node by node before guessing; and check a
+  research brief's "matching X" claims against X's code before relying on them.
