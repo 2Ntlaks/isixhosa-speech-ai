@@ -1,0 +1,38 @@
+<!doctype html><meta charset="utf-8"><title>R-0038 browser test</title><pre id="log"></pre>
+<script type="module">
+const log = s => (document.getElementById("log").textContent += s + "\n");
+const worker = new Worker("/worker.js", { type: "module" });
+const ask = msg => new Promise((ok, bad) => { worker.onmessage = ({ data }) => data.type === "error" ? bad(new Error(data.message)) : ok(data); worker.postMessage(msg); });
+async function wav(id) {  // 16 kHz mono PCM16 or float32 WAV -> Float32Array
+  if (id === "silence5") return new Float32Array(5 * 16000);
+  const b = await (await fetch(`/audio/${id}.wav`)).arrayBuffer(), v = new DataView(b);
+  let p = 12, fmt, bits, ch, rate;
+  while (p < b.byteLength) {
+    const tag = String.fromCharCode(...new Uint8Array(b, p, 4)), n = v.getUint32(p + 4, true);
+    if (tag === "fmt ") { fmt = v.getUint16(p + 8, true); ch = v.getUint16(p + 10, true); rate = v.getUint32(p + 12, true); bits = v.getUint16(p + 22, true); }
+    if (tag === "data") {
+      if (rate !== 16000 || ch !== 1) throw new Error(`${id}: ${rate} Hz, ${ch} ch`);
+      if (fmt === 3) return new Float32Array(b.slice(p + 8, p + 8 + n));
+      const i16 = new Int16Array(b.slice(p + 8, p + 8 + n)); return Float32Array.from(i16, x => x / 32768);
+    }
+    p += 8 + n + (n % 2);
+  }
+  throw new Error("no data chunk");
+}
+window.bench = async ({ clips, repeats, dtype, device, model }) => {
+  const a = await navigator.gpu?.requestAdapter();
+  const info = a ? { vendor: a.info?.vendor, architecture: a.info?.architecture, description: a.info?.description, f16: a.features.has("shader-f16"),
+    maxBufferSize: a.limits.maxBufferSize, maxStorageBufferBindingSize: a.limits.maxStorageBufferBindingSize } : null;
+  const res = { adapter: info, crossOriginIsolated, threads: navigator.hardwareConcurrency, runs: [] };
+  const r = await ask({ type: "load", dtype, device, model }); res.load_s = r.load_s; res.warmup_s = r.warmup_s; log(JSON.stringify(r));
+  for (const c of clips) {
+    const audio = await wav(c.id);
+    for (let k = 0; k < repeats; k++) {
+      const o = await ask({ type: "run", audio, max_new_tokens: c.max_new_tokens });
+      res.runs.push({ id: c.id, audio_s: audio.length / 16000, k, ...o }); log(`${c.id} #${k}: ${o.seconds.toFixed(2)} s  ${o.text}`);
+    }
+  }
+  return res;
+};
+log("ready");
+</script>

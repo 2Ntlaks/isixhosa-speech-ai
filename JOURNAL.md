@@ -471,3 +471,7 @@ Format:
 - Laptop slept mid-run (B restarted; the scorer now keeps Windows awake). Cost $0.
 - Next: founder decision. Recommendation: go on to the browser speed test with A anyway (it beats the demo by a wide
   margin), with the NCHLT miss stated; or stop and spend ~$5 on retraining small.
+- Later (D-0034, founder: go on with A): browser test in Chrome 158 WebGPU on the laptop's Radeon 780M. Text identical
+  to Python, stable, 548 MB, but a 12.8 s clip takes 11.5-12.1 s (bar 8.0 s): FAIL. Stock whisper-medium is about as
+  slow, so the integrated GPU is the limit. R-0038 verdict: no medium in the browser demo now. Next (founder): retrain
+  small with R-0035's recipe (~$5), and maybe later a 4-decoder-layer medium. Cost of R-0038: $0.

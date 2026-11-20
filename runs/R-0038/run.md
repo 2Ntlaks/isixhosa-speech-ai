@@ -85,3 +85,45 @@ What it shows:
 - The loss is small and uneven: A is worse than the GPU on 22 of 200 NCHLT clips and better on 11, mostly short
   sentences from speaker 505 (the hardest speaker for every model). On FLEURS, A is level with the GPU.
 - Against the demo's model today on the same clips, A is far better: FLEURS CER 6.61 vs 10.31, NCHLT 5.27 vs 6.07.
+
+## Browser step (after D-0034), 2026-11-20 late: FAILED on speed
+Founder chose to go on with A despite the NCHLT miss (D-0034). Harness in runs/R-0038/browser/ (local Node server with
+the demo's COOP/COEP headers; module worker with transformers.js 4.3.2 `transformers.min.js`, which bundles
+onnxruntime-web 1.31.0-dev.20260914-8d85527a0, npm-integrity-checked; puppeteer-core 24.10.0 driving the installed
+Chrome 158.0.8127.36). Model files served from disk; tokenizer.json from data/models/R-0035-int8. WebGPU adapter: AMD
+rdna-3 (Radeon 780M), shader-f16 yes, crossOriginIsolated true. Greedy, no VAD, gzip ratio measured (no retries needed).
+Load and warm-up timed after one first pass; then each clip 5 times (headless) or 3 times (window).
+
+| Clip | Audio | Headless Chrome, 5 runs | Chrome window, 3 runs | Stock whisper-medium q4f16 (onnx-community), headless |
+|---|---|---|---|---|
+| fleurs_16251693488553696524 | 12.8 s | 13.4-14.8 s | **11.5-12.1 s** | 11.1-13.2 s |
+| nchlt_xho_500m_0267 | 3.0 s | 5.0-5.2 s | 4.6 s | 4.0-4.3 s |
+| fleurs_14186816915482707666 | 25.8 s | 21.9-25.0 s | 21.7-22.9 s | 20.4-22.2 s |
+| 5 s of silence | 5.0 s | 4.6-5.0 s, writes "c" | 4.4-4.8 s, "c" | 36 s, "kwa kwa kwa ..." (loop) |
+
+- Model load from the local server 9.4-14.6 s plus 6.4-8.2 s shader warm-up (the real download of 548 MB comes first:
+  at R-0028's measured ~1.2 MB/s, roughly 7-8 minutes on the founder's connection; not measured).
+- **Text identical to Python ORT on all three speech clips** (CER 3.33 / 33.33 / 7.48, same as R-0038 A). 5/5 and 3/3
+  runs succeeded, no device loss, no loops.
+- Memory: private bytes of all browser processes peaked at ~4.2 GB (sampled each second). The split into tab and GPU
+  process failed in the sampler, so this is not the bar's "tab + GPU process" figure; on this APU the GPU memory is
+  system RAM. Not interpreted further.
+
+| Bar (set before) | Result |
+|---|---|
+| 12-15 s clip <= 8.0 s warm | **FAIL**: 11.5-12.1 s (window), 13.4-14.8 s (headless) |
+| 5/5 runs succeed | PASS |
+| Same text as Python (<= 0.1 CER) | PASS (identical) |
+| Download <= 600 MB | PASS (548 MB) |
+| Peak memory <= 2.5 GB | not measured as defined (~4.2 GB all browser processes) |
+| Silence -> empty with VAD | not tested (no VAD yet); without it: "c" |
+
+What it shows: the laptop's integrated GPU is the main limit. Stock medium from onnx-community, a graph built by a
+newer exporter, is only ~10-20 % faster. The time grows with the number of words (the 24-layer decoder runs once per
+token), so the decoder, not the encoder, sets the speed; the same part that lost accuracy at 4 bits. For comparison:
+Thetha on the laptop CPU (CTranslate2 int8, beam 5) does a 12.8 s clip in 7.1 s; the demo's small model in the
+browser (WASM) did a 14.2 s clip in 9.0-9.4 s (R-0028).
+
+**R-0038 verdict: medium does not go into the browser demo now** (accuracy bar missed narrowly, speed bar missed
+clearly). Neon's branch for this case: improve the small model instead (fixed recipe, ~$5). A smaller decoder (Neon's
+"24 encoder + 4 decoder layers" idea) would attack both failures at once; it is a separate, later experiment.

@@ -1,0 +1,161 @@
+{
+ "first": {
+  "adapter": {
+   "vendor": "amd",
+   "architecture": "rdna-3",
+   "description": "",
+   "f16": true,
+   "maxBufferSize": 2147483648,
+   "maxStorageBufferBindingSize": 2147483644
+  },
+  "crossOriginIsolated": true,
+  "threads": 16,
+  "runs": [
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 0,
+    "type": "result",
+    "text": "imali yelizwe esemthethweni yasefalklands yiponti yasefalkland fkp ixabiso leyo libekwe lalingana neponti yasebritane gpp",
+    "seconds": 12.462134999990463,
+    "gzip_ratio": 1.475609756097561
+   }
+  ],
+  "load_s": 10.026524999976159,
+  "warmup_s": 6.994814999997616,
+  "wall_s": 29.781
+ },
+ "second": {
+  "adapter": {
+   "vendor": "amd",
+   "architecture": "rdna-3",
+   "description": "",
+   "f16": true,
+   "maxBufferSize": 2147483648,
+   "maxStorageBufferBindingSize": 2147483644
+  },
+  "crossOriginIsolated": true,
+  "threads": 16,
+  "runs": [
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 0,
+    "type": "result",
+    "text": "imali yelizwe esemthethweni yasefalklands yiponti yasefalkland fkp ixabiso leyo libekwe lalingana neponti yasebritane gpp",
+    "seconds": 12.134949999988079,
+    "gzip_ratio": 1.475609756097561
+   },
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 1,
+    "type": "result",
+    "text": "imali yelizwe esemthethweni yasefalklands yiponti yasefalkland fkp ixabiso leyo libekwe lalingana neponti yasebritane gpp",
+    "seconds": 11.480389999985695,
+    "gzip_ratio": 1.475609756097561
+   },
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 2,
+    "type": "result",
+    "text": "imali yelizwe esemthethweni yasefalklands yiponti yasefalkland fkp ixabiso leyo libekwe lalingana neponti yasebritane gpp",
+    "seconds": 11.659074999988079,
+    "gzip_ratio": 1.475609756097561
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 0,
+    "type": "result",
+    "text": "ingegazi",
+    "seconds": 4.558014999985695,
+    "gzip_ratio": 0.8
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 1,
+    "type": "result",
+    "text": "ingegazi",
+    "seconds": 4.630424999952316,
+    "gzip_ratio": 0.8
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 2,
+    "type": "result",
+    "text": "ingegazi",
+    "seconds": 4.55002999997139,
+    "gzip_ratio": 0.8
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 0,
+    "type": "result",
+    "text": "iindaba zobumnandi ithembu iyaqonda ukuba umfoth wamisa isithuthi sakhe kwelinye icala le sebulvalda boulevard kwaye wazama ukuthetha uthatha imifanekiso yamapolisa ngaphambi kokuwela indlela eqhubekeke eyalela ipolisa lasecolifonia kuhola wendlela oqhuba isitopu amiyalele ukuba abuyele ngaphesheya kabini",
+    "seconds": 21.65509000003338,
+    "gzip_ratio": 1.6906077348066297
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 1,
+    "type": "result",
+    "text": "iindaba zobumnandi ithembu iyaqonda ukuba umfoth wamisa isithuthi sakhe kwelinye icala le sebulvalda boulevard kwaye wazama ukuthetha uthatha imifanekiso yamapolisa ngaphambi kokuwela indlela eqhubekeke eyalela ipolisa lasecolifonia kuhola wendlela oqhuba isitopu amiyalele ukuba abuyele ngaphesheya kabini",
+    "seconds": 22.878894999980925,
+    "gzip_ratio": 1.6906077348066297
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 2,
+    "type": "result",
+    "text": "iindaba zobumnandi ithembu iyaqonda ukuba umfoth wamisa isithuthi sakhe kwelinye icala le sebulvalda boulevard kwaye wazama ukuthetha uthatha imifanekiso yamapolisa ngaphambi kokuwela indlela eqhubekeke eyalela ipolisa lasecolifonia kuhola wendlela oqhuba isitopu amiyalele ukuba abuyele ngaphesheya kabini",
+    "seconds": 21.710055000007152,
+    "gzip_ratio": 1.6906077348066297
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 0,
+    "type": "result",
+    "text": "c",
+    "seconds": 4.415509999990463,
+    "gzip_ratio": 0.3333333333333333
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 1,
+    "type": "result",
+    "text": "c",
+    "seconds": 4.772939999997615,
+    "gzip_ratio": 0.3333333333333333
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 2,
+    "type": "result",
+    "text": "c",
+    "seconds": 4.633785000026226,
+    "gzip_ratio": 0.3333333333333333
+   }
+  ],
+  "load_s": 9.383935000002385,
+  "warmup_s": 6.378464999973774,
+  "wall_s": 145.468
+ },
+ "browser": "chrome",
+ "mode": "window",
+ "version": "Chrome/158.0.8127.36",
+ "peak_memory": {
+  "total_mb": 4218.322944,
+  "gpu_mb": 0,
+  "renderer_mb": 0
+ }
+}

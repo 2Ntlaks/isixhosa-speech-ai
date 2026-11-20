@@ -1,0 +1,161 @@
+{
+ "first": {
+  "adapter": {
+   "vendor": "amd",
+   "architecture": "rdna-3",
+   "description": "",
+   "f16": true,
+   "maxBufferSize": 2147483648,
+   "maxStorageBufferBindingSize": 2147483644
+  },
+  "crossOriginIsolated": true,
+  "threads": 16,
+  "runs": [
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 0,
+    "type": "result",
+    "text": "Ema liilizu SMT-20 ase faq lens, yi pwenti ase faq lens FK-EP. Kabi sola yi wilibe kwe lialingana, ni pwenti ase proton TPP.",
+    "seconds": 12.48467000001669,
+    "gzip_ratio": 1.2916666666666667
+   }
+  ],
+  "load_s": 10.756534999966622,
+  "warmup_s": 6.61829500001669,
+  "wall_s": 30.099
+ },
+ "second": {
+  "adapter": {
+   "vendor": "amd",
+   "architecture": "rdna-3",
+   "description": "",
+   "f16": true,
+   "maxBufferSize": 2147483648,
+   "maxStorageBufferBindingSize": 2147483644
+  },
+  "crossOriginIsolated": true,
+  "threads": 16,
+  "runs": [
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 0,
+    "type": "result",
+    "text": "Ema liilizu SMT-20 ase faq lens, yi pwenti ase faq lens FK-EP. Kabi sola yi wilibe kwe lialingana, ni pwenti ase proton TPP.",
+    "seconds": 13.162759999990463,
+    "gzip_ratio": 1.2916666666666667
+   },
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 1,
+    "type": "result",
+    "text": "Ema liilizu SMT-20 ase faq lens, yi pwenti ase faq lens FK-EP. Kabi sola yi wilibe kwe lialingana, ni pwenti ase proton TPP.",
+    "seconds": 11.083915000021458,
+    "gzip_ratio": 1.2916666666666667
+   },
+   {
+    "id": "fleurs_16251693488553696524",
+    "audio_s": 12.84,
+    "k": 2,
+    "type": "result",
+    "text": "Ema liilizu SMT-20 ase faq lens, yi pwenti ase faq lens FK-EP. Kabi sola yi wilibe kwe lialingana, ni pwenti ase proton TPP.",
+    "seconds": 11.092715000033378,
+    "gzip_ratio": 1.2916666666666667
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 0,
+    "type": "result",
+    "text": "Ingekazi.",
+    "seconds": 4.025375,
+    "gzip_ratio": 0.8181818181818182
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 1,
+    "type": "result",
+    "text": "Ingekazi.",
+    "seconds": 4.002384999990463,
+    "gzip_ratio": 0.8181818181818182
+   },
+   {
+    "id": "nchlt_xho_500m_0267",
+    "audio_s": 3,
+    "k": 2,
+    "type": "result",
+    "text": "Ingekazi.",
+    "seconds": 4.300800000011921,
+    "gzip_ratio": 0.8181818181818182
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 0,
+    "type": "result",
+    "text": "Iindabazo umnaditiemzi iakonda ukuba umfotuwa missa isituuti saiki gwilini italalay Seipulvelda, Boulevard. Kwaia wazama kuteta tatemi fanaigizo ima pulisa ngapambi kokuwela ilila kubegeki. Eyalilai pulisa lasikolefunia kuhola unli. Ukuba isitoku amia lele ukuba. Abuyele ngapeshi ya kabin.",
+    "seconds": 22.15371500003338,
+    "gzip_ratio": 1.5425531914893618
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 1,
+    "type": "result",
+    "text": "Iindabazo umnaditiemzi iakonda ukuba umfotuwa missa isituuti saiki gwilini italalay Seipulvelda, Boulevard. Kwaia wazama kuteta tatemi fanaigizo ima pulisa ngapambi kokuwela ilila kubegeki. Eyalilai pulisa lasikolefunia kuhola unli. Ukuba isitoku amia lele ukuba. Abuyele ngapeshi ya kabin.",
+    "seconds": 20.876805000007153,
+    "gzip_ratio": 1.5425531914893618
+   },
+   {
+    "id": "fleurs_14186816915482707666",
+    "audio_s": 25.8,
+    "k": 2,
+    "type": "result",
+    "text": "Iindabazo umnaditiemzi iakonda ukuba umfotuwa missa isituuti saiki gwilini italalay Seipulvelda, Boulevard. Kwaia wazama kuteta tatemi fanaigizo ima pulisa ngapambi kokuwela ilila kubegeki. Eyalilai pulisa lasikolefunia kuhola unli. Ukuba isitoku amia lele ukuba. Abuyele ngapeshi ya kabin.",
+    "seconds": 20.414924999952316,
+    "gzip_ratio": 1.5425531914893618
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 0,
+    "type": "result",
+    "text": "Kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa k",
+    "seconds": 36.12907499998808,
+    "gzip_ratio": 40.81818181818182
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 1,
+    "type": "result",
+    "text": "Kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa k",
+    "seconds": 36.050299999952315,
+    "gzip_ratio": 40.81818181818182
+   },
+   {
+    "id": "silence5",
+    "audio_s": 5,
+    "k": 2,
+    "type": "result",
+    "text": "Kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa kwa k",
+    "seconds": 36.63542500001192,
+    "gzip_ratio": 40.81818181818182
+   }
+  ],
+  "load_s": 5.935495000004768,
+  "warmup_s": 7.180714999973774,
+  "wall_s": 233.706
+ },
+ "browser": "chrome",
+ "mode": "headless",
+ "version": "Chrome/158.0.8127.36",
+ "peak_memory": {
+  "total_mb": 4494.5326079999995,
+  "gpu_mb": 0,
+  "renderer_mb": 0
+ }
+}

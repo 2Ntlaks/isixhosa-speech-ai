@@ -309,3 +309,11 @@ sentence never occurs in training ("unseen text"), so memorised prompts can't in
 - Done: src/live.py default R-0035-int8, R-0019-int8 second (checked live: 12.8 s clip in 7.1 s); Hugging Face
   whisper-medium-isixhosa = R-0035 at commit dc2acbb6 (release/publish_r0035.py, card release/model-card-medium.md), tags R-0019 (603a39b5) and
   R-0035. The free browser demo (small model, R-0027) is unchanged.
+
+## D-0034 · 2026-11-20 · Go on to the browser test with R-0038's 4-bit copy despite its NCHLT miss
+- Context: R-0038 candidate A (R-0035 q4f16, 548 MB) passed on FLEURS (CER 6.61 vs GPU greedy 6.69) but missed the
+  NCHLT bar by 0.06 (5.27 vs 4.81 + 0.40); B (fp16 encoder, 982 MB) missed by 0.02. A still beats the demo's model on the
+  same clips (FLEURS 6.61 vs 10.31, NCHLT 5.27 vs 6.07 from R-0028).
+- Options: (1) accept the miss, browser speed test with A ($0); (2) stop medium-in-browser, retrain small (~$5);
+  (3) both, small after the 1 December brake reset. Agent recommended (1); the bar is left as written and the miss recorded.
+- Founder: "okay the one you recommand" (option 1).
