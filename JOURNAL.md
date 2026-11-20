@@ -453,3 +453,6 @@ Format:
   also installed, so run transformers with USE_TF=0. data/ holds R-0035 (full + int8), R-0019-int8, NCHLT and FLEURS
   test audio (~5 GB, gitignored; inside OneDrive, so it syncs).
 - Spend today: ~$17.0 cloud (above); laptop work $0. No AWS machines running.
+- (later) Pushed to GitHub (808afd0..e2e1ca6) after a scan for private transcripts, audio and secrets. Moved data/ out of
+  OneDrive to C:\Users\ntlak\isixhosa-speech-ai-data (9.6 GB) with a junction at data/, so paths are unchanged and
+  OneDrive no longer syncs it; live page checked after the move.
