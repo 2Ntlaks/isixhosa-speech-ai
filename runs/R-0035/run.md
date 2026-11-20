@@ -92,3 +92,54 @@ Launch only after R-0033 (its R-0019 numbers are the bar) and after Neon's revie
 R-0019 under the standard decoding (R-0033 gpu_fp16_beam5): Swivuriso dev_test CER 3.92, FLEURS test CER 5.75, NCHLT
 test CER 2.23. R-0035 ships only if Swivuriso < 3.92 AND FLEURS < 5.75 AND NCHLT <= 2.73. R-0034 (Meta Omnilingual
 CTC) did not meet its switch rule, so Whisper stays the main path and this run goes ahead (D-0031, D-0032).
+
+## Outcome (lead, 2026-11-20): PASSED the ship rule on all three tests
+Attempt 3, i-0675d50370ca38f4e, g6e.2xlarge on-demand, commit daa57a2. Node up 02:35 UTC, DONE 08:02 UTC (~5.5 h,
+~$12.25 at $2.24/h). Data split = R-0029's (98,663 clips, 309.68 h, 603 speakers); audio check: all training clips
+readable, no dev drops. Training 9000 steps in 4 h 35 min (1.57 s/step), peak GPU memory 34.6 GB at 8 x 4.
+
+**Dev evaluations (combined = 0.5 Swivuriso dev CER + 0.5 FLEURS dev CER; runaways 0 at every step):**
+
+| Step | FLEURS dev loss | FLEURS dev CER | Swivuriso dev CER | Combined |
+|---|---|---|---|---|
+| 1000 | 0.514 | 8.23 | 5.98 | 7.105 |
+| 2000 | 0.429 | 6.76 | 4.60 | 5.68 |
+| 3000 | 0.391 | 6.03 | 3.77 | 4.90 |
+| 4000 | 0.382 | 5.89 | 3.66 | 4.775 |
+| 5000 | 0.377 | 5.78 | 3.42 | 4.60 |
+| 6000 | 0.359 | 5.72 | 3.16 | 4.44 |
+| 7000 | 0.367 | 5.52 | 3.55 | 4.535 |
+| **8000 (kept)** | 0.366 | 5.52 | 3.00 | **4.26** |
+| 9000 | 0.363 | 5.37 | 3.35 | 4.36 |
+
+FLEURS dev loss passed R-0029's final 0.382 at step 5000 and kept falling: the extra length helped (R-0029 stopped at
+4000). Best checkpoint: checkpoint-8000. A "missing keys: proj_out.weight" warning when loading it is the tied output
+layer (Whisper shares it with the token embeddings); the test scores below show the weights are intact.
+
+**Test sets, standard decoding (R-0033: beam 5 + loop guard, CT2 float16, GPU), vs R-0019 under the same decoding:**
+
+| Test set | R-0035 WER / CER | R-0019 (R-0033) WER / CER | Rule | Result |
+|---|---|---|---|---|
+| Swivuriso dev_test, 2145 | **15.04 / 3.24** | 18.26 / 3.92 | CER < 3.92 | PASS |
+| FLEURS test, 1034 | **26.06 / 5.21** | 28.92 / 5.75 | CER < 5.75 | PASS |
+| NCHLT test, 2770 | **11.11 / 1.92** | 13.48 / 2.23 | CER <= 2.73 | PASS |
+| Soapies test, 391 (not in rule) | 60.84 / 25.98 | 63.37 / 27.08 | - | better |
+
+Breakdowns (rounded by the evaluator to one decimal):
+- Swivuriso scripted 16.3 / 3.5 (R-0019 18.5 / 4.0); **unscripted 13.4 / 2.8 (18.0 / 3.8)**: the biggest gain is on
+  spontaneous speech, the speech people actually use.
+- NCHLT seen sentences 8.1 / 1.4 (10.6 / 1.8); **unseen 24.4 / 4.1 (26.3 / 4.1)**: on NCHLT sentences never trained
+  on, CER did not move; most of the NCHLT gain is on sentences that are also in training. Honest reading: on NCHLT the
+  longer training mainly fit the read prompts better; the gains that generalise show on Swivuriso and FLEURS.
+- Soapies: isiXhosa words heard 35.2 % (30.3 %), English 52.7 % (53.0 %).
+- Loop guard fired on 0 clips in every set; no empty outputs.
+
+**Old evaluator (transformers greedy, src/baseline.py), for continuity with results.md:** NCHLT 11.45 / 1.99 (R-0019
+13.67 / 2.31), FLEURS 26.64 / 5.56 (30.32 / 6.24), Swivuriso 15.51 / 3.38 (19.12 / 4.12).
+
+**Not one-change:** four recipe changes at once (length, checkpoint choice, SpecAugment, dev generation length). We know
+the recipe helps, not which part.
+
+**Model:** S3 models/R-0035/ (3.84 GB, fp32 + processor) and models/R-0035-int8/. jobs/R-0035/ (checkpoints) expires
+after 30 days. Still to do before it becomes Thetha's default: the int8 check as R-0020 (CER at most 0.3 above the GPU
+on the same clips), a second copy outside S3 (P-0021), and the founder's OK to publish.

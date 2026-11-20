@@ -46,6 +46,13 @@ Where we are: stage 3 is done. Best model **R-0012** (whisper-medium): 8.0 % let
       paste them to me.
 
 
+## Next research question for Neon (founder, 2026-11-20)
+Can the medium model (R-0035 if shipped) run in the free browser demo? Neon compares, with sources it actually read:
+(1) a squeezed medium (4/8-bit) in the browser on WebGPU (download size, speed on ordinary laptops and phones, accuracy
+lost, whether the tools handle our `<|sw|>` tag setup); (2) teaching the small model from medium (distillation);
+(3) both: small loads first, medium as an optional high-accuracy mode. Same rules as before: real sources only, facts
+separate from inferences, a claims ledger, report saved as a file. The lead verifies, then we test the best route.
+
 ## Future work
 
 - **isiXhosa -> English translation** (D-0015): train Whisper itself on FLEURS isiXhosa audio + the official English

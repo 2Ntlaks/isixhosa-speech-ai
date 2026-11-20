@@ -1,0 +1,6 @@
+1. attention mask OK: shape (8, 3000), audio frames [542, 548, 599, 992, 1278, 1420, 2374, 2686]
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+2. attention mask reaches the model's forward call
+3. training mode: time masks in 80 of 80 clip-passes, all inside the audio; frequency masks in 80
+4. evaluation mode: no masking
+SpecAugment check OK on cuda {'apply_spec_augment': True, 'mask_time_prob': 0.05, 'mask_time_length': 10, 'mask_time_min_masks': 2, 'mask_feature_prob': 0.1, 'mask_feature_length': 8, 'mask_feature_min_masks': 1}

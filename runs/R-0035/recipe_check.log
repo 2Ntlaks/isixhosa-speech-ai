@@ -1,0 +1,40 @@
+audio check: 16 training clips readable; dev drops none
+{"train_clips": 16, "train_hours": 0.12, "train_speakers": 14, "dev_speakers": ["005", "023", "066", "077", "173", "192"], "dev_clips_scored": 8, "dropped_over_max_seconds": 6, "fleurs_train_clips": 3434, "fleurs_dropped_over_max_seconds": 32, "fleurs_train_hours": 13.03, "fleurs_dev_clips_scored": 8, "swivuriso_train_clips": 52960, "swivuriso_train_hours": 245.44, "swivuriso_dropped_test_sentences": 6139, "swivuriso_dropped_over_440_tokens": 0, "swivuriso_train_speakers": 407, "english_train_clips": 0, "english_train_hours": 0.0, "stitched_clips": 0, "stitched_hours": 0.0, "soapies_dev_clips_scored": 0, "model": "base/whisper-medium", "batch_size": 8, "grad_accum": 4, "gradient_checkpointing": false, "recipe": {"max_steps": 2, "epochs_requested": null, "epochs": 4.0, "lr_scheduler": "linear", "select_on": "swivuriso+fleurs", "swivuriso_dev_clips_scored": 24, "swivuriso_dev_speakers": 24, "swivuriso_dev_unscripted": 0, "swivuriso_dev_hours": 0.07, "spec_augment": {"mask_time_prob": 0.05, "mask_time_length": 10, "mask_time_min_masks": 2, "mask_feature_prob": 0.1, "mask_feature_length": 8, "mask_feature_min_masks": 1}, "generation_max_length": 225, "save_total_limit": 3}}
+max_steps is given, it will override any value given in num_train_epochs
+starting from the stock model
+  0%|          | 0/2 [00:00<?, ?it/s]Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+ 50%|█████     | 1/2 [00:01<00:01,  1.64s/it]100%|██████████| 2/2 [00:02<00:00,  1.30s/it]The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                             
+                                     [A{'eval_nchlt_loss': 2.5040671825408936, 'eval_nchlt_wer': 112.5, 'eval_nchlt_cer': 25.27, 'eval_nchlt_runaways': 0, 'eval_nchlt_runtime': 1.4758, 'eval_nchlt_samples_per_second': 5.421, 'eval_nchlt_steps_per_second': 0.678, 'epoch': 2.0}
+100%|██████████| 2/2 [00:04<00:00,  1.30s/it]
+100%|██████████| 1/1 [00:00<00:00,  3.59it/s][A
+                                             [ATrainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                             
+                                     [A{'eval_fleurs_loss': 2.6866869926452637, 'eval_fleurs_wer': 117.32, 'eval_fleurs_cer': 34.65, 'eval_fleurs_runaways': 0, 'eval_fleurs_runtime': 2.8214, 'eval_fleurs_samples_per_second': 2.835, 'eval_fleurs_steps_per_second': 0.354, 'epoch': 2.0}
+100%|██████████| 2/2 [00:07<00:00,  1.30s/it]
+100%|██████████| 1/1 [00:00<00:00,  1.97it/s][A
+                                             [ATrainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                             
+                                     [A{'eval_swivuriso_loss': 2.29728102684021, 'eval_swivuriso_wer': 103.07, 'eval_swivuriso_cer': 25.17, 'eval_swivuriso_runaways': 0, 'eval_swivuriso_runtime': 4.9917, 'eval_swivuriso_samples_per_second': 4.808, 'eval_swivuriso_steps_per_second': 0.2, 'epoch': 2.0}
+100%|██████████| 2/2 [00:11<00:00,  1.30s/it]
+100%|██████████| 1/1 [00:01<00:00,  1.23s/it][A
+                                             [A                                             {'eval_combined_cer': 29.91, 'epoch': 2.0}
+100%|██████████| 2/2 [00:11<00:00,  1.30s/it]/opt/work/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py:2817: UserWarning: Moving the following attributes in the config to the generation config: {'max_length': 448, 'suppress_tokens': [1, 2, 7, 8, 9, 10, 14, 25, 26, 27, 28, 29, 31, 58, 59, 60, 61, 62, 63, 90, 91, 92, 93, 359, 503, 522, 542, 873, 893, 902, 918, 922, 931, 1350, 1853, 1982, 2460, 2627, 3246, 3253, 3268, 3536, 3846, 3961, 4183, 4667, 6585, 6647, 7273, 9061, 9383, 10428, 10929, 11938, 12033, 12331, 12562, 13793, 14157, 14635, 15265, 15618, 16553, 16604, 18362, 18956, 20075, 21675, 22520, 26130, 26161, 26435, 28279, 29464, 31650, 32302, 32470, 36865, 42863, 47425, 49870, 50254, 50258, 50358, 50359, 50360, 50361, 50362], 'begin_suppress_tokens': [220, 50257]}. You are seeing this warning because you've set generation parameters in the model config, as opposed to in the generation config.
+  warnings.warn(
+There were missing keys in the checkpoint model loaded: ['proj_out.weight'].
+                                             {'train_runtime': 18.7009, 'train_samples_per_second': 3.422, 'train_steps_per_second': 0.107, 'train_loss': 1.68219792842865, 'epoch': 2.0}
+100%|██████████| 2/2 [00:18<00:00,  1.30s/it]100%|██████████| 2/2 [00:18<00:00,  9.35s/it]
+{"best_checkpoint": "/tmp/pre/checkpoints/checkpoint-2", "best_dev_cer": 29.91, "steps": 2, "peak_gpu_memory_gb": 34.53}

@@ -1,0 +1,5 @@
+left out 7 clips over 30 s
+3 clips, 0.01 h, 1 speakers
+model /tmp/pre/final on cuda (float16); 3 clips; decoding {'language': 'sw', 'task': 'transcribe', 'beam_size': 5, 'best_of': 5, 'patience': 1.0, 'length_penalty': 1.0, 'repetition_penalty': 1.0, 'no_repeat_ngram_size': 0, 'temperature': (0.0, 0.2, 0.4, 0.6), 'compression_ratio_threshold': 2.4, 'log_prob_threshold': None, 'no_speech_threshold': None, 'condition_on_previous_text': False, 'without_timestamps': True, 'suppress_blank': True, 'vad_filter': False, 'word_timestamps': False, 'initial_prompt': None, 'max_new_tokens': 225}
+  3/3 clips, 1 s, 0 needed a fallback
+{'wer': 93.33, 'cer': 30.15, 'exact_match_pct': 0.0, 'seconds': 0.9} 0 fallbacks {'seconds_per_clip_mean': 0.301, 'seconds_per_clip_median': 0.305, 'seconds_per_clip_p95': 0.312, 'real_time_factor': 0.0208, 'note': 'decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded'}

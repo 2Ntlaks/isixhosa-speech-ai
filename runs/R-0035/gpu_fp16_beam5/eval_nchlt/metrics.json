@@ -1,0 +1,149 @@
+{
+  "model": "R-0035 CT2 float16, beam 5 + loop guard",
+  "language": "sw",
+  "test_set": "nchlt_xho.tst.xml",
+  "clips": 2770,
+  "left_out_over_max_seconds": 0,
+  "max_new_tokens": 96,
+  "audio_hours": 3.108,
+  "wer": 11.11,
+  "cer": 1.92,
+  "exact_match_pct": 74.51,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "sw": 2770
+  },
+  "per_speaker": {
+    "500": {
+      "wer": 4.2,
+      "cer": 0.8,
+      "n": 365
+    },
+    "501": {
+      "wer": 3.1,
+      "cer": 0.5,
+      "n": 383
+    },
+    "502": {
+      "wer": 15.9,
+      "cer": 3.3,
+      "n": 322
+    },
+    "503": {
+      "wer": 2.1,
+      "cer": 0.5,
+      "n": 365
+    },
+    "504": {
+      "wer": 9.2,
+      "cer": 1.9,
+      "n": 305
+    },
+    "505": {
+      "wer": 25.7,
+      "cer": 5.0,
+      "n": 312
+    },
+    "506": {
+      "wer": 18.7,
+      "cer": 2.5,
+      "n": 360
+    },
+    "507": {
+      "wer": 12.5,
+      "cer": 1.5,
+      "n": 358
+    }
+  },
+  "per_gender": {
+    "female": {
+      "wer": 11.5,
+      "cer": 2.1,
+      "n": 1352
+    },
+    "male": {
+      "wer": 10.8,
+      "cer": 1.8,
+      "n": 1418
+    }
+  },
+  "by_text_in_training": {
+    "seen": {
+      "wer": 8.1,
+      "cer": 1.4,
+      "n": 2259
+    },
+    "unseen": {
+      "wer": 24.4,
+      "cer": 4.1,
+      "n": 511
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 766.8,
+  "decoder": "faster-whisper with Whisper's reliability rules (R-0033)",
+  "decoding": {
+    "language": "sw",
+    "task": "transcribe",
+    "beam_size": 5,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0,
+    "repetition_penalty": 1.0,
+    "no_repeat_ngram_size": 0,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": null,
+    "no_speech_threshold": null,
+    "condition_on_previous_text": false,
+    "without_timestamps": true,
+    "suppress_blank": true,
+    "vad_filter": false,
+    "word_timestamps": false,
+    "initial_prompt": null,
+    "max_new_tokens": 96
+  },
+  "model_source": {
+    "ct2_folder": "models/R-0035-fp16",
+    "folder": "models/R-0035-fp16"
+  },
+  "sample": null,
+  "guard": {
+    "clips_with_fallback": 0,
+    "fallback_pct": 0.0,
+    "fallback_final_temperature": {},
+    "exhausted_every_temperature": 0,
+    "empty_outputs": 0,
+    "no_speech_skipped": 0,
+    "fallback_clips": [],
+    "decoding_attempts": 2770
+  },
+  "timing": {
+    "seconds_per_clip_mean": 0.272,
+    "seconds_per_clip_median": 0.268,
+    "seconds_per_clip_p95": 0.368,
+    "real_time_factor": 0.0674,
+    "note": "decode time per clip (features + encoder + decoder); one untimed warm-up decode first; audio loading excluded"
+  },
+  "diagnostics": {
+    "cer_no_spaces": 1.89,
+    "runaway_clips": 0,
+    "outputs_with_digits": 0,
+    "outputs_with_non_ascii": 0
+  },
+  "env": {
+    "engine": "faster-whisper 1.2.1, ctranslate2 4.5.0",
+    "device": "cuda",
+    "compute_type": "float16",
+    "cpu_threads": 8,
+    "mkl": "0",
+    "python": "3.12.3",
+    "machine": "x86_64",
+    "gpu": "NVIDIA L40S"
+  }
+}

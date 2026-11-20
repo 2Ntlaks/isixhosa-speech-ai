@@ -427,3 +427,16 @@ Format:
   (i-0675d50370ca38f4e, g6e.2xlarge, commit daa57a2): all checks passed, training at 1.56 s/step since 02:57 UTC.
 - Spend so far ~$5 + R-0035 attempt 3 (expected ~$13 at $2.24/h for ~5.7 h): total ~$18, a little over the ~$15-17
   approved in D-0032 because two failed preflights and the g6e.2xlarge fallback each added a little.
+
+## 2026-11-20 (morning): R-0035 passed; the medium model has a successor
+- R-0035 (attempt 3, ~$12.25, 5.5 h on g6e.2xlarge) finished. Kept checkpoint-8000 (best combined dev CER 4.26). Under
+  the standard decoding it beats R-0019 on all three ship tests: Swivuriso CER 3.24 vs 3.92 (WER 15.04 vs 18.26),
+  FLEURS 5.21 vs 5.75, NCHLT 1.92 vs 2.23. Soapies 25.98 vs 27.08 too. Biggest gain: unscripted Swivuriso 3.8 -> 2.8 CER.
+  Caveat: NCHLT unseen-sentence CER unchanged (4.1); the NCHLT gain is mostly sentences also in training.
+- Four recipe changes at once, so we know the recipe helps, not which part (run.md).
+- Model in S3 models/R-0035/ and models/R-0035-int8/. Not yet: int8 CPU check, second copy outside S3 (P-0021),
+  founder's OK to make it Thetha's default and publish it on Hugging Face.
+- Spend this restart: R-0033 2.25 + R-0034 1.15 + R-0035 attempts 0.75 + 0.60 + 12.25 + NCHLT re-fetch 0.01 = ~$17.0,
+  at the top of the ~$15-17 approved (D-0032). No AWS machines running.
+- Next: founder decides on shipping R-0035; then Neon research question: can the medium model run in the browser
+  (TODO.md).

@@ -1,0 +1,55 @@
+{"train_clips": 16, "train_hours": 0.12, "train_speakers": 14, "dev_speakers": ["005", "023", "066", "077", "173", "192"], "dev_clips_scored": 8, "dropped_over_max_seconds": 6, "fleurs_train_clips": 3434, "fleurs_dropped_over_max_seconds": 32, "fleurs_train_hours": 13.03, "fleurs_dev_clips_scored": 8, "swivuriso_train_clips": 52960, "swivuriso_train_hours": 245.44, "swivuriso_dropped_test_sentences": 6139, "swivuriso_dropped_over_440_tokens": 0, "swivuriso_train_speakers": 407, "english_train_clips": 0, "english_train_hours": 0.0, "stitched_clips": 0, "stitched_hours": 0.0, "soapies_dev_clips_scored": 0, "model": "base/whisper-medium", "batch_size": 4, "grad_accum": 8, "gradient_checkpointing": false, "recipe": {"max_steps": 2, "epochs_requested": null, "epochs": 4.0, "lr_scheduler": "linear", "select_on": "swivuriso+fleurs", "swivuriso_dev_clips_scored": 24, "swivuriso_dev_speakers": 24, "swivuriso_dev_unscripted": 0, "swivuriso_dev_hours": 0.07, "spec_augment": {"mask_time_prob": 0.05, "mask_time_length": 10, "mask_time_min_masks": 2, "mask_feature_prob": 0.1, "mask_feature_length": 8, "mask_feature_min_masks": 1}, "generation_max_length": 225, "save_total_limit": 3}}
+max_steps is given, it will override any value given in num_train_epochs
+starting from the stock model
+  0%|          | 0/2 [00:00<?, ?it/s]Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+ 50%|█████     | 1/2 [00:01<00:01,  1.71s/it]100%|██████████| 2/2 [00:02<00:00,  1.34s/it]Traceback (most recent call last):
+  File "/opt/work/src/train.py", line 477, in <module>
+    main()
+  File "/opt/work/src/train.py", line 462, in main
+    trainer.train(resume_from_checkpoint=resume)
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 2123, in train
+    return inner_training_loop(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 2548, in _inner_training_loop
+    self._maybe_log_save_evaluate(tr_loss, grad_norm, model, trial, epoch, ignore_keys_for_eval)
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 3004, in _maybe_log_save_evaluate
+    metrics = self._evaluate(trial, ignore_keys_for_eval)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 2958, in _evaluate
+    metrics = self.evaluate(ignore_keys=ignore_keys_for_eval)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/src/train.py", line 225, in evaluate
+    metrics = super().evaluate(eval_dataset, ignore_keys=ignore_keys, metric_key_prefix=metric_key_prefix,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer_seq2seq.py", line 195, in evaluate
+    return super().evaluate(eval_dataset, ignore_keys=ignore_keys, metric_key_prefix=metric_key_prefix)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 3957, in evaluate
+    dataset_metrics = self.evaluate(
+                      ^^^^^^^^^^^^^^
+  File "/opt/work/src/train.py", line 225, in evaluate
+    metrics = super().evaluate(eval_dataset, ignore_keys=ignore_keys, metric_key_prefix=metric_key_prefix,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer_seq2seq.py", line 195, in evaluate
+    return super().evaluate(eval_dataset, ignore_keys=ignore_keys, metric_key_prefix=metric_key_prefix)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 3975, in evaluate
+    output = eval_loop(
+             ^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 4159, in evaluation_loop
+    for step, inputs in enumerate(dataloader):
+  File "/opt/work/.venv/lib/python3.12/site-packages/accelerate/data_loader.py", line 552, in __iter__
+    current_batch = next(dataloader_iter)
+                    ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 701, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1465, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/work/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1491, in _process_data
+    data.reraise()
+  File "/opt/work/.venv/lib/python3.12/site-packages/torch/_utils.py", line 715, in reraise
+    raise exception
+soundfile.LibsndfileError: <exception str() failed>
+100%|██████████| 2/2 [00:03<00:00,  1.63s/it]
