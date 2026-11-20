@@ -456,3 +456,7 @@ Format:
 - (later) Pushed to GitHub (808afd0..e2e1ca6) after a scan for private transcripts, audio and secrets. Moved data/ out of
   OneDrive to C:\Users\ntlak\isixhosa-speech-ai-data (9.6 GB) with a junction at data/, so paths are unchanged and
   OneDrive no longer syncs it; live page checked after the move.
+- (evening) Neon researched running the medium model in the browser (docs/research/neon-browser-medium-2026-11-20.md);
+  lead verified it (docs/research/lead-verification-browser-medium-2026-11-20.md): high quality, two minor citation
+  slips. Recommendation: $0 laptop test of R-0035 as 4-bit ONNX first; then small-by-default + opt-in medium on WebGPU;
+  retraining small with the R-0035 recipe (~$5) is the cheap phone upgrade. Waiting on the founder.
