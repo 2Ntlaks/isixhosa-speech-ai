@@ -1,0 +1,2 @@
+=== omniASR_CTC_300M_v2: GPU batch size 8
+=== omniASR_CTC_1B_v2: GPU batch size 8

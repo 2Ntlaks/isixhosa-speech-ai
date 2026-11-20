@@ -1,0 +1,83 @@
+{
+  "model": "omniASR_CTC_300M_v2",
+  "language": "none",
+  "test_set": "test.tsv",
+  "clips": 20,
+  "left_out_over_max_seconds": 7,
+  "max_new_tokens": null,
+  "audio_hours": 0.075,
+  "wer": 49.26,
+  "cer": 10.03,
+  "exact_match_pct": 0.0,
+  "empty_output_pct": 0.0,
+  "detected_languages": {
+    "-": 20
+  },
+  "per_speaker": {
+    "fleurs": {
+      "wer": 49.3,
+      "cer": 10.0,
+      "n": 20
+    }
+  },
+  "per_gender": {
+    "male": {
+      "wer": 49.3,
+      "cer": 10.0,
+      "n": 20
+    }
+  },
+  "by_text_in_training": {
+    "unseen": {
+      "wer": 49.3,
+      "cer": 10.0,
+      "n": 20
+    }
+  },
+  "normalisation": "v1: drop [bracketed] tags (NCHLT's [s] non-speech marker), NFC, lowercase, punctuation -> space (apostrophes kept), collapse whitespace",
+  "seconds": 67.7,
+  "decoder": "Meta Omnilingual ASR CTC, greedy (argmax) as in the package",
+  "sample": {
+    "n": 20,
+    "seed": 1
+  },
+  "timing": {
+    "batch_size": 1,
+    "seconds_per_clip_mean": 3.383,
+    "seconds_per_clip_median": 3.492,
+    "seconds_per_clip_p95": 5.203,
+    "real_time_factor": 0.2493,
+    "note": "model time per clip, warm-up and audio loading excluded"
+  },
+  "curly_apostrophes_mapped": true,
+  "score_without_apostrophe_mapping": {
+    "wer": 49.26,
+    "cer": 10.03
+  },
+  "outputs_with_curly_apostrophes": 0,
+  "diagnostics": {
+    "cer_no_spaces": 9.4,
+    "runaway_clips": 0,
+    "outputs_with_digits": 8,
+    "outputs_with_non_ascii": 0,
+    "reference_without_digits": {
+      "wer": 52.94,
+      "cer": 9.92,
+      "n": 13
+    },
+    "reference_with_digits": {
+      "wer": 42.37,
+      "cer": 10.23,
+      "n": 7
+    }
+  },
+  "env": {
+    "device": "cpu",
+    "dtype": "float32",
+    "python": "3.12.3",
+    "machine": "x86_64",
+    "engine": "omnilingual-asr 0.2.0, fairseq2 0.6, torch 2.8.0+cu128",
+    "cpu_threads": 8,
+    "package": "https://github.com/facebookresearch/omnilingual-asr@81f51e224ce9e74b02cc2a3eaf21b2d91d743455"
+  }
+}

@@ -63,3 +63,26 @@ DISK_GB=150 FALLBACK_TYPES="g6.2xlarge" cloud/run_job.sh --run R-0034 --type g6.
   float32 clip per call, Soapies resampled from 32 kHz, no language code, curly apostrophes mapped, raw output kept);
   the omni.sh phases rehearsed in dry-run mode. **The first real call happens in the job's 3-clip preflight.**
 - Swivuriso and Soapies per-clip outputs stay out of git (gitignored), as for Thetha.
+
+## Outcome (2026-11-20, lead)
+- Attempts 1-3 failed at setup (P-0022, P-0023). Attempt 4: node i-02d1b30c91f247954, g6.xlarge on-demand, commit
+  46be064, ~1 h (~$0.80). GPU accuracy passes all completed (batch 8 for both models; peak 7.5 GB). CPU float32 timing
+  completed for both models; the 300M bfloat16 CPU probe timed out (bfloat16 on this CPU is far slower than float32),
+  which marked the job FAILED although every scored part finished.
+- **Accuracy (GPU, apostrophes mapped; CER / WER):**
+
+  | Test set | R-0019 (R-0033, beam 5 + guard) | Meta CTC 1B_v2 | Meta CTC 300M_v2 |
+  |---|---|---|---|
+  | FLEURS test, 834 digit-free (fair) | **5.49 / 28.58** | 6.31 / 35.6 | - |
+  | FLEURS test, all 1034 (fair) | **5.75 / 28.92** | 6.57 / 36.05 | 9.05 / 45.73 |
+  | Soapies test, 391 (fair) | **27.08 / 63.37** | 40.79 / 77.67 | 47.95 / 87.21 |
+  | NCHLT test, 511 unseen sentences | **4.1 / 26.3** | 5.6 / 38.4 | - |
+  | Swivuriso dev_test 2145 (Meta may have trained on it) | **3.92 / 18.26** | 4.74 / 25.35 | 6.38 / 33.63 |
+
+- **Decision rule (set before the run): NOT MET** on accuracy: Meta 1B is 0.82 CER behind on digit-free FLEURS and 13.7
+  behind on Soapies (the rule needed within 0.5 on both). Whisper stays the main path; R-0035 goes ahead.
+- **Speed: not a fair comparison.** Meta's CPU timing ran on this g6.xlarge (4 vCPUs, 8 threads requested), R-0019-int8's
+  on R-0033's g6.4xlarge (16 vCPUs, 8 threads); same CPU model (AMD EPYC 7R13) but different core counts, so the
+  "same node" condition failed (P-0024). Recorded for information only: median s/clip, Meta 1B float32 2.3 / 8.1 / 10.6
+  / 1.4 and 300M 0.9 / 3.3 / 4.3 / 0.6 (NCHLT / FLEURS / Swivuriso / Soapies); R-0019-int8 2.7 / 4.0 / 4.1 / 2.8.
+  It does not change the outcome, which the accuracy part already decides.

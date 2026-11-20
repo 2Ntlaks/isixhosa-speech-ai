@@ -1,0 +1,2 @@
+Model name:                              AMD EPYC 7R13 Processor
+BIOS Model name:                         AMD EPYC 7R13 Processor  CPU @ 2.6GHz

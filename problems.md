@@ -315,3 +315,15 @@ Format:
   newest, 26.x, whose pyproject requires numpy>=2.0; releases 20-25 build with numpy>=1.25 and run on 1.26.
 - Fix: pyarrow==20.0.0. Lesson: check the published requirements offline before relaunching; three quick launches
   cost ~$0.25 that a two-minute metadata check would have saved.
+
+## P-0024 · 2026-11-20 · R-0034 CPU timing not on the same machine as R-0033's; bfloat16 probe timed out
+- Stage / run: R-0034 attempt 4
+- Symptom: the job ended FAILED only because of `--- R-0034 300M CPU bfloat16 probe: 20 FLEURS clips: exit 124 (timed out)`;
+  and the speed comparison needed both models timed on the same node, but after R-0034 was split out (P-0022) it ran
+  on a g6.xlarge (4 vCPUs) while R-0019-int8 had been timed on a g6.4xlarge (16 vCPUs).
+- Cause: relaunching R-0034 on its own (my choice, to save money) broke the "same node" condition in its run.md; 8
+  threads on 4 vCPUs also oversubscribes. bfloat16 on an AMD EPYC 7R13 (no native bf16) is much slower than float32.
+- Fix: none needed for the decision (accuracy decides it). Any future speed comparison: time both models in one job on
+  one machine, threads = vCPUs.
+- Cost: none extra (the probe ran inside the time already paid).
+- Lesson: when a job is split, re-check every "same conditions" assumption in its pre-registered rules.

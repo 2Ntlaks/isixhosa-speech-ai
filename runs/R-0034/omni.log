@@ -1,0 +1,198 @@
+dpkg-preconfigure: unable to re-open stdin: No such file or directory
+Selecting previously unselected package libogg0:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 115470 files and directories currently installed.)
+Preparing to unpack .../0-libogg0_1.3.5-3build1_amd64.deb ...
+Unpacking libogg0:amd64 (1.3.5-3build1) ...
+Selecting previously unselected package libflac12t64:amd64.
+Preparing to unpack .../1-libflac12t64_1.4.3+ds-2.1ubuntu2_amd64.deb ...
+Unpacking libflac12t64:amd64 (1.4.3+ds-2.1ubuntu2) ...
+Selecting previously unselected package libmp3lame0:amd64.
+Preparing to unpack .../2-libmp3lame0_3.100-6build1_amd64.deb ...
+Unpacking libmp3lame0:amd64 (3.100-6build1) ...
+Selecting previously unselected package libmpg123-0t64:amd64.
+Preparing to unpack .../3-libmpg123-0t64_1.32.5-1ubuntu1.1_amd64.deb ...
+Unpacking libmpg123-0t64:amd64 (1.32.5-1ubuntu1.1) ...
+Selecting previously unselected package libopus0:amd64.
+Preparing to unpack .../4-libopus0_1.4-1build1_amd64.deb ...
+Unpacking libopus0:amd64 (1.4-1build1) ...
+Selecting previously unselected package libvorbis0a:amd64.
+Preparing to unpack .../5-libvorbis0a_1.3.7-1build3_amd64.deb ...
+Unpacking libvorbis0a:amd64 (1.3.7-1build3) ...
+Selecting previously unselected package libvorbisenc2:amd64.
+Preparing to unpack .../6-libvorbisenc2_1.3.7-1build3_amd64.deb ...
+Unpacking libvorbisenc2:amd64 (1.3.7-1build3) ...
+Selecting previously unselected package libsndfile1:amd64.
+Preparing to unpack .../7-libsndfile1_1.2.2-1ubuntu5.24.04.1_amd64.deb ...
+Unpacking libsndfile1:amd64 (1.2.2-1ubuntu5.24.04.1) ...
+Setting up libogg0:amd64 (1.3.5-3build1) ...
+Setting up libmpg123-0t64:amd64 (1.32.5-1ubuntu1.1) ...
+Setting up libopus0:amd64 (1.4-1build1) ...
+Setting up libvorbis0a:amd64 (1.3.7-1build3) ...
+Setting up libflac12t64:amd64 (1.4.3+ds-2.1ubuntu2) ...
+Setting up libmp3lame0:amd64 (3.100-6build1) ...
+Setting up libvorbisenc2:amd64 (1.3.7-1build3) ...
+Setting up libsndfile1:amd64 (1.2.2-1ubuntu5.24.04.1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.12) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+numpy 1.26.4 pyarrow 20.0.0
+{"omnilingual-asr": "0.2.0", "fairseq2": "0.6", "torch": "2.8.0+cu128"}
+  0%|          | 0.00/1.21G [00:00<?, ?B/s]  2%|▏         | 22.6M/1.21G [00:00<00:05, 237MB/s]  4%|▍         | 47.2M/1.21G [00:00<00:05, 249MB/s]  6%|▌         | 74.2M/1.21G [00:00<00:04, 265MB/s]  9%|▉         | 109M/1.21G [00:00<00:03, 306MB/s]  12%|█▏        | 144M/1.21G [00:00<00:03, 327MB/s] 14%|█▍        | 179M/1.21G [00:00<00:03, 340MB/s] 17%|█▋        | 214M/1.21G [00:00<00:03, 348MB/s] 20%|█▉        | 249M/1.21G [00:00<00:02, 354MB/s] 23%|██▎       | 282M/1.21G [00:00<00:02, 352MB/s] 25%|██▌       | 317M/1.21G [00:01<00:02, 355MB/s] 28%|██▊       | 351M/1.21G [00:01<00:02, 356MB/s] 31%|███       | 386M/1.21G [00:01<00:02, 359MB/s] 34%|███▍      | 421M/1.21G [00:01<00:02, 361MB/s] 37%|███▋      | 456M/1.21G [00:01<00:02, 362MB/s] 39%|███▉      | 490M/1.21G [00:01<00:02, 363MB/s] 42%|████▏     | 526M/1.21G [00:01<00:02, 364MB/s] 45%|████▌     | 560M/1.21G [00:01<00:01, 364MB/s] 48%|████▊     | 595M/1.21G [00:01<00:01, 365MB/s] 51%|█████     | 630M/1.21G [00:01<00:01, 364MB/s] 54%|█████▎    | 667M/1.21G [00:02<00:01, 371MB/s] 57%|█████▋    | 704M/1.21G [00:02<00:01, 376MB/s] 60%|█████▉    | 740M/1.21G [00:02<00:01, 336MB/s] 62%|██████▏   | 777M/1.21G [00:02<00:01, 351MB/s] 66%|██████▌   | 816M/1.21G [00:02<00:01, 367MB/s] 68%|██████▊   | 851M/1.21G [00:02<00:01, 367MB/s] 71%|███████▏  | 887M/1.21G [00:02<00:01, 354MB/s] 74%|███████▍  | 922M/1.21G [00:02<00:00, 358MB/s] 77%|███████▋  | 960M/1.21G [00:02<00:00, 371MB/s] 80%|████████  | 996M/1.21G [00:02<00:00, 359MB/s] 83%|████████▎ | 1.01G/1.21G [00:03<00:00, 360MB/s] 86%|████████▌ | 1.04G/1.21G [00:03<00:00, 370MB/s] 89%|████████▉ | 1.08G/1.21G [00:03<00:00, 378MB/s] 92%|█████████▏| 1.12G/1.21G [00:03<00:00, 381MB/s] 95%|█████████▍| 1.15G/1.21G [00:03<00:00, 380MB/s] 98%|█████████▊| 1.19G/1.21G [00:03<00:00, 371MB/s]100%|██████████| 1.21G/1.21G [00:03<00:00, 356MB/s]
+
+  0%|          | 0.00/89.3k [00:00<?, ?B/s]100%|██████████| 89.3k/89.3k [00:00<00:00, 60.5MB/s]
+{"downloaded": "omniASR_CTC_300M_v2"}
+  0%|          | 0.00/3.63G [00:00<?, ?B/s]  0%|          | 14.8M/3.63G [00:00<00:27, 141MB/s]  1%|          | 32.6M/3.63G [00:00<00:23, 166MB/s]  2%|▏         | 66.9M/3.63G [00:00<00:15, 253MB/s]  3%|▎         | 101M/3.63G [00:00<00:12, 295MB/s]   4%|▎         | 136M/3.63G [00:00<00:11, 320MB/s]  5%|▍         | 171M/3.63G [00:00<00:11, 335MB/s]  6%|▌         | 206M/3.63G [00:00<00:10, 346MB/s]  6%|▋         | 241M/3.63G [00:00<00:10, 352MB/s]  7%|▋         | 276M/3.63G [00:00<00:10, 357MB/s]  8%|▊         | 311M/3.63G [00:01<00:09, 360MB/s]  9%|▉         | 346M/3.63G [00:01<00:09, 362MB/s] 10%|█         | 381M/3.63G [00:01<00:09, 364MB/s] 11%|█         | 416M/3.63G [00:01<00:09, 365MB/s] 12%|█▏        | 451M/3.63G [00:01<00:09, 366MB/s] 13%|█▎        | 486M/3.63G [00:01<00:09, 367MB/s] 14%|█▍        | 522M/3.63G [00:01<00:09, 367MB/s] 15%|█▍        | 557M/3.63G [00:01<00:09, 368MB/s] 16%|█▌        | 592M/3.63G [00:01<00:08, 368MB/s] 17%|█▋        | 627M/3.63G [00:01<00:08, 368MB/s] 18%|█▊        | 662M/3.63G [00:02<00:08, 368MB/s] 19%|█▊        | 697M/3.63G [00:02<00:08, 368MB/s] 20%|█▉        | 733M/3.63G [00:02<00:08, 369MB/s] 21%|██        | 768M/3.63G [00:02<00:08, 370MB/s] 22%|██▏       | 804M/3.63G [00:02<00:08, 370MB/s] 23%|██▎       | 839M/3.63G [00:02<00:08, 370MB/s] 23%|██▎       | 874M/3.63G [00:02<00:08, 371MB/s] 24%|██▍       | 910M/3.63G [00:02<00:07, 370MB/s] 25%|██▌       | 945M/3.63G [00:02<00:07, 370MB/s] 26%|██▋       | 980M/3.63G [00:02<00:07, 370MB/s] 27%|██▋       | 0.99G/3.63G [00:03<00:08, 347MB/s] 28%|██▊       | 1.02G/3.63G [00:03<00:08, 313MB/s] 29%|██▉       | 1.05G/3.63G [00:03<00:09, 291MB/s] 30%|██▉       | 1.08G/3.63G [00:03<00:09, 275MB/s] 30%|███       | 1.11G/3.63G [00:03<00:10, 260MB/s] 31%|███       | 1.13G/3.63G [00:03<00:10, 244MB/s] 32%|███▏      | 1.16G/3.63G [00:03<00:11, 235MB/s] 32%|███▏      | 1.18G/3.63G [00:03<00:11, 224MB/s] 33%|███▎      | 1.20G/3.63G [00:04<00:12, 214MB/s] 34%|███▎      | 1.22G/3.63G [00:04<00:12, 209MB/s] 34%|███▍      | 1.24G/3.63G [00:04<00:12, 209MB/s] 35%|███▍      | 1.26G/3.63G [00:04<00:13, 196MB/s] 35%|███▌      | 1.28G/3.63G [00:04<00:13, 192MB/s] 36%|███▌      | 1.30G/3.63G [00:04<00:13, 189MB/s] 36%|███▌      | 1.31G/3.63G [00:04<00:12, 192MB/s] 37%|███▋      | 1.33G/3.63G [00:04<00:13, 185MB/s] 37%|███▋      | 1.35G/3.63G [00:04<00:13, 177MB/s] 38%|███▊      | 1.37G/3.63G [00:05<00:13, 178MB/s] 38%|███▊      | 1.38G/3.63G [00:05<00:14, 171MB/s] 39%|███▊      | 1.40G/3.63G [00:05<00:13, 174MB/s] 39%|███▉      | 1.42G/3.63G [00:05<00:13, 174MB/s] 39%|███▉      | 1.43G/3.63G [00:05<00:13, 173MB/s] 40%|███▉      | 1.45G/3.63G [00:05<00:14, 163MB/s] 40%|████      | 1.46G/3.63G [00:05<00:14, 162MB/s] 41%|████      | 1.48G/3.63G [00:05<00:14, 162MB/s] 41%|████      | 1.49G/3.63G [00:05<00:14, 161MB/s] 42%|████▏     | 1.51G/3.63G [00:05<00:14, 161MB/s] 42%|████▏     | 1.53G/3.63G [00:06<00:14, 161MB/s] 42%|████▏     | 1.54G/3.63G [00:06<00:14, 159MB/s] 43%|████▎     | 1.56G/3.63G [00:06<00:14, 159MB/s] 43%|████▎     | 1.57G/3.63G [00:06<00:14, 157MB/s] 44%|████▎     | 1.59G/3.63G [00:06<00:14, 155MB/s] 44%|████▍     | 1.60G/3.63G [00:06<00:14, 154MB/s] 45%|████▍     | 1.62G/3.63G [00:06<00:14, 153MB/s] 45%|████▌     | 1.64G/3.63G [00:06<00:14, 152MB/s] 45%|████▌     | 1.65G/3.63G [00:06<00:14, 152MB/s] 46%|████▌     | 1.67G/3.63G [00:07<00:13, 152MB/s] 46%|████▋     | 1.68G/3.63G [00:07<00:13, 151MB/s] 47%|████▋     | 1.70G/3.63G [00:07<00:13, 151MB/s] 47%|████▋     | 1.71G/3.63G [00:07<00:13, 151MB/s] 48%|████▊     | 1.73G/3.63G [00:07<00:13, 151MB/s] 48%|████▊     | 1.74G/3.63G [00:07<00:13, 153MB/s] 48%|████▊     | 1.76G/3.63G [00:07<00:13, 153MB/s] 49%|████▉     | 1.77G/3.63G [00:07<00:13, 150MB/s] 49%|████▉     | 1.79G/3.63G [00:07<00:13, 150MB/s] 50%|████▉     | 1.80G/3.63G [00:08<00:13, 147MB/s] 50%|████▉     | 1.81G/3.63G [00:08<00:13, 143MB/s] 50%|█████     | 1.83G/3.63G [00:08<00:13, 145MB/s] 51%|█████     | 1.84G/3.63G [00:08<00:13, 141MB/s] 51%|█████     | 1.86G/3.63G [00:08<00:13, 144MB/s] 51%|█████▏    | 1.87G/3.63G [00:08<00:13, 141MB/s] 52%|█████▏    | 1.88G/3.63G [00:08<00:13, 144MB/s] 52%|█████▏    | 1.90G/3.63G [00:08<00:13, 141MB/s] 53%|█████▎    | 1.91G/3.63G [00:08<00:12, 144MB/s] 53%|█████▎    | 1.92G/3.63G [00:08<00:13, 141MB/s] 53%|█████▎    | 1.94G/3.63G [00:09<00:12, 144MB/s] 54%|█████▎    | 1.95G/3.63G [00:09<00:12, 141MB/s] 54%|█████▍    | 1.97G/3.63G [00:09<00:12, 144MB/s] 54%|█████▍    | 1.98G/3.63G [00:09<00:12, 141MB/s] 55%|█████▍    | 1.99G/3.63G [00:09<00:12, 144MB/s] 55%|█████▌    | 2.01G/3.63G [00:09<00:12, 141MB/s] 56%|█████▌    | 2.02G/3.63G [00:09<00:12, 144MB/s] 56%|█████▌    | 2.04G/3.63G [00:09<00:12, 141MB/s] 56%|█████▋    | 2.05G/3.63G [00:09<00:11, 144MB/s] 57%|█████▋    | 2.06G/3.63G [00:10<00:11, 141MB/s] 57%|█████▋    | 2.08G/3.63G [00:10<00:17, 95.0MB/s] 58%|█████▊    | 2.09G/3.63G [00:10<00:14, 113MB/s]  58%|█████▊    | 2.11G/3.63G [00:10<00:12, 136MB/s] 59%|█████▉    | 2.14G/3.63G [00:10<00:09, 173MB/s] 59%|█████▉    | 2.16G/3.63G [00:10<00:09, 165MB/s] 60%|█████▉    | 2.17G/3.63G [00:10<00:09, 158MB/s] 60%|██████    | 2.19G/3.63G [00:10<00:10, 154MB/s] 61%|██████    | 2.20G/3.63G [00:11<00:10, 151MB/s] 61%|██████    | 2.22G/3.63G [00:11<00:10, 148MB/s] 61%|██████▏   | 2.23G/3.63G [00:11<00:10, 150MB/s] 62%|██████▏   | 2.25G/3.63G [00:11<00:10, 147MB/s] 62%|██████▏   | 2.26G/3.63G [00:11<00:10, 143MB/s] 63%|██████▎   | 2.28G/3.63G [00:11<00:09, 146MB/s] 63%|██████▎   | 2.29G/3.63G [00:11<00:10, 143MB/s] 63%|██████▎   | 2.30G/3.63G [00:11<00:09, 146MB/s] 64%|██████▍   | 2.32G/3.63G [00:11<00:09, 143MB/s] 64%|██████▍   | 2.33G/3.63G [00:12<00:09, 142MB/s] 65%|██████▍   | 2.35G/3.63G [00:12<00:09, 145MB/s] 65%|██████▍   | 2.36G/3.63G [00:12<00:09, 142MB/s] 65%|██████▌   | 2.37G/3.63G [00:12<00:09, 145MB/s] 66%|██████▌   | 2.39G/3.63G [00:12<00:09, 142MB/s] 66%|██████▌   | 2.40G/3.63G [00:12<00:09, 145MB/s] 66%|██████▋   | 2.42G/3.63G [00:12<00:09, 142MB/s] 67%|██████▋   | 2.43G/3.63G [00:12<00:08, 145MB/s] 67%|██████▋   | 2.44G/3.63G [00:12<00:09, 142MB/s] 68%|██████▊   | 2.46G/3.63G [00:12<00:08, 145MB/s] 68%|██████▊   | 2.47G/3.63G [00:13<00:08, 142MB/s] 68%|██████▊   | 2.48G/3.63G [00:13<00:08, 143MB/s] 69%|██████▊   | 2.50G/3.63G [00:13<00:08, 145MB/s] 69%|██████▉   | 2.51G/3.63G [00:13<00:08, 139MB/s] 69%|██████▉   | 2.52G/3.63G [00:13<00:08, 138MB/s] 70%|██████▉   | 2.54G/3.63G [00:13<00:08, 137MB/s] 70%|███████   | 2.55G/3.63G [00:13<00:08, 136MB/s] 71%|███████   | 2.56G/3.63G [00:13<00:08, 135MB/s] 71%|███████   | 2.58G/3.63G [00:13<00:08, 134MB/s] 71%|███████   | 2.59G/3.63G [00:14<00:08, 137MB/s] 72%|███████▏  | 2.60G/3.63G [00:14<00:08, 134MB/s] 72%|███████▏  | 2.62G/3.63G [00:14<00:08, 133MB/s] 72%|███████▏  | 2.63G/3.63G [00:14<00:07, 136MB/s] 73%|███████▎  | 2.64G/3.63G [00:14<00:08, 132MB/s] 73%|███████▎  | 2.65G/3.63G [00:14<00:08, 131MB/s] 73%|███████▎  | 2.67G/3.63G [00:14<00:07, 131MB/s] 74%|███████▎  | 2.68G/3.63G [00:14<00:07, 132MB/s] 74%|███████▍  | 2.69G/3.63G [00:14<00:07, 132MB/s] 74%|███████▍  | 2.71G/3.63G [00:14<00:07, 135MB/s] 75%|███████▍  | 2.72G/3.63G [00:15<00:07, 132MB/s] 75%|███████▌  | 2.73G/3.63G [00:15<00:07, 134MB/s] 75%|███████▌  | 2.74G/3.63G [00:15<00:07, 131MB/s] 76%|███████▌  | 2.76G/3.63G [00:15<00:07, 131MB/s] 76%|███████▌  | 2.77G/3.63G [00:15<00:06, 133MB/s] 77%|███████▋  | 2.78G/3.63G [00:15<00:06, 132MB/s] 77%|███████▋  | 2.80G/3.63G [00:15<00:06, 131MB/s] 77%|███████▋  | 2.81G/3.63G [00:15<00:06, 130MB/s] 78%|███████▊  | 2.82G/3.63G [00:15<00:06, 135MB/s] 78%|███████▊  | 2.83G/3.63G [00:15<00:06, 133MB/s] 78%|███████▊  | 2.85G/3.63G [00:16<00:06, 129MB/s] 79%|███████▊  | 2.86G/3.63G [00:16<00:06, 130MB/s] 79%|███████▉  | 2.87G/3.63G [00:16<00:06, 133MB/s] 79%|███████▉  | 2.88G/3.63G [00:16<00:06, 132MB/s] 80%|███████▉  | 2.90G/3.63G [00:16<00:06, 131MB/s] 80%|████████  | 2.91G/3.63G [00:16<00:05, 130MB/s] 80%|████████  | 2.92G/3.63G [00:16<00:05, 131MB/s] 81%|████████  | 2.93G/3.63G [00:16<00:05, 131MB/s] 81%|████████  | 2.95G/3.63G [00:16<00:05, 130MB/s] 81%|████████▏ | 2.96G/3.63G [00:17<00:05, 129MB/s] 82%|████████▏ | 2.97G/3.63G [00:17<00:05, 129MB/s] 82%|████████▏ | 2.99G/3.63G [00:17<00:05, 130MB/s] 82%|████████▏ | 3.00G/3.63G [00:17<00:05, 130MB/s] 83%|████████▎ | 3.01G/3.63G [00:17<00:05, 128MB/s] 83%|████████▎ | 3.02G/3.63G [00:17<00:05, 128MB/s] 83%|████████▎ | 3.03G/3.63G [00:17<00:05, 128MB/s] 84%|████████▍ | 3.05G/3.63G [00:17<00:04, 129MB/s] 84%|████████▍ | 3.06G/3.63G [00:17<00:04, 128MB/s] 84%|████████▍ | 3.07G/3.63G [00:17<00:04, 128MB/s] 85%|████████▍ | 3.08G/3.63G [00:18<00:04, 128MB/s] 85%|████████▌ | 3.10G/3.63G [00:18<00:04, 129MB/s] 86%|████████▌ | 3.11G/3.63G [00:18<00:04, 128MB/s] 86%|████████▌ | 3.12G/3.63G [00:18<00:04, 129MB/s] 86%|████████▌ | 3.13G/3.63G [00:18<00:04, 129MB/s] 87%|████████▋ | 3.15G/3.63G [00:18<00:04, 123MB/s] 87%|████████▋ | 3.16G/3.63G [00:18<00:03, 132MB/s] 87%|████████▋ | 3.17G/3.63G [00:18<00:03, 130MB/s] 88%|████████▊ | 3.18G/3.63G [00:18<00:03, 131MB/s] 88%|████████▊ | 3.20G/3.63G [00:19<00:03, 133MB/s] 88%|████████▊ | 3.21G/3.63G [00:19<00:03, 132MB/s] 89%|████████▊ | 3.22G/3.63G [00:19<00:03, 133MB/s] 89%|████████▉ | 3.24G/3.63G [00:19<00:03, 132MB/s] 89%|████████▉ | 3.25G/3.63G [00:19<00:03, 133MB/s] 90%|████████▉ | 3.26G/3.63G [00:19<00:03, 131MB/s] 90%|█████████ | 3.27G/3.63G [00:19<00:03, 130MB/s] 90%|█████████ | 3.29G/3.63G [00:19<00:02, 132MB/s] 91%|█████████ | 3.30G/3.63G [00:19<00:02, 129MB/s] 91%|█████████ | 3.31G/3.63G [00:19<00:02, 133MB/s] 91%|█████████▏| 3.32G/3.63G [00:20<00:02, 130MB/s] 92%|█████████▏| 3.34G/3.63G [00:20<00:02, 128MB/s] 92%|█████████▏| 3.35G/3.63G [00:20<00:02, 131MB/s] 92%|█████████▏| 3.36G/3.63G [00:20<00:03, 86.0MB/s] 93%|█████████▎| 3.40G/3.63G [00:20<00:01, 150MB/s]  94%|█████████▍| 3.41G/3.63G [00:20<00:01, 145MB/s] 94%|█████████▍| 3.43G/3.63G [00:20<00:01, 139MB/s] 95%|█████████▍| 3.44G/3.63G [00:21<00:01, 139MB/s] 95%|█████████▌| 3.46G/3.63G [00:21<00:01, 136MB/s] 96%|█████████▌| 3.47G/3.63G [00:21<00:01, 133MB/s] 96%|█████████▌| 3.48G/3.63G [00:21<00:01, 130MB/s] 96%|█████████▌| 3.50G/3.63G [00:21<00:01, 130MB/s] 97%|█████████▋| 3.51G/3.63G [00:21<00:01, 129MB/s] 97%|█████████▋| 3.52G/3.63G [00:21<00:00, 129MB/s] 97%|█████████▋| 3.54G/3.63G [00:21<00:00, 130MB/s] 98%|█████████▊| 3.55G/3.63G [00:21<00:00, 130MB/s] 98%|█████████▊| 3.56G/3.63G [00:21<00:00, 132MB/s] 98%|█████████▊| 3.57G/3.63G [00:22<00:00, 131MB/s] 99%|█████████▊| 3.59G/3.63G [00:22<00:00, 130MB/s] 99%|█████████▉| 3.60G/3.63G [00:22<00:00, 130MB/s] 99%|█████████▉| 3.61G/3.63G [00:22<00:00, 130MB/s]100%|█████████▉| 3.62G/3.63G [00:22<00:00, 131MB/s]100%|██████████| 3.63G/3.63G [00:22<00:00, 173MB/s]
+
+{"downloaded": "omniASR_CTC_1B_v2"}
+16 clips, 0.13 h, 12 speakers
+
+  16/16 clips, 1 s
+{'wer': 35.58, 'cer': 6.71, 'exact_match_pct': 0.0, 'seconds': 1.1, 'peak_gpu_memory_gb': 6.23} {'batch_size': 8, 'seconds_per_clip_mean': 0.064, 'seconds_per_clip_median': 0.064, 'seconds_per_clip_p95': 0.066, 'real_time_factor': 0.0021, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+2770 clips, 3.11 h, 8 speakers
+
+  400/2770 clips, 4 s
+  800/2770 clips, 7 s
+  1200/2770 clips, 11 s
+  1600/2770 clips, 15 s
+  2000/2770 clips, 19 s
+  2400/2770 clips, 24 s
+  2770/2770 clips, 29 s
+{'wer': 37.33, 'cer': 5.68, 'exact_match_pct': 38.59, 'seconds': 29.4, 'peak_gpu_memory_gb': 2.94} {'batch_size': 8, 'seconds_per_clip_mean': 0.007, 'seconds_per_clip_median': 0.007, 'seconds_per_clip_p95': 0.011, 'real_time_factor': 0.0018, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+left out 7 clips over 30 s
+1034 clips, 3.72 h, 1 speakers
+
+  400/1034 clips, 8 s
+  800/1034 clips, 21 s
+  1034/1034 clips, 31 s
+{'wer': 45.73, 'cer': 9.05, 'exact_match_pct': 0.19, 'seconds': 31.5, 'peak_gpu_memory_gb': 6.01} {'batch_size': 8, 'seconds_per_clip_mean': 0.025, 'seconds_per_clip_median': 0.023, 'seconds_per_clip_p95': 0.042, 'real_time_factor': 0.0019, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+2145 clips, 9.40 h, 24 speakers
+
+  400/2145 clips, 6 s
+  800/2145 clips, 14 s
+  1200/2145 clips, 28 s
+  1600/2145 clips, 46 s
+  2000/2145 clips, 68 s
+  2145/2145 clips, 78 s
+{'wer': 33.63, 'cer': 6.38, 'exact_match_pct': 7.51, 'seconds': 78.3, 'peak_gpu_memory_gb': 6.22} {'batch_size': 8, 'seconds_per_clip_mean': 0.031, 'seconds_per_clip_median': 0.031, 'seconds_per_clip_p95': 0.059, 'real_time_factor': 0.002, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+391 clips, 0.24 h, 5 speakers
+
+  391/391 clips, 3 s
+{'wer': 87.21, 'cer': 47.95, 'exact_match_pct': 0.0, 'seconds': 2.8, 'peak_gpu_memory_gb': 2.08} {'batch_size': 8, 'seconds_per_clip_mean': 0.005, 'seconds_per_clip_median': 0.004, 'seconds_per_clip_p95': 0.009, 'real_time_factor': 0.0023, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+16 clips, 0.13 h, 12 speakers
+
+  16/16 clips, 2 s
+{'wer': 28.85, 'cer': 5.7, 'exact_match_pct': 0.0, 'seconds': 2.2, 'peak_gpu_memory_gb': 7.54} {'batch_size': 8, 'seconds_per_clip_mean': 0.135, 'seconds_per_clip_median': 0.135, 'seconds_per_clip_p95': 0.136, 'real_time_factor': 0.0045, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+2770 clips, 3.11 h, 8 speakers
+
+  400/2770 clips, 4 s
+  800/2770 clips, 9 s
+  1200/2770 clips, 15 s
+  1600/2770 clips, 21 s
+  2000/2770 clips, 29 s
+  2400/2770 clips, 37 s
+  2770/2770 clips, 47 s
+{'wer': 34.41, 'cer': 5.08, 'exact_match_pct': 44.22, 'seconds': 47.2, 'peak_gpu_memory_gb': 4.25} {'batch_size': 8, 'seconds_per_clip_mean': 0.015, 'seconds_per_clip_median': 0.014, 'seconds_per_clip_p95': 0.023, 'real_time_factor': 0.0036, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+left out 7 clips over 30 s
+1034 clips, 3.72 h, 1 speakers
+
+  400/1034 clips, 15 s
+  800/1034 clips, 37 s
+  1034/1034 clips, 57 s
+{'wer': 36.05, 'cer': 6.57, 'exact_match_pct': 0.87, 'seconds': 57.1, 'peak_gpu_memory_gb': 7.32} {'batch_size': 8, 'seconds_per_clip_mean': 0.05, 'seconds_per_clip_median': 0.046, 'seconds_per_clip_p95': 0.086, 'real_time_factor': 0.0038, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+2145 clips, 9.40 h, 24 speakers
+
+  400/2145 clips, 10 s
+  800/2145 clips, 26 s
+  1200/2145 clips, 51 s
+  1600/2145 clips, 85 s
+  2000/2145 clips, 130 s
+  2145/2145 clips, 150 s
+{'wer': 25.35, 'cer': 4.74, 'exact_match_pct': 12.87, 'seconds': 149.6, 'peak_gpu_memory_gb': 7.53} {'batch_size': 8, 'seconds_per_clip_mean': 0.065, 'seconds_per_clip_median': 0.063, 'seconds_per_clip_p95': 0.124, 'real_time_factor': 0.0041, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+391 clips, 0.24 h, 5 speakers
+
+  391/391 clips, 4 s
+{'wer': 77.67, 'cer': 40.79, 'exact_match_pct': 0.0, 'seconds': 4.4, 'peak_gpu_memory_gb': 3.39} {'batch_size': 8, 'seconds_per_clip_mean': 0.009, 'seconds_per_clip_median': 0.008, 'seconds_per_clip_p95': 0.018, 'real_time_factor': 0.0042, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+50 clips, 0.06 h, 8 speakers
+
+  10/50 clips, 25 s
+  20/50 clips, 44 s
+  30/50 clips, 69 s
+  40/50 clips, 97 s
+  50/50 clips, 123 s
+{'wer': 27.4, 'cer': 3.8, 'exact_match_pct': 54.0, 'seconds': 122.8, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 2.454, 'seconds_per_clip_median': 2.299, 'seconds_per_clip_p95': 3.536, 'real_time_factor': 0.6191, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+50 clips, 0.18 h, 1 speakers
+
+  10/50 clips, 71 s
+  20/50 clips, 155 s
+  30/50 clips, 231 s
+  40/50 clips, 317 s
+  50/50 clips, 399 s
+{'wer': 37.89, 'cer': 6.45, 'exact_match_pct': 0.0, 'seconds': 398.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 7.975, 'seconds_per_clip_median': 8.053, 'seconds_per_clip_p95': 13.872, 'real_time_factor': 0.6135, 'note': 'model time per clip, warm-up and audio loading excluded'}
+50 clips, 0.22 h, 21 speakers
+
+  10/50 clips, 87 s
+  20/50 clips, 179 s
+  30/50 clips, 277 s
+  40/50 clips, 383 s
+  50/50 clips, 500 s
+{'wer': 32.11, 'cer': 5.87, 'exact_match_pct': 14.0, 'seconds': 500.1, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 9.999, 'seconds_per_clip_median': 10.64, 'seconds_per_clip_p95': 18.374, 'real_time_factor': 0.6281, 'note': 'model time per clip, warm-up and audio loading excluded'}
+50 clips, 0.03 h, 5 speakers
+
+  10/50 clips, 17 s
+  20/50 clips, 29 s
+  30/50 clips, 47 s
+  40/50 clips, 61 s
+  50/50 clips, 78 s
+{'wer': 76.62, 'cer': 33.23, 'exact_match_pct': 0.0, 'seconds': 77.7, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 1.552, 'seconds_per_clip_median': 1.41, 'seconds_per_clip_p95': 2.753, 'real_time_factor': 0.6739, 'note': 'model time per clip, warm-up and audio loading excluded'}
+50 clips, 0.06 h, 8 speakers
+
+  10/50 clips, 10 s
+  20/50 clips, 18 s
+  30/50 clips, 28 s
+  40/50 clips, 39 s
+  50/50 clips, 49 s
+{'wer': 32.19, 'cer': 5.82, 'exact_match_pct': 44.0, 'seconds': 48.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 0.977, 'seconds_per_clip_median': 0.903, 'seconds_per_clip_p95': 1.579, 'real_time_factor': 0.2464, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+50 clips, 0.18 h, 1 speakers
+
+  10/50 clips, 29 s
+  20/50 clips, 63 s
+  30/50 clips, 94 s
+  40/50 clips, 130 s
+  50/50 clips, 163 s
+{'wer': 47.36, 'cer': 8.84, 'exact_match_pct': 0.0, 'seconds': 162.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 3.254, 'seconds_per_clip_median': 3.292, 'seconds_per_clip_p95': 5.683, 'real_time_factor': 0.2503, 'note': 'model time per clip, warm-up and audio loading excluded'}
+50 clips, 0.22 h, 21 speakers
+
+  10/50 clips, 35 s
+  20/50 clips, 72 s
+  30/50 clips, 112 s
+  40/50 clips, 155 s
+  50/50 clips, 203 s
+{'wer': 40.29, 'cer': 7.91, 'exact_match_pct': 8.0, 'seconds': 203.4, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 4.065, 'seconds_per_clip_median': 4.274, 'seconds_per_clip_p95': 7.536, 'real_time_factor': 0.2553, 'note': 'model time per clip, warm-up and audio loading excluded'}
+50 clips, 0.03 h, 5 speakers
+
+  10/50 clips, 7 s
+  20/50 clips, 12 s
+  30/50 clips, 19 s
+  40/50 clips, 25 s
+  50/50 clips, 31 s
+{'wer': 82.54, 'cer': 41.21, 'exact_match_pct': 0.0, 'seconds': 31.4, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 0.628, 'seconds_per_clip_median': 0.568, 'seconds_per_clip_p95': 1.11, 'real_time_factor': 0.2729, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+20 clips, 0.08 h, 1 speakers
+
+  10/20 clips, 36 s
+  20/20 clips, 68 s
+{'wer': 49.26, 'cer': 10.03, 'exact_match_pct': 0.0, 'seconds': 67.7, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 3.383, 'seconds_per_clip_median': 3.492, 'seconds_per_clip_p95': 5.203, 'real_time_factor': 0.2493, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+20 clips, 0.08 h, 1 speakers
+
+  10/20 clips, 574 s

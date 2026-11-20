@@ -1,0 +1,193 @@
+Shutdown scheduled for Fri 2026-11-20 01:30:43 UTC, use 'shutdown -c' to cancel.
+=== 23:30:43 node up Â· R-0034 Â· commit 46be064
+name, driver_version, memory.total [MiB]
+NVIDIA L4, 620.70.06, 23034 MiB
+=== 23:30:44 installing Python packages
+downloading uv 0.5.11 x86_64-unknown-linux-gnu
+torch 2.5.1+cu124 cuda True
+=== 23:31:25 running runs/R-0034/job.sh
+NVIDIA L4, 23034 MiB
+4
+               total        used        free      shared  buff/cache   available
+Mem:              15           1           7           0           6          13
+=== 23:31:26 test data
+=== 23:31:57 FLEURS: from Hugging Face google/fleurs @ 70bb2e84b976b7e960aa89f1c648e09c59f894dd
+--- 23:31:57 data/fleurs_xh_za/train.tsv
+--- 23:31:57 data/fleurs_xh_za/dev.tsv
+--- 23:31:57 data/fleurs_xh_za/test.tsv
+--- 23:31:57 data/fleurs_xh_za/audio/test.tar.gz
+FLEURS test: 1034 clips <= 30 s, as in every earlier run
+NCHLT test wavs: 2770; FLEURS test: 1041; Swivuriso dev_test: 2145; Soapies wavs: 7923
+/dev/root       145G   59G   86G  41% /
+=== 23:33:24 R-0034 apt libsndfile1
+=== 23:34:04 R-0034 venv
+=== 23:34:04 R-0034 install (commit 81f51e224ce9e74b02cc2a3eaf21b2d91d743455)
+=== 23:35:54 R-0034 version check
+{"omnilingual-asr": "0.2.0", "fairseq2": "0.6", "torch": "2.8.0+cu128"}
+=== 23:36:03 R-0034 download omniASR_CTC_300M_v2
+{"downloaded": "omniASR_CTC_300M_v2"}
+=== 23:36:11 R-0034 download omniASR_CTC_1B_v2
+{"downloaded": "omniASR_CTC_1B_v2"}
+=== 23:36:46 R-0034 setup done, 0 failed part(s)
+=== 23:36:46 R-0034 omniASR_CTC_300M_v2 GPU memory preflight, batch 8
+16 clips, 0.13 h, 12 speakers
+  16/16 clips, 1 s
+{'wer': 35.58, 'cer': 6.71, 'exact_match_pct': 0.0, 'seconds': 1.1, 'peak_gpu_memory_gb': 6.23} {'batch_size': 8, 'seconds_per_clip_mean': 0.064, 'seconds_per_clip_median': 0.064, 'seconds_per_clip_p95': 0.066, 'real_time_factor': 0.0021, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== omniASR_CTC_300M_v2: GPU batch size 8
+=== 23:37:14 R-0034 omniASR_CTC_300M_v2 GPU: nchlt
+2770 clips, 3.11 h, 8 speakers
+  400/2770 clips, 4 s
+  800/2770 clips, 7 s
+  1200/2770 clips, 11 s
+  1600/2770 clips, 15 s
+  2000/2770 clips, 19 s
+  2400/2770 clips, 24 s
+  2770/2770 clips, 29 s
+{'wer': 37.33, 'cer': 5.68, 'exact_match_pct': 38.59, 'seconds': 29.4, 'peak_gpu_memory_gb': 2.94} {'batch_size': 8, 'seconds_per_clip_mean': 0.007, 'seconds_per_clip_median': 0.007, 'seconds_per_clip_p95': 0.011, 'real_time_factor': 0.0018, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:37:50 R-0034 omniASR_CTC_300M_v2 GPU: fleurs
+1034 clips, 3.72 h, 1 speakers
+  400/1034 clips, 8 s
+  800/1034 clips, 21 s
+  1034/1034 clips, 31 s
+{'wer': 45.73, 'cer': 9.05, 'exact_match_pct': 0.19, 'seconds': 31.5, 'peak_gpu_memory_gb': 6.01} {'batch_size': 8, 'seconds_per_clip_mean': 0.025, 'seconds_per_clip_median': 0.023, 'seconds_per_clip_p95': 0.042, 'real_time_factor': 0.0019, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:38:28 R-0034 omniASR_CTC_300M_v2 GPU: swivuriso
+2145 clips, 9.40 h, 24 speakers
+  400/2145 clips, 6 s
+  800/2145 clips, 14 s
+  1200/2145 clips, 28 s
+  1600/2145 clips, 46 s
+  2000/2145 clips, 68 s
+  2145/2145 clips, 78 s
+{'wer': 33.63, 'cer': 6.38, 'exact_match_pct': 7.51, 'seconds': 78.3, 'peak_gpu_memory_gb': 6.22} {'batch_size': 8, 'seconds_per_clip_mean': 0.031, 'seconds_per_clip_median': 0.031, 'seconds_per_clip_p95': 0.059, 'real_time_factor': 0.002, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:39:55 R-0034 omniASR_CTC_300M_v2 GPU: soapies
+391 clips, 0.24 h, 5 speakers
+  391/391 clips, 3 s
+{'wer': 87.21, 'cer': 47.95, 'exact_match_pct': 0.0, 'seconds': 2.8, 'peak_gpu_memory_gb': 2.08} {'batch_size': 8, 'seconds_per_clip_mean': 0.005, 'seconds_per_clip_median': 0.004, 'seconds_per_clip_p95': 0.009, 'real_time_factor': 0.0023, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:40:04 R-0034 omniASR_CTC_1B_v2 GPU memory preflight, batch 8
+16 clips, 0.13 h, 12 speakers
+  16/16 clips, 2 s
+{'wer': 28.85, 'cer': 5.7, 'exact_match_pct': 0.0, 'seconds': 2.2, 'peak_gpu_memory_gb': 7.54} {'batch_size': 8, 'seconds_per_clip_mean': 0.135, 'seconds_per_clip_median': 0.135, 'seconds_per_clip_p95': 0.136, 'real_time_factor': 0.0045, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== omniASR_CTC_1B_v2: GPU batch size 8
+=== 23:40:18 R-0034 omniASR_CTC_1B_v2 GPU: nchlt
+2770 clips, 3.11 h, 8 speakers
+  400/2770 clips, 4 s
+  800/2770 clips, 9 s
+  1200/2770 clips, 15 s
+  1600/2770 clips, 21 s
+  2000/2770 clips, 29 s
+  2400/2770 clips, 37 s
+  2770/2770 clips, 47 s
+{'wer': 34.41, 'cer': 5.08, 'exact_match_pct': 44.22, 'seconds': 47.2, 'peak_gpu_memory_gb': 4.25} {'batch_size': 8, 'seconds_per_clip_mean': 0.015, 'seconds_per_clip_median': 0.014, 'seconds_per_clip_p95': 0.023, 'real_time_factor': 0.0036, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:41:22 R-0034 omniASR_CTC_1B_v2 GPU: fleurs
+1034 clips, 3.72 h, 1 speakers
+  400/1034 clips, 15 s
+  800/1034 clips, 37 s
+  1034/1034 clips, 57 s
+{'wer': 36.05, 'cer': 6.57, 'exact_match_pct': 0.87, 'seconds': 57.1, 'peak_gpu_memory_gb': 7.32} {'batch_size': 8, 'seconds_per_clip_mean': 0.05, 'seconds_per_clip_median': 0.046, 'seconds_per_clip_p95': 0.086, 'real_time_factor': 0.0038, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:42:28 R-0034 omniASR_CTC_1B_v2 GPU: swivuriso
+2145 clips, 9.40 h, 24 speakers
+  400/2145 clips, 10 s
+  800/2145 clips, 26 s
+  1200/2145 clips, 51 s
+  1600/2145 clips, 85 s
+  2000/2145 clips, 130 s
+  2145/2145 clips, 150 s
+{'wer': 25.35, 'cer': 4.74, 'exact_match_pct': 12.87, 'seconds': 149.6, 'peak_gpu_memory_gb': 7.53} {'batch_size': 8, 'seconds_per_clip_mean': 0.065, 'seconds_per_clip_median': 0.063, 'seconds_per_clip_p95': 0.124, 'real_time_factor': 0.0041, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:45:07 R-0034 omniASR_CTC_1B_v2 GPU: soapies
+391 clips, 0.24 h, 5 speakers
+  391/391 clips, 4 s
+{'wer': 77.67, 'cer': 40.79, 'exact_match_pct': 0.0, 'seconds': 4.4, 'peak_gpu_memory_gb': 3.39} {'batch_size': 8, 'seconds_per_clip_mean': 0.009, 'seconds_per_clip_median': 0.008, 'seconds_per_clip_p95': 0.018, 'real_time_factor': 0.0042, 'note': 'model time per clip, warm-up and audio loading excluded; batch time shared equally, only the total is meaningful'}
+=== 23:45:20 R-0034 gpu done, 0 failed part(s)
+=== 23:45:20 R-0034 omniASR_CTC_1B_v2 CPU float32: nchlt (50 clips)
+50 clips, 0.06 h, 8 speakers
+  10/50 clips, 25 s
+  20/50 clips, 44 s
+  30/50 clips, 69 s
+  40/50 clips, 97 s
+  50/50 clips, 123 s
+{'wer': 27.4, 'cer': 3.8, 'exact_match_pct': 54.0, 'seconds': 122.8, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 2.454, 'seconds_per_clip_median': 2.299, 'seconds_per_clip_p95': 3.536, 'real_time_factor': 0.6191, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 23:47:38 R-0034 omniASR_CTC_1B_v2 CPU float32: fleurs (50 clips)
+50 clips, 0.18 h, 1 speakers
+  10/50 clips, 71 s
+  20/50 clips, 155 s
+  30/50 clips, 231 s
+  40/50 clips, 317 s
+  50/50 clips, 399 s
+{'wer': 37.89, 'cer': 6.45, 'exact_match_pct': 0.0, 'seconds': 398.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 7.975, 'seconds_per_clip_median': 8.053, 'seconds_per_clip_p95': 13.872, 'real_time_factor': 0.6135, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 23:54:45 R-0034 omniASR_CTC_1B_v2 CPU float32: swivuriso (50 clips)
+50 clips, 0.22 h, 21 speakers
+  10/50 clips, 87 s
+  20/50 clips, 179 s
+  30/50 clips, 277 s
+  40/50 clips, 383 s
+  50/50 clips, 500 s
+{'wer': 32.11, 'cer': 5.87, 'exact_match_pct': 14.0, 'seconds': 500.1, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 9.999, 'seconds_per_clip_median': 10.64, 'seconds_per_clip_p95': 18.374, 'real_time_factor': 0.6281, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:03:22 R-0034 omniASR_CTC_1B_v2 CPU float32: soapies (50 clips)
+50 clips, 0.03 h, 5 speakers
+  10/50 clips, 17 s
+  20/50 clips, 29 s
+  30/50 clips, 47 s
+  40/50 clips, 61 s
+  50/50 clips, 78 s
+{'wer': 76.62, 'cer': 33.23, 'exact_match_pct': 0.0, 'seconds': 77.7, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 1.552, 'seconds_per_clip_median': 1.41, 'seconds_per_clip_p95': 2.753, 'real_time_factor': 0.6739, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:04:57 R-0034 omniASR_CTC_300M_v2 CPU float32: nchlt (50 clips)
+50 clips, 0.06 h, 8 speakers
+  10/50 clips, 10 s
+  20/50 clips, 18 s
+  30/50 clips, 28 s
+  40/50 clips, 39 s
+  50/50 clips, 49 s
+{'wer': 32.19, 'cer': 5.82, 'exact_match_pct': 44.0, 'seconds': 48.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 0.977, 'seconds_per_clip_median': 0.903, 'seconds_per_clip_p95': 1.579, 'real_time_factor': 0.2464, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:05:52 R-0034 omniASR_CTC_300M_v2 CPU float32: fleurs (50 clips)
+50 clips, 0.18 h, 1 speakers
+  10/50 clips, 29 s
+  20/50 clips, 63 s
+  30/50 clips, 94 s
+  40/50 clips, 130 s
+  50/50 clips, 163 s
+{'wer': 47.36, 'cer': 8.84, 'exact_match_pct': 0.0, 'seconds': 162.9, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 3.254, 'seconds_per_clip_median': 3.292, 'seconds_per_clip_p95': 5.683, 'real_time_factor': 0.2503, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:08:46 R-0034 omniASR_CTC_300M_v2 CPU float32: swivuriso (50 clips)
+50 clips, 0.22 h, 21 speakers
+  10/50 clips, 35 s
+  20/50 clips, 72 s
+  30/50 clips, 112 s
+  40/50 clips, 155 s
+  50/50 clips, 203 s
+{'wer': 40.29, 'cer': 7.91, 'exact_match_pct': 8.0, 'seconds': 203.4, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 4.065, 'seconds_per_clip_median': 4.274, 'seconds_per_clip_p95': 7.536, 'real_time_factor': 0.2553, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:12:16 R-0034 omniASR_CTC_300M_v2 CPU float32: soapies (50 clips)
+50 clips, 0.03 h, 5 speakers
+  10/50 clips, 7 s
+  20/50 clips, 12 s
+  30/50 clips, 19 s
+  40/50 clips, 25 s
+  50/50 clips, 31 s
+{'wer': 82.54, 'cer': 41.21, 'exact_match_pct': 0.0, 'seconds': 31.4, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 0.628, 'seconds_per_clip_median': 0.568, 'seconds_per_clip_p95': 1.11, 'real_time_factor': 0.2729, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:12:54 R-0034 300M CPU float32 probe: 20 FLEURS clips
+20 clips, 0.08 h, 1 speakers
+  10/20 clips, 36 s
+  20/20 clips, 68 s
+{'wer': 49.26, 'cer': 10.03, 'exact_match_pct': 0.0, 'seconds': 67.7, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 3.383, 'seconds_per_clip_median': 3.492, 'seconds_per_clip_p95': 5.203, 'real_time_factor': 0.2493, 'note': 'model time per clip, warm-up and audio loading excluded'}
+=== 00:14:12 R-0034 300M CPU bfloat16 probe: 20 FLEURS clips
+20 clips, 0.08 h, 1 speakers
+  10/20 clips, 574 s
+--- R-0034 300M CPU bfloat16 probe: 20 FLEURS clips: exit 124 (timed out)
+!!! R-0034 300M CPU bfloat16 probe: 20 FLEURS clips FAILED; last lines of its log:
+  20/50 clips, 12 s
+  30/50 clips, 19 s
+  40/50 clips, 25 s
+  50/50 clips, 31 s
+{'wer': 82.54, 'cer': 41.21, 'exact_match_pct': 0.0, 'seconds': 31.4, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 0.628, 'seconds_per_clip_median': 0.568, 'seconds_per_clip_p95': 1.11, 'real_time_factor': 0.2729, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+20 clips, 0.08 h, 1 speakers
+
+  10/20 clips, 36 s
+  20/20 clips, 68 s
+{'wer': 49.26, 'cer': 10.03, 'exact_match_pct': 0.0, 'seconds': 67.7, 'peak_gpu_memory_gb': None} {'batch_size': 1, 'seconds_per_clip_mean': 3.383, 'seconds_per_clip_median': 3.492, 'seconds_per_clip_p95': 5.203, 'real_time_factor': 0.2493, 'note': 'model time per clip, warm-up and audio loading excluded'}
+left out 7 clips over 30 s
+20 clips, 0.08 h, 1 speakers
+
+  10/20 clips, 574 s
+=== 00:30:21 R-0034 cpu done, 1 failed part(s)
+!!! R-0034 cpu FAILED
+Model name:                              AMD EPYC 7R13 Processor
+BIOS Model name:                         AMD EPYC 7R13 Processor  CPU @ 2.6GHz
