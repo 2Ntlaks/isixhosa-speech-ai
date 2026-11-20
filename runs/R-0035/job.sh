@@ -69,7 +69,7 @@ RECIPE="--xml $T/nchlt_xho.trn.xml --root data --fleurs-tsv $F/train.tsv --fleur
   --swivuriso-tsv data/swiv_all_train.tsv --swivuriso-audio $S --exclude-texts data/test_texts.txt
   --swivuriso-dev-tsv $S/dev.tsv --swivuriso-dev-audio $S --swivuriso-dev-per-speaker 22 --swivuriso-dev-max-tokens 220
   --model $BASE --language sw --lr 1e-5 --warmup 500 --lr-scheduler linear --generation-max-length 225
-  --select-on swivuriso+fleurs --count-runaways --save-total-limit 3
+  --select-on swivuriso+fleurs --count-runaways --save-total-limit 3 --check-audio
   --spec-augment --mask-time-prob 0.05 --mask-time-length 10 --mask-time-min-masks 2
   --mask-feature-prob 0.10 --mask-feature-length 8 --mask-feature-min-masks 1"
 

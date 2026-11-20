@@ -327,3 +327,20 @@ Format:
   one machine, threads = vCPUs.
 - Cost: none extra (the probe ran inside the time already paid).
 - Lesson: when a job is split, re-check every "same conditions" assumption in its pre-registered rules.
+
+## P-0025 · 2026-11-20 · R-0035 attempt 1: an audio file in the dev evaluation could not be read, and the error hid which
+- Stage / run: R-0035 preflight 3/4 (full recipe, 2 steps, all dev sets), node i-086bffd79955bd69a, g6e.2xlarge
+- Symptom (in the first evaluation, both batch layouts):
+  ```
+  soundfile.LibsndfileError: <exception str() failed>
+  ```
+- What was checked from the laptop: Swivuriso dev audio in S3 is complete (2290 files, none empty); FLEURS dev archive at
+  the pinned revision has all 446 files its TSV lists, same layout as test; preflight 2/4 had read Swivuriso dev audio
+  fine. The failing file is still unknown: soundfile's message could not be printed.
+- Fix: read16k now names the file in any read error (path, exists or not, error code). New train.py --check-audio (in
+  R-0035's recipe, so it runs in preflight 1/4 and in training): opens every training and dev file before GPU time;
+  any unreadable training file stops the run (data must equal R-0029's), a dev set with <= 2 % unreadable files drops
+  them (recorded in data_split.json), more stops the run. Tested on the fixture data: clean passes, a broken dev or
+  training file stops with the file named.
+- Cost: ~20 min of g6e.2xlarge (~$0.75). The preflight did its job: no training hours were spent.
+- Lesson: an error message that cannot name its input is a bug in itself; check every input file once before a long run.

@@ -62,7 +62,11 @@ def target_text(text):
 
 
 def read16k(path):
-    audio, sr = sf.read(path, dtype="float32")
+    try:
+        audio, sr = sf.read(path, dtype="float32")
+    except Exception as e:  # soundfile's own message can fail to print (R-0035 attempt 1): always name the file
+        raise RuntimeError(f"cannot read audio {path!r} (exists: {os.path.exists(path)}, "
+                           f"{type(e).__name__} code {getattr(e, 'code', '?')})") from None
     if audio.ndim > 1:
         audio = audio.mean(axis=1)
     if sr != 16000:  # NCHLT and FLEURS are 16 kHz; Soapies is 32 kHz
@@ -293,6 +297,8 @@ def main():
                    choices=["auto", "nchlt", "fleurs", "swivuriso", "soapies", "swivuriso+fleurs"])
     r.add_argument("--count-runaways", action="store_true")
     r.add_argument("--split-only", action="store_true", help="write data_split.json and stop (a check before a run)")
+    r.add_argument("--check-audio", action="store_true",
+                   help="open every training and dev file first; stop on any unreadable training file or >2%% of a dev set")
     r.add_argument("--spec-augment", action="store_true")
     r.add_argument("--mask-time-prob", type=float, default=0.05)
     r.add_argument("--mask-time-length", type=int, default=10)
@@ -379,6 +385,31 @@ def main():
               and len(proc.tokenizer(c["text"], add_special_tokens=False).input_ids) <= a.swivuriso_dev_max_tokens]
         swiv_dev = swivuriso_dev_sample(sd, a.swivuriso_dev_per_speaker, a.seed)
         assert not {c["speaker"] for c in swiv_dev} & {c["speaker"] for c in train}, "a dev speaker is in training"
+    audio_dropped = {}
+    if a.check_audio:  # open every file once before any GPU time is spent (R-0035 attempt 1, P-0025)
+        def unreadable(cs):
+            bad = []
+            for c in cs:
+                for p in c.get("parts") or [c["path"]]:
+                    try:
+                        sf.info(p)
+                    except Exception:
+                        bad.append(p)
+            return bad
+        bad_train = unreadable(train)
+        if bad_train:
+            print(f"!!! {len(bad_train)} training files cannot be read, e.g. {bad_train[:20]}", flush=True)
+            sys.exit(1)
+        for name, cs in (("dev", dev), ("fleurs_dev", fleurs_dev), ("swiv_dev", swiv_dev), ("soapies_dev", soapies_dev)):
+            bad = set(unreadable(cs))
+            if bad:
+                print(f"!!! {name}: {len(bad)} of {len(cs)} files cannot be read, e.g. {sorted(bad)[:20]}", flush=True)
+                if len(bad) > 0.02 * len(cs):
+                    sys.exit(1)
+                kept = [c for c in cs if not ({c["path"]} | set(c.get("parts") or [])) & bad]
+                cs[:] = kept  # dropped from this dev set only; recorded in data_split.json below
+                audio_dropped[name] = len(bad)
+        print(f"audio check: {len(train)} training clips readable; dev drops {audio_dropped or 'none'}", flush=True)
     max_steps = steps_for(a, len(train))
     info = {"train_clips": len(train), "train_hours": round(sum(c["duration"] for c in train) / 3600, 2),
             "train_speakers": len({c["speaker"] for c in train}), "dev_speakers": dev_speakers,
@@ -407,6 +438,10 @@ def main():
     print(json.dumps(info), flush=True)
     with open(os.path.join(a.out, "data_split.json"), "w") as f:
         json.dump(info, f, indent=2)
+    if a.check_audio:
+        info["audio_check"] = {"dev_files_dropped": audio_dropped}
+        with open(os.path.join(a.out, "data_split.json"), "w") as f:
+            json.dump(info, f, indent=2)
     if a.split_only:
         return
 
